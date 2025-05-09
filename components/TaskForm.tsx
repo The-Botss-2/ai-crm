@@ -120,14 +120,14 @@ const TaskForm: React.FC<TaskFormProps> = ({
                     </Field>
 
                     <div className="flex gap-2">
-                        <Field name="status" as="select" className="w-full border text-xs dark:border-gray-700 border-gray-200 p-2 rounded">
+                        <Field name="status" as="select" className="w-full border text-xs dark:border-gray-700 border-gray-200 p-2 rounded dark:bg-slate-900">
                             <option value="pending">Pending</option>
                             <option value="in_progress">In Progress</option>
                             <option value="completed">Completed</option>
                             <option value="blocked">Blocked</option>
                         </Field>
 
-                        <Field name="priority" as="select" className="w-full border text-xs dark:border-gray-700 border-gray-200 p-2 rounded">
+                        <Field name="priority" as="select" className="dark:bg-slate-900 w-full border text-xs dark:border-gray-700 border-gray-200 p-2 rounded">
                             <option value="low">Low</option>
                             <option value="medium">Medium</option>
                             <option value="high">High</option>
@@ -146,7 +146,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
                     </Field>
 
 
-                    <Field name="assignedTo" as="select" className="w-full border text-xs dark:border-gray-700 border-gray-200 p-2 rounded">
+                    <Field name="assignedTo" as="select" className="dark:bg-slate-900 w-full border text-xs dark:border-gray-700 border-gray-200 p-2 rounded">
 
                         <option value="">Assign to</option>
                         {teamData?.team?.members?.map((m: any) => (
@@ -156,7 +156,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
                         ))}
                     </Field>
 
-                    <Field name="leadId" as="select" className="w-full border text-xs dark:border-gray-700 border-gray-200 p-2 rounded">
+                    <Field name="leadId" as="select" className="w-full border text-xs dark:bg-slate-900 dark:border-gray-700 border-gray-200 p-2 rounded">
                         <option value="">Link to Lead</option>
                         {leads.map((lead: any) => (
                             <option key={lead._id} value={lead._id}>
@@ -165,7 +165,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
                         ))}
                     </Field>
 
-                    <Field name="meetingId" as="select" className="w-full border text-xs dark:border-gray-700 border-gray-200 p-2 rounded">
+                    <Field name="meetingId" as="select" className="w-full border text-xs dark:bg-slate-900 dark:border-gray-700 border-gray-200 p-2 rounded">
                         <option value="">Link to Meeting</option>
                         {meetings.map((m: any) => (
                             <option key={m._id} value={m._id}>

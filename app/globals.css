@@ -38,6 +38,11 @@
   .rbc-off-range-bg {
     background-color: #363d4e !important;
   }
+
+  input {
+    color-scheme: dark;
+  }
+
 }
 
 body {

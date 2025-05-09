@@ -85,7 +85,7 @@ export default function LeadForm({ initialValues, onClose, isEdit, isPreview, re
 
           <div>
             <label className="block mb-1 text-xs">Status</label>
-            <Field as="select" name="status" disabled={isPreview} className=" text-xs dark:border-gray-700 border-gray-200 w-full border px-3 py-2 rounded">
+            <Field as="select" name="status" disabled={isPreview} className=" text-xs dark:border-gray-700 border-gray-200 w-full border px-3 py-2 rounded dark:bg-slate-900">
               <option value="new">New</option>
               <option value="contacted">Contacted</option>
               <option value="qualified">Qualified</option>

@@ -125,7 +125,7 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
                                     <input
                                         {...field}
                                         type="date"
-                                        className="w-full border dark:border-gray-700 border-gray-200 text-xs p-2 rounded"
+                                        className="w-full border dark:border-gray-700 border-gray-200 text-xs p-2 rounded dark:text-white"
                                         required
                                     />
                                 )}
@@ -163,7 +163,7 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
                             </Field>
                         </div>
 
-                        <Field name="platform" as="select" className="w-full border dark:border-gray-700 border-gray-200 text-xs p-2 rounded">
+                        <Field name="platform" as="select" className="w-full border dark:bg-slate-900 dark:border-gray-700 border-gray-200 text-xs p-2 rounded">
                             <option value="zoom">Zoom</option>
                             <option value="meet">Google Meet</option>
                             <option value="teams">Microsoft Teams</option>
@@ -175,7 +175,7 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
                             )}
                         </Field>
 
-                        <Field name="meetingType" as="select" className="w-full border dark:border-gray-700 border-gray-200 text-xs p-2 rounded">
+                        <Field name="meetingType" as="select" className="dark:bg-slate-900 w-full border dark:border-gray-700 border-gray-200 text-xs p-2 rounded">
                             <option value="online">Online</option>
                             <option value="onsite">Onsite</option>
                         </Field>
