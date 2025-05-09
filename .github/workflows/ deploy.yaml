@@ -1,4 +1,4 @@
-name: Deploy Master to DogitalOcean
+name: Deploy Master to DigitalOcean
 
 on:
   push:
@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the code from the repository
+      # Step 1: Check out the code from the repository
       - name: Checkout Code
         uses: actions/checkout@v3
 
