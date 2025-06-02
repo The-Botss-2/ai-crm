@@ -4,7 +4,6 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useState } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { axiosInstance } from '@/lib/fetcher';
 
 export default function MemberActionDialog({ member, teamId, requesterId, mutate }: any) {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,7 +14,7 @@ export default function MemberActionDialog({ member, teamId, requesterId, mutate
     const toastId = toast.loading('Updating role...');
     setLoading(true);
     try {
-      await axiosInstance.patch(`/api/team/user?id=${teamId}`, {
+      await axios.patch(`/api/team/user?id=${teamId}`, {
         requesterId,
         memberId: member.profile._id,
         role,
@@ -35,7 +34,7 @@ export default function MemberActionDialog({ member, teamId, requesterId, mutate
     const toastId = toast.loading('Removing member...');
     setLoading(true);
     try {
-      await axiosInstance.delete(`/api/team/user?id=${teamId}`, {
+      await axios.delete(`/api/team/user?id=${teamId}`, {
         data: { requesterId, memberId: member.profile._id },
       });
 
@@ -65,12 +64,12 @@ export default function MemberActionDialog({ member, teamId, requesterId, mutate
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <Dialog.Panel className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-slate-900 p-6 z-[9999] rounded-xl shadow-md w-96">
+            <Dialog.Panel className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-6 z-[9999] rounded-xl shadow-md w-96">
               <Dialog.Title className="text-lg font-semibold mb-4">Update Member Role</Dialog.Title>
               <select
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
-                   className="border p-2 w-full mb-2 rounded text-sm dark:border-gray-700 border-gray-200 dark:bg-slate-900"
+                   className="border p-2 w-full mb-2 rounded text-sm border-gray-200"
                 disabled={loading}
               >
                 <option value="manager">Manager</option>
@@ -88,7 +87,7 @@ export default function MemberActionDialog({ member, teamId, requesterId, mutate
                 <div className='flex gap-2 items-center'>
                   <button
                     onClick={() => setIsOpen(false)}
-                    className="px-4 py-2 bg-gray-200 rounded text-xs dark:text-black"
+                    className="px-4 py-2 bg-gray-200 rounded text-xs"
                     disabled={loading}
                   >
                     Cancel

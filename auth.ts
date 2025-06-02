@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import { authConfig } from "./auth.config";
 import { connectToDatabase } from "./lib/db";
 import Profile from "./model/Profile";
-
+export const runtime = 'nodejs'; 
 export const { handlers, signIn, signOut, auth } = NextAuth({
     ...authConfig,
     session: {
@@ -27,11 +27,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             }
             return true;
         },
-        async jwt({ token}) {
+        async jwt({ token, user, account, profile }) {
             return token;
         },
 
-        async session({ session}) {
+        async session({ session, user, token }) {
             await connectToDatabase();
             if (session.user.email) {
                 const dbUser = await Profile.findOne({ email: session.user.email });

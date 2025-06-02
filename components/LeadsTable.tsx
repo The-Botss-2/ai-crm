@@ -36,20 +36,20 @@ const LeadsTable: React.FC<LeadsTableProps> = ({ leads, onEdit, onDelete, onPrev
             leads.map((lead) => (
               <tr
                 key={lead._id}
-                className="bg-white dark:bg-slate-800 shadow-sm hover:shadow-md transition duration-150 rounded-md"
+                className="bg-white shadow-sm hover:shadow-md transition duration-150 rounded-md"
               >
-                <td className="px-4 py-2 rounded-l-md bg-blue-50 dark:bg-slate-900 font-medium text-blue-700">{lead.name}</td>
-                <td className="px-4 py-2 text-gray-800 dark:text-blue-300">{lead.email}</td>
-                <td className="px-4 py-2 text-gray-800 dark:text-blue-300">{lead.phone}</td>
+                <td className="px-4 py-2 rounded-l-md bg-blue-50 font-medium text-blue-700">{lead.name}</td>
+                <td className="px-4 py-2 text-gray-800">{lead.email}</td>
+                <td className="px-4 py-2 text-gray-800">{lead.phone}</td>
                 <td className="px-4 py-2">
                   <span className={`px-2 capitalize py-1 rounded-full text-xs font-semibold ${getStatusColor(lead.status)}`}>
                     {lead.status.replace('_', ' ')}
                   </span>
                 </td>
-                <td className="px-4 py-2 text-gray-600 dark:text-blue-300">
+                <td className="px-4 py-2 text-gray-600">
                   {new Date(lead.createdAt).toLocaleDateString()}
                 </td>
-                <td className="px-4 py-2 text-gray-600 dark:text-blue-300">
+                <td className="px-4 py-2 text-gray-600">
                   {new Date(lead.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </td>
                 <td className="px-4 py-2 rounded-r-md space-x-2">
@@ -71,7 +71,7 @@ const LeadsTable: React.FC<LeadsTableProps> = ({ leads, onEdit, onDelete, onPrev
             ))
           ) : (
             <tr>
-              <td colSpan={7} className="text-center py-4 text-gray-500 dark:text-blue-300">
+              <td colSpan={7} className="text-center py-4 text-gray-500">
                 {error ? 'Failed to load leads' : 'No leads found'}
               </td>
             </tr>

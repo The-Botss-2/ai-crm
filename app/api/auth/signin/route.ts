@@ -5,6 +5,7 @@ import { connectToDatabase } from '@/lib/db';
 import Profile from '@/model/Profile';
 import Credentials from '@/model/Credentials';
 
+export const runtime = 'nodejs'; 
 export async function POST(req: Request) {
   try {
     const { email, password } = await req.json();

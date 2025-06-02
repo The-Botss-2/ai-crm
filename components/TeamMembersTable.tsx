@@ -3,7 +3,7 @@ import MemberActionDialog from "./MemberActionDialog";
 
 export default function TeamMembersTable({ members, isAdmin, teamId, requesterId, mutate }: any) {
   return (
-    <table className="w-full border rounded-md overflow-hidden bg-white dark:bg-slate-700 mt-5">
+    <table className="w-full border rounded-md overflow-hidden bg-white mt-5">
       <thead className="">
         <tr>
           <th className="text-left px-4 py-2">Name</th>

@@ -3,8 +3,8 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { useState, Fragment } from 'react';
 import { mutate } from 'swr';
+import axios from 'axios';
 import toast from 'react-hot-toast';
-import { axiosInstance } from '@/lib/fetcher';
 
 export default function AddTeamDialog({ userId }: { userId: string }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,7 +21,7 @@ export default function AddTeamDialog({ userId }: { userId: string }) {
     const toastId = toast.loading('Creating team...');
 
     try {
-      await axiosInstance.post('/api/team', {
+      await axios.post('/api/team', {
         name: teamName,
         adminId: userId,
       });
@@ -61,19 +61,19 @@ export default function AddTeamDialog({ userId }: { userId: string }) {
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <Dialog.Panel className="fixed top-1/3 left-1/2 -translate-x-1/2 transform bg-white dark:bg-slate-800 p-6 z-50 rounded-xl shadow-md w-96">
+            <Dialog.Panel className="fixed top-1/3 left-1/2 -translate-x-1/2 transform bg-white p-6 z-50 rounded-xl shadow-md w-96">
               <Dialog.Title className="text-lg font-semibold mb-2">New Team</Dialog.Title>
               <input
                 type="text"
                 value={teamName}
                 onChange={(e) => setTeamName(e.target.value)}
                 placeholder="Team name"
-                className="border p-2 w-full mb-2 rounded text-sm dark:border-gray-700 border-gray-200"
+                className="border p-2 w-full mb-2 rounded text-sm border-gray-200"
                 disabled={loading}
               />
               <div className="flex justify-end space-x-2">
                 <button
-                  className="px-4 py-2 rounded bg-gray-200 text-xs dark:text-black"
+                  className="px-4 py-2 rounded bg-gray-200 text-xs"
                   onClick={() => setIsOpen(false)}
                   disabled={loading}
                 >

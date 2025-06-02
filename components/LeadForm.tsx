@@ -3,7 +3,6 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { Lead } from '@/types/lead';
 import toast from 'react-hot-toast';
-import { axiosInstance } from '@/lib/fetcher';
 
 interface Props {
   initialValues: Partial<Lead>;
@@ -28,27 +27,23 @@ export default function LeadForm({ initialValues, onClose, isEdit, isPreview, re
     const toastId = toast.loading(isEdit ? 'Updating lead...' : 'Adding lead...');
 
     try {
-      const url = isEdit ? '/api/lead' : '/api/leads';
-      const method = isEdit ? 'patch' : 'post';
-
-      await axiosInstance.request({
-        url,
-        method,
-        params: {
-          team: values.team,
-          user: submittedBy,
-        },
-        data: values,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
+      const res = await fetch(
+        isEdit
+          ? `/api/lead?team=${values.team}&user=${submittedBy}`
+          : `/api/leads?team=${values.team}&user=${submittedBy}`,
+        {
+          method: isEdit ? 'PATCH' : 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(values),
+        }
+      );
+      if (!res.ok) throw new Error(await res.text());
       toast.success(isEdit ? 'Lead updated' : 'Lead added', { id: toastId });
       reload();
       onClose();
       resetForm();
-    } catch (err) {
+    } 
+    catch (err) {
       toast.error('Something went wrong', { id: toastId });
     } finally {
       setSubmitting(false);
@@ -61,31 +56,31 @@ export default function LeadForm({ initialValues, onClose, isEdit, isPreview, re
         <Form className="space-y-4">
           <div>
             <label className="block mb-1 text-xs">Name</label>
-            <Field name="name" disabled={isPreview} className="w-full border px-3 py-2 rounded text-xs dark:border-gray-700 border-gray-200 " />
+            <Field name="name" disabled={isPreview} className="w-full border px-3 py-2 rounded text-xs border-gray-200 " />
             <ErrorMessage name="name" component="div" className="text-red-500 text-xs" />
           </div>
 
           <div>
             <label className="block mb-1 text-xs">Email</label>
-            <Field name="email" disabled={isPreview} className="w-full border px-3 py-2 rounded text-xs dark:border-gray-700 border-gray-200 " />
+            <Field name="email" disabled={isPreview} className="w-full border px-3 py-2 rounded text-xs border-gray-200 " />
             <ErrorMessage name="email" component="div" className="text-red-500 text-xs" />
           </div>
 
           <div>
             <label className="block mb-1 text-xs">Phone</label>
-            <Field name="phone" disabled={isPreview} className="w-full border px-3 py-2 rounded text-xs dark:border-gray-700 border-gray-200 " />
+            <Field name="phone" disabled={isPreview} className="w-full border px-3 py-2 rounded text-xs border-gray-200 " />
             <ErrorMessage name="phone" component="div" className="text-red-500 text-xs" />
           </div>
 
           <div>
             <label className="block mb-1 text-xs">Company</label>
-            <Field name="company" disabled={isPreview} className="w-full border px-3 py-2 rounded text-xs dark:border-gray-700 border-gray-200 " />
+            <Field name="company" disabled={isPreview} className="w-full border px-3 py-2 rounded text-xs border-gray-200 " />
             <ErrorMessage name="company" component="div" className="text-red-500 text-xs" />
           </div>
 
           <div>
             <label className="block mb-1 text-xs">Status</label>
-            <Field as="select" name="status" disabled={isPreview} className=" text-xs dark:border-gray-700 border-gray-200 w-full border px-3 py-2 rounded dark:bg-slate-900">
+            <Field as="select" name="status" disabled={isPreview} className=" text-xs border-gray-200 w-full border px-3 py-2 rounded">
               <option value="new">New</option>
               <option value="contacted">Contacted</option>
               <option value="qualified">Qualified</option>
@@ -99,13 +94,13 @@ export default function LeadForm({ initialValues, onClose, isEdit, isPreview, re
 
           <div>
             <label className="block mb-1 text-xs">Source</label>
-            <Field name="source" disabled={isPreview} className=" text-xs dark:border-gray-700 border-gray-200 w-full border px-3 py-2 rounded" />
+            <Field name="source" disabled={isPreview} className=" text-xs border-gray-200 w-full border px-3 py-2 rounded" />
             <ErrorMessage name="source" component="div" className="text-red-500 text-xs" />
           </div>
 
           <div>
             <label className="block mb-1 text-xs">Notes</label>
-            <Field as="textarea" name="notes" disabled={isPreview} rows={3} className=" text-xs dark:border-gray-700 border-gray-200 w-full border px-3 py-2 rounded" />
+            <Field as="textarea" name="notes" disabled={isPreview} rows={3} className=" text-xs border-gray-200 w-full border px-3 py-2 rounded" />
             <ErrorMessage name="notes" component="div" className="text-red-500 text-xs" />
           </div>
 

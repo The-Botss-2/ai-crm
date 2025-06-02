@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { Formik, Form, Field } from 'formik';
 import { toast } from 'react-hot-toast';
-import { axiosInstance } from '@/lib/fetcher';
 
 interface MeetingFormProps {
     initialValues: any;
@@ -22,30 +21,20 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
 }) => {
     const handleSubmit = async (values: any, { setSubmitting }: any) => {
         const toastId = toast.loading(isEdit ? 'Updating meeting...' : 'Adding meeting...');
-
         try {
-            const payload = {
-                ...values,
-                startTime: new Date(`${values.date}T${values.fromTime}`).toISOString(),
-                endTime: new Date(`${values.date}T${values.toTime}`).toISOString(),
-            };
+            const payload = { ...values };
             if (!isEdit) delete (payload as any)._id;
-            delete payload.date;
-            delete payload.fromTime;
-            delete payload.toTime;
 
-            const url = isEdit ? '/api/meeting' : '/api/meetings';
-            const method = isEdit ? 'patch' : 'post';
+            const res = await fetch(
+                isEdit ? `/api/meeting?id=${values._id}` : `/api/meetings`,
+                {
+                    method: isEdit ? 'PATCH' : 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                }
+            );
 
-            await axiosInstance.request({
-                url,
-                method,
-                params: isEdit ? { id: values._id } : undefined,
-                data: payload,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
+            if (!res.ok) throw new Error(await res.text());
 
             toast.success(isEdit ? 'Meeting updated' : 'Meeting added', { id: toastId });
             reload();
@@ -61,14 +50,17 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
         <Formik
             initialValues={{
                 ...initialValues,
-                date: initialValues.startTime ? new Date(initialValues.startTime).toISOString().slice(0, 10) : '',
-                fromTime: initialValues.startTime ? new Date(initialValues.startTime).toISOString().slice(11, 16) : '',
-                toTime: initialValues.endTime ? new Date(initialValues.endTime).toISOString().slice(11, 16) : '',
+                startTime: initialValues.startTime
+                    ? new Date(initialValues.startTime).toISOString().slice(0, 16)
+                    : '',
+                endTime: initialValues.endTime
+                    ? new Date(initialValues.endTime).toISOString().slice(0, 16)
+                    : '',
             }}
             validate={(values) => {
                 const errors: any = {};
-                if (values.fromTime >= values.toTime) {
-                    errors.toTime = 'End time must be after start time';
+                if (new Date(values.startTime) >= new Date(values.endTime)) {
+                    errors.endTime = 'End time must be after start time';
                 }
                 if (!values.attendees || values.attendees.length === 0) {
                     errors.attendees = 'At least one attendee is required';
@@ -109,50 +101,36 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
                     <Form className="space-y-4">
                         <Field name="title">
                             {({ field }: any) => (
-                                <input {...field} className="w-full border dark:border-gray-700 border-gray-200 text-xs p-2 rounded" placeholder="Title" required />
+                                <input {...field} className="w-full border border-gray-200 text-xs p-2 rounded" placeholder="Title" required />
                             )}
                         </Field>
 
                         <Field name="description">
                             {({ field }: any) => (
-                                <textarea {...field} className="w-full border dark:border-gray-700 border-gray-200 text-xs p-2 rounded" placeholder="Description" rows={2} required />
+                                <textarea {...field} className="w-full border border-gray-200 text-xs p-2 rounded" placeholder="Description" rows={2} required />
                             )}
                         </Field>
 
                         <div className="flex gap-2">
-                            <Field name="date">
+                            <Field name="startTime">
                                 {({ field }: any) => (
                                     <input
                                         {...field}
-                                        type="date"
-                                        className="w-full border dark:border-gray-700 border-gray-200 text-xs p-2 rounded dark:text-white"
-                                        required
-                                    />
-                                )}
-                            </Field>
-                        </div>
-
-                        <div className="flex gap-2 items-center">
-
-                            <Field name="fromTime">
-                                {({ field }: any) => (
-                                    <input
-                                        {...field}
-                                        type="time"
-                                        className="w-full border dark:border-gray-700 border-gray-200 text-xs p-2 rounded"
+                                        type="datetime-local"
+                                        className="w-full border border-gray-200 text-xs p-2 rounded "
                                         required
                                     />
                                 )}
                             </Field>
 
-                            <span className='text-xs'>-</span>
-                            <Field name="toTime">
+                            <Field name="endTime">
                                 {({ field, meta }: any) => (
                                     <>
                                         <input
                                             {...field}
-                                            type="time"
-                                            className={`w-full border dark:border-gray-700 border-gray-200 text-xs p-2 rounded ${meta.touched && meta.error ? 'border-red-500' : ''}`}
+                                            type="datetime-local"
+                                            className={`w-full border border-gray-200 text-xs p-2 rounded  ${meta.touched && meta.error ? 'border border-gray-200 text-xs-red-500' : ''
+                                                }`}
                                             required
                                         />
                                         {meta.touched && meta.error && (
@@ -163,7 +141,7 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
                             </Field>
                         </div>
 
-                        <Field name="platform" as="select" className="w-full border dark:bg-slate-900 dark:border-gray-700 border-gray-200 text-xs p-2 rounded">
+                        <Field name="platform" as="select" className="w-full border border-gray-200 text-xs p-2 rounded">
                             <option value="zoom">Zoom</option>
                             <option value="meet">Google Meet</option>
                             <option value="teams">Microsoft Teams</option>
@@ -171,23 +149,24 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
 
                         <Field name="link">
                             {({ field }: any) => (
-                                <input {...field} className="w-full border dark:border-gray-700 border-gray-200 text-xs p-2 rounded" placeholder="Meeting Link" required />
+                                <input {...field} className="w-full border border-gray-200 text-xs p-2 rounded" placeholder="Meeting Link" required />
                             )}
                         </Field>
 
-                        <Field name="meetingType" as="select" className="dark:bg-slate-900 w-full border dark:border-gray-700 border-gray-200 text-xs p-2 rounded">
+                        <Field name="meetingType" as="select" className="w-full border border-gray-200 text-xs p-2 rounded">
                             <option value="online">Online</option>
                             <option value="onsite">Onsite</option>
                         </Field>
 
                         {/* Attendees Field */}
                         <div>
+
                             <div className="flex gap-2">
                                 <input
                                     type="email"
                                     value={attendeeInput}
                                     onChange={(e) => setAttendeeInput(e.target.value)}
-                                    className="w-full border dark:border-gray-700 border-gray-200 text-xs p-2 rounded"
+                                    className="w-full border border-gray-200 text-xs p-2 rounded"
                                     placeholder="Add attendee email"
                                 />
                                 <button
@@ -222,7 +201,7 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
 
                         <Field name="notes">
                             {({ field }: any) => (
-                                <textarea {...field} className="w-full border dark:border-gray-700 border-gray-200 text-xs p-2 rounded" placeholder="Notes" rows={2} />
+                                <textarea {...field} className="w-full border border-gray-200 text-xs p-2 rounded" placeholder="Notes" rows={2} />
                             )}
                         </Field>
 
@@ -231,25 +210,25 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
                             <>
                                 <Field name="followUpStatus">
                                     {({ field }: any) => (
-                                        <input {...field} className="w-full border dark:border-gray-700 border-gray-200 text-xs p-2 rounded" placeholder="Follow-up Status" />
+                                        <input {...field} className="w-full border border-gray-200 text-xs p-2 rounded" placeholder="Follow-up Status" />
                                     )}
                                 </Field>
 
                                 <Field name="recordingUrl">
                                     {({ field }: any) => (
-                                        <input {...field} className="w-full border dark:border-gray-700 border-gray-200 text-xs p-2 rounded" placeholder="Recording URL" />
+                                        <input {...field} className="w-full border border-gray-200 text-xs p-2 rounded" placeholder="Recording URL" />
                                     )}
                                 </Field>
 
                                 <Field name="transcript">
                                     {({ field }: any) => (
-                                        <textarea {...field} className="w-full border dark:border-gray-700 border-gray-200 text-xs p-2 rounded" placeholder="Transcript" rows={2} />
+                                        <textarea {...field} className="w-full border border-gray-200 text-xs p-2 rounded" placeholder="Transcript" rows={2} />
                                     )}
                                 </Field>
 
                                 <Field name="aiSummary">
                                     {({ field }: any) => (
-                                        <textarea {...field} className="w-full border dark:border-gray-700 border-gray-200 text-xs p-2 rounded" placeholder="AI Summary" rows={2} />
+                                        <textarea {...field} className="w-full border border-gray-200 text-xs p-2 rounded" placeholder="AI Summary" rows={2} />
                                     )}
                                 </Field>
                             </>
@@ -271,11 +250,11 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
                                         onClick={async () => {
                                             const toastId = toast.loading('Deleting meeting...');
                                             try {
-                                                await axiosInstance.delete('/api/meeting', {
-                                                    params: {
-                                                        id: initialValues._id,
-                                                    },
+                                                const res = await fetch(`/api/meeting?id=${initialValues._id}`, {
+                                                    method: 'DELETE',
                                                 });
+
+                                                if (!res.ok) throw new Error(await res.text());
 
                                                 toast.success('Meeting deleted', { id: toastId });
                                                 reload();
@@ -291,6 +270,7 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
                                 )}
                             </div>
                         )}
+
                     </Form>
                 );
             }}

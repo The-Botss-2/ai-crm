@@ -4,14 +4,11 @@ import React, { useMemo, useState } from 'react';
 import useSWR from 'swr';
 import { format, isAfter, isBefore, parseISO } from 'date-fns';
 import MeetingPanel from './MeetingPanel';
-import { fetcher } from '@/lib/fetcher';
-import { useParams } from 'next/navigation';
 
+const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 const MeetingsListView = () => {
-  const { id: teamId } = useParams<{ id: string }>();
-
-  const { data: meetings, mutate } = useSWR(`/api/meetings?team=${teamId}`, fetcher);
+  const { data: meetings, mutate } = useSWR('/api/meetings', fetcher);
   const [activeTab, setActiveTab] = useState<'upcoming' | 'past'>('upcoming');
   const [selectedMeeting, setSelectedMeeting] = useState<any | null>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -32,7 +29,7 @@ const MeetingsListView = () => {
 
   return (
     <>
-      <div className="flex space-x-4 mb-4 border-b dark:border-gray-700 border-gray-200 pb-2">
+      <div className="flex space-x-4 mb-4 border-b border-gray-200 pb-2">
         <button
           onClick={() => setActiveTab('upcoming')}
           className={`px-4 py-2 rounded-t-md font-medium text-xs ${activeTab === 'upcoming' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'
@@ -53,7 +50,7 @@ const MeetingsListView = () => {
         {filteredMeetings.map((m: any) => (
           <div
             key={m._id}
-            className="border p-4 rounded-md mb-3 bg-white/50 dark:bg-slate-700 dark:border-gray-700 border-gray-200 cursor-pointer"
+            className="border p-4 rounded-md mb-3 bg-white/50 border-gray-200 cursor-pointer"
             onClick={() => {
               setSelectedMeeting(m);
               setIsOpen(true);
@@ -80,7 +77,7 @@ const MeetingsListView = () => {
               </div>
             </div>
 
-            <div className="text-sm text-gray-500 dark:text-gray-400">
+            <div className="text-sm text-gray-500">
               {format(parseISO(m.startTime), 'PPpp')} → {format(parseISO(m.endTime), 'PPpp')}
             </div>
 

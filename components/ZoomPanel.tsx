@@ -74,9 +74,9 @@ export default function ZoomPanel({ isOpen, zoomUserId, onClose }: ZoomPanelProp
   return (
     <Transition show={isOpen} as={Fragment}>
       <Dialog onClose={onClose} className="relative z-50">
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-xs" />
-        <div className="fixed inset-y-0 right-0 w-full max-w-md bg-white dark:bg-slate-900 shadow-xl p-6 overflow-y-auto">
-          <Dialog.Title className="text-md font-semibold border-b dark:border-gray-700 border-gray-200 pb-4 mb-4 flex justify-between items-center">
+        <div className="fixed inset-0 bg-black/30" />
+        <div className="fixed inset-y-0 right-0 w-full max-w-md bg-white shadow-xl p-6 overflow-y-auto">
+          <Dialog.Title className="text-md font-semibold border-b border-gray-200 pb-4 mb-4 flex justify-between items-center">
             Setup Knowledge Base
             <button onClick={onClose}><IoClose size={16} /></button>
           </Dialog.Title>
@@ -89,7 +89,7 @@ export default function ZoomPanel({ isOpen, zoomUserId, onClose }: ZoomPanelProp
 
               <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
                 {data?.uploaded_files?.map((file: any) => (
-                  <div key={file.file_name} className="flex items-center justify-between relative bg-gray-50  dark:border-gray-700 border-gray-200 border rounded-2xl py-2">
+                  <div key={file.file_name} className="flex items-center justify-between relative bg-gray-50  border-gray-200 border rounded-2xl py-2">
                     <div className="flex flex-col items-center gap-2 mx-auto">
                       <AiTwotoneFileText size={20} className="text-gray-500" />
                       <span className="text-sm text-gray-700 text-center">{file.file_name}</span>

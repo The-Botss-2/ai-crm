@@ -2,6 +2,8 @@ import NextAuth from "next-auth";
 import { NextResponse } from "next/server";
 import { authConfig } from "./auth.config";
 import { API_AUTH_PREFIX, AUTH_ROUTES, PROTECTED_ROUTES } from "./routes";
+
+
 export const { auth } = NextAuth(authConfig);
 
 export default auth(req => {
@@ -26,7 +28,7 @@ export default auth(req => {
         return NextResponse.next();
     }
 
-    if (!isAuth && isAccessingProtectedRoute) {
+    if (!isAuth && isAccessingProtectedRoute && pathname !== "/signup") {
         return NextResponse.redirect(new URL("/signin", req.nextUrl.origin));
     }
 });

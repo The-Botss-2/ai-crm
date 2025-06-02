@@ -7,8 +7,6 @@ import { parseISO } from 'date-fns';
 import moment from 'moment';
 import MeetingPanel from './MeetingPanel';
 import useSWR from 'swr';
-import { fetcher } from '@/lib/fetcher';
-import { useParams } from 'next/navigation';
 
 // Use moment localizer for broader compatibility
 const localizer = momentLocalizer(moment);
@@ -23,11 +21,10 @@ interface MeetingEvent {
   createdBy: string;
 }
 
+const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 const MeetingsCalendarView = () => {
-  const { id: teamId } = useParams<{ id: string }>();
-
-  const { data: meetings, mutate } = useSWR(`/api/meetings?team=${teamId}`, fetcher);
+  const { data: meetings, mutate } = useSWR('/api/meetings', fetcher);
   const [selectedMeeting, setSelectedMeeting] = useState<MeetingEvent | null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -44,7 +41,7 @@ const MeetingsCalendarView = () => {
   })) ?? [];
 
   return (
-    <div className="h-[80vh] overflow-hidden  rounded shadow bg-white dark:bg-slate-900 p-2">
+    <div className="h-[80vh] overflow-hidden  rounded shadow bg-white p-2">
       <Calendar
         localizer={localizer}
         events={mappedEvents}

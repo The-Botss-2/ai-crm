@@ -2,28 +2,22 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/db';
 import Meeting from '@/model/Meeting';
 import { checkTeamWritePermission } from '@/lib/checkTeamWritePermission';
-import { auth } from '@/auth';
+import { auth } from '@/auth'; // Adjust path if needed
 
+// GET /api/meetings?team=teamId (optional filtering)
 export async function GET(req: NextRequest) {
   try {
-    const session = await auth();
-    if (!session || !session.user || !session.user.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    await connectToDatabase();
 
     const { searchParams } = new URL(req.url);
     const teamId = searchParams.get('team');
 
-    if (!teamId) {
-      return NextResponse.json({ error: 'teamId is required' }, { status: 400 });
+    let meetings;
+    if (teamId) {
+      meetings = await Meeting.find({ teamId }).sort({ createdAt: -1 });
+    } else {
+      meetings = await Meeting.find().sort({ createdAt: -1 });
     }
-
-    await connectToDatabase();
-
-    const meetings = await Meeting.find({
-      teamId,
-      createdBy: session.user.id,
-    }).sort({ createdAt: -1 });
 
     return NextResponse.json(meetings);
   } catch (err: any) {
@@ -31,7 +25,7 @@ export async function GET(req: NextRequest) {
   }
 }
 
-
+// POST /api/meetings
 export async function POST(req: NextRequest) {
   try {
     const session = await auth();

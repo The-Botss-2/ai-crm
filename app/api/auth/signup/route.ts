@@ -5,7 +5,7 @@ import Credentials from '@/model/Credentials';
 import Profile from '@/model/Profile';
 import bcrypt from 'bcryptjs';
 
-
+export const runtime = 'nodejs'; 
 export async function POST(req: Request) {
   try {
     const { email, password, name } = await req.json();

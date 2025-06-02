@@ -2,7 +2,6 @@ import React from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { Lead } from '@/types/lead';
 import toast from 'react-hot-toast';
-import { axiosInstance } from '@/lib/fetcher';
 
 interface ConfirmDeleteModalProps {
   lead: Lead | null;
@@ -17,17 +16,14 @@ const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({ lead, onClose, 
     if (!lead) return;
     const toastId = toast.loading('Deleting...');
     try {
-      await axiosInstance.delete('/api/lead', {
-        params: {
-          id: lead._id,
-          'team-id': teamId,
-          'user-id': userId,
-        },
+      const res = await fetch(`/api/lead?id=${lead._id}&team-id=${teamId}&user-id=${userId}`, {
+        method: 'DELETE',
       });
+      if (!res.ok) throw new Error();
       toast.success('Lead deleted', { id: toastId });
       mutate();
       onClose();
-    } catch (error) {
+    } catch {
       toast.error('Failed to delete', { id: toastId });
     }
   };

@@ -13,12 +13,12 @@ const LeadsToolbar: React.FC<LeadsToolbarProps> = ({ search, sortOption, onSearc
       <input
         type="text"
         placeholder="Search by name or email"
-        className="border px-3 py-2 rounded w-full max-w-md text-xs border-gray-300 dark:border-gray-700"
+        className="border px-3 py-2 rounded w-full max-w-md text-xs border-gray-300"
         value={search}
         onChange={(e) => onSearchChange(e.target.value)}
       />
       <select
-        className="border px-2 py-2 rounded text-xs border-gray-300 dark:border-gray-700 dark:bg-slate-700"
+        className="border px-2 py-2 rounded text-xs border-gray-300"
         value={sortOption}
         onChange={(e) => onSortChange(e.target.value)}
       >

@@ -66,7 +66,7 @@ export default function LeadsPage({ user_id }: any) {
 
     return (
         <div className="p-6">
-            <div className="flex justify-between items-center mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
+            <div className="flex justify-between items-center mb-4 pb-4 border-b border-gray-200">
                 <h1 className="text-2xl font-bold">Leads</h1>
                 <button
                     onClick={() => {

@@ -1,15 +1,14 @@
 import { signIn } from "@/auth";
-import Link from "next/link";
 import SignupForm from "@/components/SignupForm";
-import { FcGoogle } from "react-icons/fc";
+import Link from "next/link";
 
-const LoginPage = () => {
+const SignupPage = () => {
   return (
-    <section className="flex items-center min-h-screen">
+    <section className="bg-gray-1 py-5 dark:bg-dark ">
       <div className="container mx-auto ">
         <div className="-mx-4 flex flex-wrap">
           <div className="w-full px-4">
-            <div className="relative mx-auto max-w-[525px] overflow-hidden rounded-lg dark:bg-black/40 bg-white px-10 py-16 text-center dark:bg-dark-2 sm:px-12 md:px-[60px]">
+            <div className="relative mx-auto max-w-[525px] overflow-hidden rounded-lg bg-white px-10 py-16 text-center dark:bg-dark-2 sm:px-12 md:px-[60px]">
               <div className="mb-10 text-center md:mb-16">
                 <Link
                   href="/"
@@ -19,7 +18,17 @@ const LoginPage = () => {
                 </Link>
               </div>
               <SignupForm />
-              
+              <p className="mb-6 text-base text-secondary-color dark:text-dark-7">
+                OR
+              </p>
+              <form
+                action={async () => {
+                  "use server";
+                  await signIn("google");
+                }}
+              >
+                <button type="submit" className="w-full cursor-pointer rounded-md border border-primary bg-primary px-5 py-3 text-base font-medium text-white transition hover:bg-opacity-90">Login with Google</button>
+              </form>
 
               <div>
                 <span className="absolute right-1 top-1">
@@ -261,4 +270,4 @@ const InputBox = ({ type, placeholder, name }: any) => {
   );
 };
 
-export default LoginPage;
+export default SignupPage;

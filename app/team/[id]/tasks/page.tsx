@@ -50,13 +50,13 @@ export default function TasksPage() {
             </div>
 
             {/* Tabs + Search */}
-            <div className="flex justify-between items-center mb-4  p-4 border-b dark:border-gray-700 border-gray-200">
+            <div className="flex justify-between items-center mb-4  p-4 border-b border-gray-200">
                 <input
                     type="text"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Search tasks..."
-                    className="text-xs px-3 py-1 dark:border-gray-700 border-gray-200 border rounded-md bg-white dark:bg-slate-900"
+                    className="text-xs px-3 py-1 border-gray-200 border rounded-md bg-white"
                 />
 
                 <div className="flex gap-2 text-xs">
@@ -81,7 +81,7 @@ export default function TasksPage() {
             {/* Table */}
             <div className="overflow-auto">
                 <table className="min-w-full text-sm border-separate border-spacing-y-2">
-                    <thead className="bg-gray-50 dark:bg-slate-800 text-left">
+                    <thead className="bg-gray-50 text-left">
                         <tr>
                             <th className="px-4 py-2">Title</th>
                             <th className="px-4 py-2">Status</th>
@@ -103,14 +103,14 @@ export default function TasksPage() {
                                         : undefined
                                 }
                                 className={classNames(
-                                    'bg-white dark:bg-slate-900 shadow-sm transition duration-150 rounded-md',
+                                    'bg-white shadow-sm transition duration-150 rounded-md',
                                     {
                                         'hover:shadow-md cursor-pointer': role !== 'readonly',
                                         'cursor-not-allowed': role === 'readonly',
                                     }
                                 )}
                             >
-                                <td className="px-4 py-2 rounded-l-md bg-blue-50 dark:bg-slate-700 font-medium text-blue-700 dark:text-white">
+                                <td className="px-4 py-2 rounded-l-md bg-blue-50 font-medium text-blue-700">
                                     {task.title}
                                 </td>
 

@@ -1,11 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Formik, Form, Field } from 'formik';
 import { toast } from 'react-hot-toast';
 import useSWR from 'swr';
 import { fetcher } from '@/lib/fetcher';
-import { axiosInstance } from '@/lib/fetcher';
 
 interface TaskFormProps {
     initialValues: any;
@@ -27,14 +26,16 @@ const TaskForm: React.FC<TaskFormProps> = ({
 
 
     const handleDelete = async () => {
+        const confirmDelete = confirm('Are you sure you want to delete this task?');
+        if (!confirmDelete) return;
+
         setLoading(true);
         const toastId = toast.loading('Deleting task...');
         try {
-            await axiosInstance.delete('/api/task', {
-                params: {
-                    id: initialValues._id,
-                },
+            const res = await fetch(`/api/task?id=${initialValues._id}`, {
+                method: 'DELETE',
             });
+            if (!res.ok) throw new Error(await res.text());
 
             toast.success('Task deleted', { id: toastId });
             reload();
@@ -47,7 +48,6 @@ const TaskForm: React.FC<TaskFormProps> = ({
     };
 
 
-
     return (
         <Formik
             initialValues={initialValues}
@@ -58,12 +58,11 @@ const TaskForm: React.FC<TaskFormProps> = ({
             }}
             onSubmit={async (values, { setSubmitting }) => {
                 const toastId = toast.loading(isEdit ? 'Updating task...' : 'Creating task...');
-
                 try {
                     const payload = { ...values };
 
                     if (!isEdit) {
-                        delete payload._id; // Never send _id on create
+                        delete payload._id; // never send _id on create
                     }
 
                     // Remove empty references
@@ -71,18 +70,17 @@ const TaskForm: React.FC<TaskFormProps> = ({
                     if (!payload.leadId) delete payload.leadId;
                     if (!payload.meetingId) delete payload.meetingId;
 
-                    const url = isEdit ? '/api/task' : '/api/tasks';
-                    const method = isEdit ? 'patch' : 'post';
 
-                    await axiosInstance.request({
-                        url,
-                        method,
-                        params: isEdit ? { id: values._id } : undefined,
-                        data: payload,
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    });
+                    const res = await fetch(
+                        isEdit ? `/api/task?id=${values._id}` : '/api/tasks',
+                        {
+                            method: isEdit ? 'PATCH' : 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload),
+                        }
+                    );
+
+                    if (!res.ok) throw new Error(await res.text());
 
                     toast.success(isEdit ? 'Task updated' : 'Task created', { id: toastId });
                     reload();
@@ -103,7 +101,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
                                 {...field}
                                 placeholder="Title"
                                 required
-                                className="w-full border dark:border-gray-700 border-gray-200 text-xs p-2 rounded"
+                                className="w-full border border-gray-200 text-xs p-2 rounded"
                             />
                         )}
                     </Field>
@@ -113,21 +111,21 @@ const TaskForm: React.FC<TaskFormProps> = ({
                             <textarea
                                 {...field}
                                 placeholder="Description"
-                                className="w-full border dark:border-gray-700 border-gray-200 text-xs p-2 rounded"
+                                className="w-full border border-gray-200 text-xs p-2 rounded"
                                 rows={2}
                             />
                         )}
                     </Field>
 
                     <div className="flex gap-2">
-                        <Field name="status" as="select" className="w-full border text-xs dark:border-gray-700 border-gray-200 p-2 rounded dark:bg-slate-900">
+                        <Field name="status" as="select" className="w-full border text-xs border-gray-200 p-2 rounded">
                             <option value="pending">Pending</option>
                             <option value="in_progress">In Progress</option>
                             <option value="completed">Completed</option>
                             <option value="blocked">Blocked</option>
                         </Field>
 
-                        <Field name="priority" as="select" className="dark:bg-slate-900 w-full border text-xs dark:border-gray-700 border-gray-200 p-2 rounded">
+                        <Field name="priority" as="select" className="w-full border text-xs border-gray-200 p-2 rounded">
                             <option value="low">Low</option>
                             <option value="medium">Medium</option>
                             <option value="high">High</option>
@@ -140,13 +138,13 @@ const TaskForm: React.FC<TaskFormProps> = ({
                             <input
                                 {...field}
                                 type="datetime-local"
-                                className="w-full border text-xs dark:border-gray-700 border-gray-200 p-2 rounded"
+                                className="w-full border text-xs border-gray-200 p-2 rounded"
                             />
                         )}
                     </Field>
 
 
-                    <Field name="assignedTo" as="select" className="dark:bg-slate-900 w-full border text-xs dark:border-gray-700 border-gray-200 p-2 rounded">
+                    <Field name="assignedTo" as="select" className="w-full border text-xs border-gray-200 p-2 rounded">
 
                         <option value="">Assign to</option>
                         {teamData?.team?.members?.map((m: any) => (
@@ -156,7 +154,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
                         ))}
                     </Field>
 
-                    <Field name="leadId" as="select" className="w-full border text-xs dark:bg-slate-900 dark:border-gray-700 border-gray-200 p-2 rounded">
+                    <Field name="leadId" as="select" className="w-full border text-xs border-gray-200 p-2 rounded">
                         <option value="">Link to Lead</option>
                         {leads.map((lead: any) => (
                             <option key={lead._id} value={lead._id}>
@@ -165,7 +163,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
                         ))}
                     </Field>
 
-                    <Field name="meetingId" as="select" className="w-full border text-xs dark:bg-slate-900 dark:border-gray-700 border-gray-200 p-2 rounded">
+                    <Field name="meetingId" as="select" className="w-full border text-xs border-gray-200 p-2 rounded">
                         <option value="">Link to Meeting</option>
                         {meetings.map((m: any) => (
                             <option key={m._id} value={m._id}>

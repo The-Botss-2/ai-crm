@@ -29,8 +29,8 @@ const LeadPanel: React.FC<LeadPanelProps> = ({
   return (
     <Transition show={isOpen} as={React.Fragment}>
       <Dialog onClose={onClose} className="relative z-50">
-        <div className="fixed inset-0 bg-black/30 dark:bg-white/5 backdrop-blur-sm" />
-        <div className="fixed inset-y-0 right-0 w-full max-w-md bg-white dark:bg-slate-950 shadow-xl p-6 overflow-y-auto">
+        <div className="fixed inset-0 bg-black/30" />
+        <div className="fixed inset-y-0 right-0 w-full max-w-md bg-white shadow-xl p-6 overflow-y-auto">
           <Dialog.Title className="text-md font-semibold border-b border-gray-200 pb-4 mb-4 flex justify-between items-center">
             {isPreview ? 'Preview Lead' : isEdit ? 'Edit Lead' : 'Add New Lead'}
             <button onClick={onClose}><IoClose size={16} /></button>

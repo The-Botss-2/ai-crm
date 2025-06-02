@@ -30,19 +30,6 @@
     --background-start: rgb(17, 24, 39);
     --background-end: rgb(31, 41, 55);
   }
-
-  .rbc-today {
-    background-color: #0f172b !important;
-  }
-
-  .rbc-off-range-bg {
-    background-color: #363d4e !important;
-  }
-
-  input {
-    color-scheme: dark;
-  }
-
 }
 
 body {
@@ -105,7 +92,7 @@ body {
   color: oklch(42.4% 0.199 265.638) !important;
 }
 
-.rbc-toolbar button.rbc-active {
+.rbc-toolbar button.rbc-active{
   background-color: oklch(93.2% 0.032 255.585) !important;
   color: oklch(42.4% 0.199 265.638) !important;
 }

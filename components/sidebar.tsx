@@ -39,11 +39,11 @@ export default async function Sidebar({ team_id }: { team_id: string }) {
       href: `/team/${team_id}/integrations`,
       icon: <PiLinkSimpleDuotone size={22} />
     },
-    // {
-    //   name: 'Settings',
-    //   href: `/team/${team_id}/settings`,
-    //   icon: <AiTwotoneSetting size={22} />
-    // },
+    {
+      name: 'Settings',
+      href: `/team/${team_id}/settings`,
+      icon: <AiTwotoneSetting size={22} />
+    },
   ];
 
 

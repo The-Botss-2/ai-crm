@@ -31,7 +31,7 @@ const MeetingPanel: React.FC<MeetingPanelProps> = ({
     <Transition show={isOpen} as={React.Fragment}>
       <Dialog onClose={onClose} className="relative z-50">
         <div className="fixed inset-0 bg-black/30 backdrop-blur-xs" />
-        <div className="fixed inset-y-0 right-0 w-full max-w-md bg-white dark:bg-slate-950 shadow-xl p-6 overflow-y-auto">
+        <div className="fixed inset-y-0 right-0 w-full max-w-md bg-white shadow-xl p-6 overflow-y-auto">
           <Dialog.Title className="text-md font-semibold border-b border-gray-200 pb-4 mb-4 flex justify-between items-center">
             {isPreview ? 'Preview Meeting' : isEdit ? 'Edit Meeting' : 'Add New Meeting'}
             <button onClick={onClose}><IoClose size={16} /></button>
