@@ -3,13 +3,12 @@
 import React, { useEffect, useState } from 'react';
 import FormRenderer from '@/components/FormRenderer';
 import Loading from '@/components/Loading';
+import { useParams } from 'next/navigation';
 
-type Props = {
-  params: { id: string };
-};
 
-export default function Page({ params }: Props) {
-  const { id } = params;
+
+export default function Page() {
+  const { id } = useParams()
 
   const [form, setForm] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
@@ -25,7 +24,7 @@ export default function Page({ params }: Props) {
     async function fetchForm() {
       try {
         const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
-        const res = await fetch(`${baseUrl}/api/form?id=${encodeURIComponent(id)}`);
+        const res = await fetch(`${baseUrl}/api/form?id=${id}`);
 
         if (!res.ok) {
           throw new Error('Failed to fetch form');
