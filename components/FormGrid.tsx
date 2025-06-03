@@ -81,14 +81,15 @@ export default function FormGrid() {
   return (
     <>
       <Tab.Group selectedIndex={categories.indexOf(selectedTab)} onChange={handleTabChange}>
-        <Tab.List className="flex space-x-2 mb-4">
+        <Tab.List className="flex space-x-2 mb-4 border-b border-gray-300">
           {categories.map((cat) => (
             <Tab
               key={cat}
               className={({ selected }) =>
-                `px-3 py-1.5 text-xs rounded ${selected
-                  ? 'bg-blue-100 text-blue-800 font-semibold'
-                  : 'bg-white/10 text-white hover:bg-white/20'
+                `px-3 py-1.5 text-xs rounded-t-md ${
+                  selected
+                    ? 'bg-blue-100 text-blue-800 font-semibold border border-b-0 border-blue-300'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`
               }
             >
@@ -98,7 +99,7 @@ export default function FormGrid() {
         </Tab.List>
       </Tab.Group>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6 text-white">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6 text-gray-900">
         {/* Create New Form */}
         <button
           className="flex flex-col justify-center gap-4"
@@ -107,18 +108,18 @@ export default function FormGrid() {
             setIsOpen(true);
           }}
         >
-          <div className="aspect-square bg-white/10 rounded-2xl flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-white/20 transition-all">
-            <FiPlus size={28} />
+          <div className="aspect-square bg-gray-100 rounded-2xl flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-gray-200 transition-all shadow-sm">
+            <FiPlus size={28} className="text-gray-700" />
           </div>
-          <h1 className="text-left hover:font-semibold text-sm ">Create New Form</h1>
+          <h1 className="text-left hover:font-semibold text-sm text-gray-900">Create New Form</h1>
         </button>
 
         {/* Loading skeleton */}
         {isLoading &&
           Array.from({ length: 5 }).map((_, index) => (
             <div key={index} className="flex flex-col justify-center gap-2 animate-pulse">
-              <div className="aspect-square bg-white/5 rounded-2xl" />
-              <div className="h-4 w-2/3 bg-white/10 rounded self-center" />
+              <div className="aspect-square bg-gray-200 rounded-2xl" />
+              <div className="h-4 w-2/3 bg-gray-300 rounded self-center" />
             </div>
           ))}
 
@@ -135,18 +136,18 @@ export default function FormGrid() {
 
             return (
               <div key={form._id} className="flex flex-col justify-center gap-2 relative">
-                <div className="aspect-square bg-white/10 rounded-2xl flex flex-col items-center justify-center gap-2 transition-all">
-                  <CgFileDocument size={28} />
+                <div className="aspect-square bg-gray-100 rounded-2xl flex flex-col items-center justify-center gap-2 shadow-sm transition-all hover:shadow-md cursor-pointer">
+                  <CgFileDocument size={28} className="text-gray-700" />
                 </div>
 
                 <div className="flex items-center justify-between px-2 gap-4">
                   <h1 className="text-sm truncate">{form.title}</h1>
 
                   <Menu as="div" className="relative inline-block text-left">
-                    <Menu.Button className="text-white text-xs cursor-pointer">
+                    <Menu.Button className="text-gray-700 text-xs cursor-pointer">
                       <BsThreeDotsVertical size={16} />
                     </Menu.Button>
-                    <Menu.Items className="absolute right-0 z-10 mt-2 w-36 origin-top-right divide-y divide-gray-100 rounded-md bg-white dark:bg-slate-800 shadow-lg ring-1 ring-black/5 focus:outline-none">
+                    <Menu.Items className="absolute right-0 z-10 mt-2 w-36 origin-top-right divide-y divide-gray-200 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none">
                       <div className="px-1 py-1">
                         <Menu.Item>
                           {({ active }) => (
@@ -155,7 +156,9 @@ export default function FormGrid() {
                                 setSelectedForm(normalizedForm);
                                 setIsOpen(true);
                               }}
-                              className={`${active ? 'bg-blue-100 text-blue-800' : 'text-gray-900 dark:text-white'} group flex w-full items-center rounded px-2 py-2 text-xs`}
+                              className={`${
+                                active ? 'bg-blue-100 text-blue-800' : 'text-gray-900'
+                              } group flex w-full items-center rounded px-2 py-2 text-xs`}
                             >
                               Edit
                             </button>
@@ -166,12 +169,15 @@ export default function FormGrid() {
                           {({ active }) => (
                             <button
                               onClick={() => handleDelete(form._id)}
-                              className={`${active ? 'bg-red-100 text-red-700' : 'text-red-600'} group flex w-full items-center rounded px-2 py-2 text-xs`}
+                              className={`${
+                                active ? 'bg-red-100 text-red-700' : 'text-red-600'
+                              } group flex w-full items-center rounded px-2 py-2 text-xs`}
                             >
                               Delete
                             </button>
                           )}
                         </Menu.Item>
+
                         <Menu.Item>
                           {({ active }) => (
                             <button
@@ -180,7 +186,9 @@ export default function FormGrid() {
                                 navigator.clipboard.writeText(url);
                                 toast.success('Link copied to clipboard');
                               }}
-                              className={`${active ? 'bg-gray-100 text-gray-900' : 'text-gray-800 dark:text-white'} group flex w-full items-center rounded px-2 py-2 text-xs`}
+                              className={`${
+                                active ? 'bg-gray-100 text-gray-900' : 'text-gray-800'
+                              } group flex w-full items-center rounded px-2 py-2 text-xs`}
                             >
                               Copy Link
                             </button>
@@ -191,7 +199,9 @@ export default function FormGrid() {
                           {({ active }) => (
                             <button
                               onClick={() => setShowResponses(form._id)}
-                              className={`${active ? 'bg-gray-100 text-gray-900' : 'text-gray-800 dark:text-white'} group flex w-full items-center rounded px-2 py-2 text-xs`}
+                              className={`${
+                                active ? 'bg-gray-100 text-gray-900' : 'text-gray-800'
+                              } group flex w-full items-center rounded px-2 py-2 text-xs`}
                             >
                               Responses
                             </button>

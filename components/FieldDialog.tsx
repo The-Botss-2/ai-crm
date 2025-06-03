@@ -1,8 +1,8 @@
 'use client';
 
 import { Dialog, Transition } from '@headlessui/react';
-import { Fragment, useEffect } from 'react';
-import { Formik, Form, Field as FormikField, ErrorMessage, useFormikContext } from 'formik';
+import { Fragment } from 'react';
+import { Formik, Form, Field as FormikField, ErrorMessage } from 'formik';
 
 export type FieldData = {
   id?: number;
@@ -40,10 +40,10 @@ export default function FieldDialog({ isOpen, onClose, onSave, initialData }: Pr
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-20" onClose={onClose}>
-        <div className="fixed inset-0 bg-black/25" />
+        <div className="fixed inset-0 bg-black/20" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <Dialog.Panel className="bg-white dark:bg-slate-950 rounded p-6 shadow max-w-md w-full">
-            <Dialog.Title className="text-lg font-semibold mb-4">
+          <Dialog.Panel className="bg-white rounded p-6 shadow max-w-md w-full">
+            <Dialog.Title className="text-lg font-semibold mb-4 text-gray-900">
               {initialData ? 'Edit Field' : 'Add Field'}
             </Dialog.Title>
 
@@ -57,28 +57,28 @@ export default function FieldDialog({ isOpen, onClose, onSave, initialData }: Pr
               enableReinitialize
             >
               {({ values, setFieldValue, isSubmitting }) => (
-                <Form className="space-y-4">
+                <Form className="space-y-4 text-gray-900">
                   {/* Label */}
                   <div>
-                    <label className="block mb-1 text-xs">Label *</label>
+                    <label className="block mb-1 text-xs font-medium">Label *</label>
                     <FormikField
                       name="label"
-                      className="w-full border px-3 py-2 rounded text-xs dark:border-gray-700 border-gray-200"
+                      className="w-full border border-gray-300 px-3 py-2 rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-400"
                     />
                     <ErrorMessage
                       name="label"
                       component="div"
-                      className="text-red-500 text-xs"
+                      className="text-red-600 text-xs mt-1"
                     />
                   </div>
 
                   {/* Type */}
                   <div>
-                    <label className="block mb-1 text-xs">Type</label>
+                    <label className="block mb-1 text-xs font-medium">Type</label>
                     <FormikField
                       as="select"
                       name="type"
-                      className="w-full border px-3 py-2 rounded text-xs dark:bg-slate-950 dark:border-gray-700 border-gray-200"
+                      className="w-full border border-gray-300 px-3 py-2 rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-400"
                     >
                       <option value="text">Text</option>
                       <option value="textarea">Textarea</option>
@@ -94,27 +94,29 @@ export default function FieldDialog({ isOpen, onClose, onSave, initialData }: Pr
 
                   {/* Placeholder */}
                   <div>
-                    <label className="block mb-1 text-xs">Placeholder</label>
+                    <label className="block mb-1 text-xs font-medium">Placeholder</label>
                     <FormikField
                       name="placeholder"
-                      className="w-full border px-3 py-2 rounded text-xs dark:border-gray-700 border-gray-200"
+                      className="w-full border border-gray-300 px-3 py-2 rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-400"
                     />
                   </div>
 
                   {/* isRequired */}
                   <div className="flex items-center gap-2">
-                    <FormikField type="checkbox" name="isRequired" />
-                    <label className="text-sm">Required</label>
+                    <FormikField type="checkbox" name="isRequired" id="isRequired" className="cursor-pointer" />
+                    <label htmlFor="isRequired" className="text-sm select-none">
+                      Required
+                    </label>
                   </div>
 
                   {/* Options (only if needed) */}
                   {FieldTypesWithOptions.includes(values.type) && (
                     <div>
-                      <label className="block mb-1 text-xs">Options</label>
+                      <label className="block mb-1 text-xs font-medium">Options</label>
                       {(values.options || []).map((option, idx) => (
                         <div key={idx} className="flex items-center gap-2 mb-2">
                           <input
-                            className="w-full border px-3 py-1 text-xs rounded dark:border-gray-700 border-gray-200"
+                            className="w-full border border-gray-300 px-3 py-1 text-xs rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
                             value={option}
                             onChange={(e) => {
                               const newOptions = [...(values.options || [])];
@@ -124,11 +126,12 @@ export default function FieldDialog({ isOpen, onClose, onSave, initialData }: Pr
                           />
                           <button
                             type="button"
-                            className="text-red-500 text-sm"
+                            className="text-red-600 text-sm hover:text-red-800"
                             onClick={() => {
                               const newOptions = [...(values.options || [])].filter((_, i) => i !== idx);
                               setFieldValue('options', newOptions);
                             }}
+                            aria-label="Remove option"
                           >
                             ✕
                           </button>
@@ -136,7 +139,7 @@ export default function FieldDialog({ isOpen, onClose, onSave, initialData }: Pr
                       ))}
                       <button
                         type="button"
-                        className="text-sm text-blue-600"
+                        className="text-sm text-blue-600 hover:text-blue-800"
                         onClick={() => setFieldValue('options', [...(values.options || []), ''])}
                       >
                         + Add Option
@@ -149,14 +152,14 @@ export default function FieldDialog({ isOpen, onClose, onSave, initialData }: Pr
                     <button
                       type="button"
                       onClick={onClose}
-                      className="px-4 py-2 text-xs border rounded"
+                      className="px-4 py-2 text-xs border border-gray-300 rounded hover:bg-gray-100 transition"
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="bg-blue-600 text-white text-xs px-4 py-2 rounded"
+                      className="bg-blue-600 text-white text-xs px-4 py-2 rounded hover:bg-blue-700 transition"
                     >
                       {initialData ? 'Update' : 'Add'}
                     </button>

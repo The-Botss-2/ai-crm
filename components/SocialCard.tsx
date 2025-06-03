@@ -75,7 +75,7 @@ export function SocialCard({
 
   return (
     <>
-      <div className="bg-white/50 dark:bg-slate-900 border dark:border-gray-700 border-gray-200 rounded-xl py-8 flex gap-3 flex-col items-center justify-center shadow-md hover:shadow-lg transition">
+      <div className="bg-white/50 rounded-xl py-8 flex gap-3 flex-col items-center justify-center shadow-md hover:shadow-lg transition">
         <div className="flex flex-col items-center">
           <div
             className={`size-10 ${bgColorMap[name] || 'bg-gray-400'} rounded-full p-2 flex mb-2 items-center justify-center`}
@@ -158,15 +158,15 @@ export function SocialCard({
 
 export function SocialCardSkeleton({ icon }: { icon: React.ReactNode }) {
   return (
-    <div className="bg-white/40 border dark:border-gray-700 border-gray-200 rounded-xl py-6 px-4 flex gap-3 flex-col items-center justify-center shadow-md animate-pulse">
-      <div className="flex flex-col items-center gap-2">
-        <div className="size-10 bg-gray-300 rounded-full flex items-center justify-center">
+    <div className="bg-white border border-gray-200 rounded-xl py-6 px-4 flex flex-col items-center justify-center gap-4 shadow-sm animate-pulse">
+      <div className="flex flex-col items-center gap-3">
+        <div className="h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center">
           {icon}
         </div>
-        <div className="h-4 w-20 bg-gray-300 rounded" />
+        <div className="h-4 w-20 bg-gray-200 rounded" />
       </div>
-      <div className="h-3 w-32 bg-gray-300 rounded" />
-      <div className="h-6 w-20 bg-gray-300 rounded" />
+      <div className="h-3 w-32 bg-gray-200 rounded" />
+      <div className="h-6 w-20 bg-gray-200 rounded" />
     </div>
   );
 }

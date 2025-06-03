@@ -1,27 +1,63 @@
-// app/forms/[id]/page.tsx
-import { axiosInstance } from '@/lib/fetcher';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import FormRenderer from '@/components/FormRenderer';
+import Loading from '@/components/Loading';
 
-export default async function Page({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
+type Props = {
+  params: { id: string };
+};
 
-  try {
-    const res = await axiosInstance.get(`/api/form?id=${id}`);
-    const form = res.data;
+export default function Page({ params }: Props) {
+  const { id } = params;
 
+  const [form, setForm] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!id) {
+      setError('Form ID is required.');
+      setLoading(false);
+      return;
+    }
+
+    async function fetchForm() {
+      try {
+        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+        const res = await fetch(`${baseUrl}/api/form?id=${encodeURIComponent(id)}`);
+
+        if (!res.ok) {
+          throw new Error('Failed to fetch form');
+        }
+
+        const data = await res.json();
+        setForm(data);
+      } catch (err) {
+        setError('Form not found or failed to load.');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchForm();
+  }, [id]);
+
+  if (loading) {
     return (
-      <section className="flex justify-center py-10 px-4 h-screen bg-gray-50 dark:bg-slate-950">
-        <FormRenderer form={form} />
-      </section>
+     <Loading />
     );
   }
 
-
-  catch (err) {
+  if (error || !form) {
     return (
       <section className="flex items-center justify-center min-h-screen">
-        <p className="text-red-500 text-sm">Form not found or failed to load.</p>
+        <p className="text-red-500 text-sm">{error || 'Form not found or failed to load.'}</p>
       </section>
     );
   }
+
+  return (
+      <FormRenderer form={form} />
+  );
 }

@@ -47,19 +47,17 @@ export default function FormPanel({ isOpen, onClose, mutate, form }: Props) {
   const params = useParams<{ id: string }>();
   const teamId = params.id;
 
-  // Initialize form state when editing
   useEffect(() => {
     if (form) {
       const normalizedFields = (form.fields || []).map((field, index) => ({
         ...field,
-        id: index, // 💡 inject id as index
+        id: index, // inject id as index
       }));
       setFields(normalizedFields);
     } else {
       setFields([]);
     }
   }, [form]);
-
 
   const initialValues: FormValues = {
     title: form?.title || '',
@@ -96,7 +94,6 @@ export default function FormPanel({ isOpen, onClose, mutate, form }: Props) {
   const handleDelete = async () => {
     if (!form?._id) return;
 
-
     const toastId = toast.loading('Deleting form...');
 
     try {
@@ -107,14 +104,13 @@ export default function FormPanel({ isOpen, onClose, mutate, form }: Props) {
       if (!res.ok) throw new Error('Failed to delete form');
 
       toast.success('Form deleted successfully', { id: toastId });
-      mutate();       // Revalidate form list
-      onClose();      // Close panel
+      mutate(); // Revalidate form list
+      onClose(); // Close panel
     } catch (err) {
       console.error(err);
       toast.error('Error deleting form', { id: toastId });
     }
   };
-
 
   const handleSubmitForm = async (values: FormValues, { setSubmitting, resetForm }: any) => {
     if (fields.length === 0) {
@@ -156,43 +152,50 @@ export default function FormPanel({ isOpen, onClose, mutate, form }: Props) {
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={onClose}>
-        <div className="fixed inset-0 bg-black/25 backdrop-blur-sm" />
-        <div className="fixed inset-y-0 right-0 w-full max-w-md bg-white dark:bg-slate-950 p-6 shadow-lg overflow-y-auto">
-          <Dialog.Title className="flex items-center justify-between border-b border-white/10 pb-4">
-            <span className="text-xl font-bold">{form ? 'Edit Form' : 'Create Form'}</span>
-            <button className="cursor-pointer rounded-lg bg-white/5" onClick={onClose}>
-              <IoIosClose size={28} />
+        {/* Background overlay */}
+        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm" />
+
+        {/* Panel */}
+        <div className="fixed inset-y-0 right-0 w-full max-w-md bg-white p-6 shadow-lg overflow-y-auto">
+          <Dialog.Title className="flex items-center justify-between border-b border-gray-300 pb-4">
+            <span className="text-xl font-bold text-gray-900">{form ? 'Edit Form' : 'Create Form'}</span>
+            <button
+              className="cursor-pointer rounded-lg hover:bg-gray-200 p-1"
+              onClick={onClose}
+              aria-label="Close panel"
+            >
+              <IoIosClose size={28} className="text-gray-700" />
             </button>
           </Dialog.Title>
 
           <Formik initialValues={initialValues} validate={validate} onSubmit={handleSubmitForm}>
             {({ isSubmitting }) => (
-              <Form className="mt-4 space-y-4">
+              <Form className="mt-4 space-y-4 text-gray-900">
                 <div>
-                  <label className="block mb-1 text-xs">Form Title *</label>
+                  <label className="block mb-1 text-xs font-medium">Form Title *</label>
                   <FormikField
                     name="title"
-                    className="w-full border px-3 py-2 rounded text-xs dark:border-gray-700 border-gray-200"
+                    className="w-full border border-gray-300 px-3 py-2 rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-400"
                   />
-                  <ErrorMessage name="title" component="div" className="text-red-500 text-xs" />
+                  <ErrorMessage name="title" component="div" className="text-red-600 text-xs mt-1" />
                 </div>
 
                 <div>
-                  <label className="block mb-1 text-xs">Description</label>
+                  <label className="block mb-1 text-xs font-medium">Description</label>
                   <FormikField
                     as="textarea"
                     name="description"
                     rows={2}
-                    className="w-full border px-3 py-2 rounded text-xs dark:border-gray-700 border-gray-200"
+                    className="w-full border border-gray-300 px-3 py-2 rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-400"
                   />
                 </div>
 
                 <div>
-                  <label className="block mb-1 text-xs">Category</label>
+                  <label className="block mb-1 text-xs font-medium">Category</label>
                   <FormikField
                     as="select"
                     name="category"
-                    className="w-full border px-3 py-2 rounded text-xs dark:border-gray-700 border-gray-200 dark:bg-slate-950"
+                    className="w-full border border-gray-300 px-3 py-2 rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-400"
                   >
                     <option value="custom">Custom</option>
                     <option value="lead">Lead</option>
@@ -203,8 +206,8 @@ export default function FormPanel({ isOpen, onClose, mutate, form }: Props) {
                 </div>
 
                 {/* Field Builder */}
-                <div className="border border-dotted p-4 border-white/10 flex flex-col gap-2 rounded-lg">
-                  <h2 className="font-semibold text-sm">Form Fields</h2>
+                <div className="border border-dotted border-gray-300 p-4 flex flex-col gap-2 rounded-lg">
+                  <h2 className="font-semibold text-sm text-gray-900">Form Fields</h2>
 
                   {fields.length === 0 ? (
                     <p className="text-xs text-gray-500">No fields added.</p>
@@ -213,18 +216,18 @@ export default function FormPanel({ isOpen, onClose, mutate, form }: Props) {
                       {fields.map((field, index) => (
                         <li
                           key={`field-${index}`}
-                          className="border border-white/10 dark:bg-slate-900 p-3 rounded flex justify-between items-center"
+                          className="border border-gray-300 p-3 rounded flex justify-between items-center hover:shadow-sm transition-shadow"
                         >
                           <div>
-                            <p className="font-medium text-sm">
-                              {field.label} {field.isRequired && <span>*</span>}
+                            <p className="font-medium text-sm text-gray-900">
+                              {field.label} {field.isRequired && <span className="text-red-600">*</span>}
                             </p>
                             <p className="text-xs text-gray-500">{field.type}</p>
                           </div>
                           <div className="flex gap-2">
                             <button
                               type="button"
-                              className="bg-blue-100 text-blue-800 text-xs p-2 rounded-sm"
+                              className="bg-blue-100 text-blue-800 text-xs p-2 rounded-sm hover:bg-blue-200 transition"
                               onClick={() => {
                                 setEditing({ ...field, id: index });
                                 setShowFieldDialog(true);
@@ -234,7 +237,7 @@ export default function FormPanel({ isOpen, onClose, mutate, form }: Props) {
                             </button>
                             <button
                               type="button"
-                              className="text-red-800 bg-red-100 text-xs p-2 rounded-sm"
+                              className="bg-red-100 text-red-700 text-xs p-2 rounded-sm hover:bg-red-200 transition"
                               onClick={() => handleDeleteField(index)}
                             >
                               <MdDeleteOutline />
@@ -242,49 +245,12 @@ export default function FormPanel({ isOpen, onClose, mutate, form }: Props) {
                           </div>
                         </li>
                       ))}
-
-
-                      {/* {fields.map((field, index) => (
-                        <li
-                          key={field.id ?? `field-${index}`}
-                          className="border border-white/10 dark:bg-slate-900 p-3 rounded flex justify-between items-center"
-                        >
-                          <div>
-                            <p className="font-medium text-sm">
-                              {field.label} {field.isRequired && <span>*</span>}
-                            </p>
-                            <p className="text-xs text-gray-500">{field.type}</p>
-                          </div>
-                          <div className="flex gap-2">
-                            <button
-                              type="button"
-                              className="bg-blue-100 text-blue-800 text-xs p-2 rounded-sm"
-                              onClick={() => {
-                                setEditing(field);
-                                setShowFieldDialog(true);
-                              }}
-                            >
-                              <FiEdit3 />
-                            </button>
-                            <button
-                              type="button"
-                              className="text-red-800 bg-red-100 text-xs p-2 rounded-sm"
-                              onClick={() =>
-                                field.id !== undefined && handleDeleteField(field.id)
-                              }
-                              disabled={field.id === undefined}
-                            >
-                              <MdDeleteOutline />
-                            </button>
-                          </div>
-                        </li>
-                      ))} */}
                     </ul>
                   )}
 
                   <button
                     type="button"
-                    className="bg-blue-100 text-blue-800 text-xs p-2 rounded w-full text-center flex items-center justify-center gap-2"
+                    className="bg-blue-100 text-blue-800 text-xs p-2 rounded w-full text-center flex items-center justify-center gap-2 hover:bg-blue-200 transition"
                     onClick={() => {
                       setEditing(null);
                       setShowFieldDialog(true);
@@ -296,18 +262,29 @@ export default function FormPanel({ isOpen, onClose, mutate, form }: Props) {
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <FormikField type="checkbox" name="isTemplate" />
-                  <label className="text-xs">Save as Template</label>
+                  <FormikField type="checkbox" name="isTemplate" id="isTemplate" className="cursor-pointer" />
+                  <label htmlFor="isTemplate" className="text-xs text-gray-900 select-none">
+                    Save as Template
+                  </label>
                 </div>
+
                 <div className="pt-4 flex gap-2">
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-blue-100 cursor-pointer text-blue-800 py-2 rounded text-xs font-semibold"
+                    className="w-full bg-blue-600 cursor-pointer text-white py-2 rounded text-xs font-semibold hover:bg-blue-700 transition"
                   >
                     {isSubmitting ? 'Saving...' : form ? 'Update Form' : 'Add Form'}
                   </button>
-
+                  {form && (
+                    <button
+                      type="button"
+                      onClick={handleDelete}
+                      className="w-full bg-red-600 cursor-pointer text-white py-2 rounded text-xs font-semibold hover:bg-red-700 transition"
+                    >
+                      Delete Form
+                    </button>
+                  )}
                 </div>
               </Form>
             )}
