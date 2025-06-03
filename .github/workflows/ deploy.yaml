@@ -1,4 +1,4 @@
-name: Deploy Master to DigitalOcean
+name: Deploy Master to DigitalOcean!
 
 on:
   push:
