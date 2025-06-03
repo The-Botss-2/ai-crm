@@ -22,9 +22,11 @@ export default async function DashboardLayout({ children, params }: LayoutProps)
             <Sidebar team_id={id} />
             <div className="flex-1 pl-16 lg:pl-64 transition-all duration-300">
                 <main className="py-6">
-                    {session.user?.id && <> (<TeamRoleProvider teamId={id} userId={session.user.id}>
+                    {session.user?.id && <> <TeamRoleProvider teamId={id} userId={session.user.id}>
                             {children}
-                        </TeamRoleProvider><BotWidget user_id={session?.user?.id} team_id={id} />)</>}
+                        </TeamRoleProvider>
+                        {/* <BotWidget user_id={session?.user?.id} team_id={id} /> */}
+                        </>}
                         
                 </main>
             </div>

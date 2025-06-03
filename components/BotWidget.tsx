@@ -2,17 +2,25 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import toast from 'react-hot-toast';
-import { axiosInstanceThirdParty } from '@/lib/thirdParty';
+import { axiosInstance } from '@/lib/fetcher';
+import { useRouter } from 'next/navigation';
+import { navigation } from '@/utils';
 
 const BotWidget = ({ user_id, team_id }: { user_id: string; team_id: string }) => {
   const [loading, setLoading] = useState(false);
-  const [isChatOpen, setIsChatOpen] = useState(false);
-  const [agentId, setAgentId] = useState<string | null>(null);
   const [listening, setListening] = useState(false);
-  const [transcript, setTranscript] = useState('');
-  const recognitionRef = useRef<any>(null);
+  const [analyticsData, setAnalyticsData] = useState<{
+    totalLeads: number;
+    pendingTasks: number;
+    completedTasks: number;
+    upcomingMeetings: { title: string; startTime: string }[];
+  } | null>(null);
 
-  // Initialize Web Speech API recognition if available
+  const recognitionRef = useRef<any>(null);
+  const router = useRouter();
+
+  const navigationPaths = navigation.map((item) => item.href);
+
   useEffect(() => {
     if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
       const SpeechRecognition = (window as any).webkitSpeechRecognition;
@@ -25,44 +33,111 @@ const BotWidget = ({ user_id, team_id }: { user_id: string; team_id: string }) =
         let interimTranscript = '';
         let finalTranscript = '';
         for (let i = event.resultIndex; i < event.results.length; i++) {
-          const transcriptChunk = event.results[i][0].transcript;
+          const transcriptChunk = event.results[i][0].transcript.trim();
           if (event.results[i].isFinal) {
-            finalTranscript += transcriptChunk;
+            finalTranscript += transcriptChunk + ' ';
           } else {
-            interimTranscript += transcriptChunk;
+            interimTranscript += transcriptChunk + ' ';
           }
         }
-        setTranscript(finalTranscript || interimTranscript);
+        const combinedTranscript = (finalTranscript || interimTranscript).trim();
+
+        if (finalTranscript) {
+          handleCommands(combinedTranscript.toLowerCase());
+        }
       };
 
       recognition.onend = () => {
-        if (listening) recognition.start(); // restart recognition on end if still listening
+        if (listening) recognition.start();
       };
 
       recognitionRef.current = recognition;
     } else {
       toast.error('Speech Recognition API not supported in your browser');
     }
-  }, []);
+  }, [listening, analyticsData]);
 
   const startListening = () => {
-    if (recognitionRef.current) {
+    if (recognitionRef.current && !listening) {
       recognitionRef.current.start();
       setListening(true);
     }
   };
 
   const stopListening = () => {
-    if (recognitionRef.current) {
+    if (recognitionRef.current && listening) {
       recognitionRef.current.stop();
       setListening(false);
     }
   };
 
+  const speak = (text: string) => {
+    if ('speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      speechSynthesis.speak(utterance);
+    }
+  };
+
+  const handleCommands = (text: string) => {
+    const redirectRegex = /(redirect|go|navigate)( to)? (\/[a-z0-9\-_/]*)/i;
+    const redirectMatch = text.match(redirectRegex);
+    if (redirectMatch && redirectMatch[3]) {
+      const path = redirectMatch[3];
+
+      if (navigationPaths.includes(path)) {
+        stopListening();
+        toast.success(`Redirecting to ${path}`);
+        router.push(path);
+      } else {
+        const msg = "Sorry, that page was not found.";
+        speak(msg);
+      }
+      return;
+    }
+
+    if (!analyticsData) {
+      const msg = "I don't have any analytics data right now.";
+      speak(msg);
+      return;
+    }
+
+    if (text.includes('leads')) {
+      const msg = `You have ${analyticsData.totalLeads} lead${analyticsData.totalLeads !== 1 ? 's' : ''}.`;
+      speak(msg);
+      return;
+    }
+
+    if (text.includes('pending tasks')) {
+      const msg = `You have ${analyticsData.pendingTasks} pending task${analyticsData.pendingTasks !== 1 ? 's' : ''}.`;
+      speak(msg);
+      return;
+    }
+
+    if (text.includes('completed tasks')) {
+      const msg = `You have completed ${analyticsData.completedTasks} task${analyticsData.completedTasks !== 1 ? 's' : ''}.`;
+      speak(msg);
+      return;
+    }
+
+    if (text.includes('upcoming meetings')) {
+      if (analyticsData.upcomingMeetings.length === 0) {
+        const msg = 'You have no upcoming meetings.';
+        speak(msg);
+      } else {
+        const meetingTitles = analyticsData.upcomingMeetings.map(m => m.title).join(', ');
+        const msg = `Your upcoming meetings are: ${meetingTitles}`;
+        speak(msg);
+      }
+      return;
+    }
+
+    const fallbackMsg = "I don't have that information.";
+    speak(fallbackMsg);
+  };
+
   const handleBotClick = async () => {
     if (loading) return;
 
-    // Request microphone permission first
     try {
       await navigator.mediaDevices.getUserMedia({ audio: true });
     } catch (err) {
@@ -71,17 +146,9 @@ const BotWidget = ({ user_id, team_id }: { user_id: string; team_id: string }) =
     }
 
     setLoading(true);
-
     try {
-      // Create agent API call
-      const response = await axiosInstanceThirdParty.post('/api/create-agent', {
-        user_id,
-        team_id,
-      });
-
-      toast.success('Agent created successfully!');
-      setAgentId(response.data.agent_id || null);
-      setIsChatOpen(true);
+      const response = await axiosInstance.get(`/api/analytics?teamId=${team_id}`);
+      setAnalyticsData(response.data);
       startListening();
     } catch (error: any) {
       toast.error(error?.response?.data?.message || 'Failed to create agent');
@@ -92,7 +159,7 @@ const BotWidget = ({ user_id, team_id }: { user_id: string; team_id: string }) =
 
   return (
     <>
-      <div className="fixed bottom-5 left-5 z-50">
+      <div className="fixed bottom-5 right-5 z-50">
         <button
           onClick={handleBotClick}
           disabled={loading}
@@ -100,6 +167,7 @@ const BotWidget = ({ user_id, team_id }: { user_id: string; team_id: string }) =
           className="bg-gradient-to-tr from-purple-700 to-blue-600 text-white p-4 rounded-full shadow-xl hover:scale-110 transition-transform flex items-center justify-center"
           style={{ width: 56, height: 56 }}
         >
+          {/* SVG omitted for brevity */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-7 w-7"
@@ -108,13 +176,11 @@ const BotWidget = ({ user_id, team_id }: { user_id: string; team_id: string }) =
             stroke="currentColor"
             strokeWidth={2}
           >
-            {/* Phone handset */}
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
               d="M3 5.25a2.25 2.25 0 012.25-2.25h3.75a.75.75 0 01.75.75v3.75a.75.75 0 01-.75.75H7.5a11.25 11.25 0 0011.25 11.25v-2.25a.75.75 0 01.75-.75h3.75a.75.75 0 01.75.75v3.75a2.25 2.25 0 01-2.25 2.25H7.5a17.25 17.25 0 01-4.5-4.5z"
             />
-            {/* AI brain nodes */}
             <circle cx="12" cy="8" r="1.5" stroke="currentColor" strokeWidth={1.5} />
             <circle cx="15" cy="11" r="1.5" stroke="currentColor" strokeWidth={1.5} />
             <circle cx="9" cy="11" r="1.5" stroke="currentColor" strokeWidth={1.5} />
@@ -128,48 +194,6 @@ const BotWidget = ({ user_id, team_id }: { user_id: string; team_id: string }) =
           </svg>
         </button>
       </div>
-
-      {/* Chat panel */}
-      {isChatOpen && (
-        <div className="fixed bottom-20 left-5 z-50 w-80 h-96 bg-white rounded-lg shadow-xl flex flex-col overflow-hidden">
-          <div className="flex items-center justify-between p-3 bg-gradient-to-r from-purple-700 to-blue-600 text-white">
-            <h3 className="font-semibold text-lg">AI Chat Caller</h3>
-            <button
-              onClick={() => {
-                setIsChatOpen(false);
-                stopListening();
-                setTranscript('');
-              }}
-              className="text-white hover:text-gray-200 font-bold"
-              title="Close"
-            >
-              ×
-            </button>
-          </div>
-
-          <div className="flex-1 p-3 overflow-y-auto text-gray-700">
-            <p>{transcript || 'Speak to start chatting...'}</p>
-          </div>
-
-          <div className="p-3 border-t border-gray-300 flex justify-between items-center">
-            {listening ? (
-              <button
-                onClick={stopListening}
-                className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition"
-              >
-                Stop Listening
-              </button>
-            ) : (
-              <button
-                onClick={startListening}
-                className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition"
-              >
-                Start Listening
-              </button>
-            )}
-          </div>
-        </div>
-      )}
     </>
   );
 };
