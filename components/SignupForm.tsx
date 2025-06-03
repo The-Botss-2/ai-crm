@@ -1,78 +1,122 @@
 'use client';
 
-import { signup } from '@/actions/auth';
-import { useActionState } from 'react';
+import axios from 'axios';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 
 export default function SignupForm() {
-    const [state, formAction] = useActionState(signup, null);
-    const router = useRouter();
+  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+  const [errors, setErrors] = useState<{ name?: string; email?: string; password?: string }>({});
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-    useEffect(() => {
-        if (state?.status === 'loading') {
-            toast.loading('Signing up...', { id: 'signup' });
-        } else if (state?.status === 'error') {
-            toast.error(state.message || 'Signup failed.', { id: 'signup' });
-        } else if (state?.status === 'success') {
-            toast.success('Signup successful!', { id: 'signup' });
-            router.push('/teams');
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    setErrors(prev => ({ ...prev, [e.target.name]: undefined })); // clear error on change
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setErrors({});
+    const toastId = toast.loading('Signing up...');
+
+    try {
+      const response = await axios.post('/api/auth/signup', formData);
+
+      toast.success('Signup successful!', { id: toastId });
+      router.push('/teams');
+    } catch (error: any) {
+      toast.dismiss(toastId);
+      if (axios.isAxiosError(error) && error.response) {
+        const data = error.response.data;
+
+        // Handle general error message
+        if (data.error) {
+          toast.error(data.error);
         }
-    }, [state]);
 
-    return (
-        <form action={formAction}>
-            <div className="mb-6">
-                <input
-                    type="text"
-                    name="name"
-                    placeholder="Name"
-                    className="w-full rounded-md border border-stroke bg-transparent px-5 py-3 text-sm text-body-color outline-none focus:border-primary dark:border-dark-3 dark:text-white"
-                    required
-                />
-                {state?.error?.name && (
-                    <p className="text-red-500 text-sm mt-1">{state.error.name}</p>
-                )}
-            </div>
-            <div className="mb-6">
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    className="w-full rounded-md border border-stroke bg-transparent px-5 py-3 text-sm text-body-color outline-none focus:border-primary dark:border-dark-3 dark:text-white"
-                    required
-                />
-                {state?.error?.email && (
-                    <p className="text-red-500 text-sm mt-1">{state.error.email}</p>
-                )}
-            </div>
-            <div className="mb-6">
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    className="w-full rounded-md border border-stroke bg-transparent px-5 py-3 text-sm text-body-color outline-none focus:border-primary dark:border-dark-3 dark:text-white"
-                    required
-                />
-                {state?.error?.password && (
-                    <p className="text-red-500 text-sm mt-1">{state.error.password}</p>
-                )}
-            </div>
-            <div className="mb-10">
-                <button
-                    type="submit"
-                    className="w-full cursor-pointer rounded-md bg-blue-800 text-blue-100 px-5 py-3 text-sm font-medium transition hover:bg-opacity-90 disabled:opacity-50"
-                >
-                    Sign Up
-                </button>
+        // If your API returns validation errors per field, show them
+        if (data.errors) {
+          setErrors(data.errors);
+        }
+      } else {
+        toast.error('Signup failed. Please try again.');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
-                <div className="mt-5 text-xs flex gap-2 justify-center">
-                    <span>Already have an account?</span>
-                    <Link className="font-semibold" href="/signin">Sign In</Link>
-                </div>
-            </div>
-        </form>
-    );
+  return (
+    <form onSubmit={handleSubmit} noValidate>
+      <div className="space-y-5">
+        <div>
+          <input
+            type="text"
+            name="name"
+            placeholder="Name"
+            value={formData.name}
+            onChange={handleChange}
+            className={`w-full rounded-md border px-4 py-3 text-sm focus:outline-none ${
+              errors.name ? 'border-red-500' : 'border-gray-300 focus:border-blue-500'
+            }`}
+            required
+            disabled={loading}
+          />
+          {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+        </div>
+
+        <div>
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+            className={`w-full rounded-md border px-4 py-3 text-sm focus:outline-none ${
+              errors.email ? 'border-red-500' : 'border-gray-300 focus:border-blue-500'
+            }`}
+            required
+            disabled={loading}
+          />
+          {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+        </div>
+
+        <div>
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            className={`w-full rounded-md border px-4 py-3 text-sm focus:outline-none ${
+              errors.password ? 'border-red-500' : 'border-gray-300 focus:border-blue-500'
+            }`}
+            required
+            disabled={loading}
+          />
+          {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className={`w-full rounded-md px-4 py-3 text-sm font-semibold text-white transition ${
+            loading ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
+          }`}
+        >
+          {loading ? 'Signing up...' : 'Sign Up'}
+        </button>
+      </div>
+
+      <p className="mt-6 text-center text-sm text-gray-600">
+        Already have an account?{' '}
+        <a href="/signin" className="text-blue-600 font-semibold hover:underline">
+          Sign In
+        </a>
+      </p>
+    </form>
+  );
 }

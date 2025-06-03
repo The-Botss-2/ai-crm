@@ -25,11 +25,19 @@ const TaskPanel: React.FC<TaskPanelProps> = ({
   return (
     <Transition show={isOpen} as={Fragment}>
       <Dialog onClose={onClose} className="relative z-50">
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-xs" />
-        <div className="fixed inset-y-0 right-0 w-full max-w-md bg-white dark:bg-slate-900 shadow-xl p-6 overflow-y-auto">
-          <Dialog.Title className="text-md font-semibold border-b border-gray-200 pb-4 mb-4 flex justify-between items-center">
+        {/* Backdrop */}
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" aria-hidden="true" />
+        {/* Panel */}
+        <div className="fixed inset-y-0 right-0 w-full max-w-md bg-white shadow-xl p-6 overflow-y-auto rounded-l-lg">
+          <Dialog.Title className="text-md font-semibold border-b border-gray-300 pb-4 mb-4 flex justify-between items-center text-gray-900">
             {isEdit ? 'Edit Task' : 'Add Task'}
-            <button onClick={onClose}><IoClose size={16} /></button>
+            <button
+              onClick={onClose}
+              className="text-gray-700 hover:text-gray-900 transition"
+              aria-label="Close"
+            >
+              <IoClose size={20} />
+            </button>
           </Dialog.Title>
 
           <TaskForm
@@ -39,9 +47,7 @@ const TaskPanel: React.FC<TaskPanelProps> = ({
               description: task?.description || '',
               status: task?.status || 'pending',
               priority: task?.priority || 'medium',
-              dueDate: task?.dueDate
-                ? new Date(task.dueDate).toISOString().slice(0, 16)
-                : '',
+              dueDate: task?.dueDate ? new Date(task.dueDate).toISOString().slice(0, 16) : '',
               assignedTo: task?.assignedTo || '',
               leadId: task?.leadId || '',
               meetingId: task?.meetingId || '',

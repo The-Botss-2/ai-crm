@@ -9,7 +9,7 @@ const memberSchema = new Schema({
   },
   role: {
     type: String,
-    enum: ['admin', 'manager', 'agent', 'readonly'],
+    enum: ['admin', 'manager', 'agent', 'readonly', 'bot'],
     required: true,
   }
 }, { _id: false });
@@ -21,6 +21,8 @@ const teamSchema = new Schema({
     ref: 'Profile',
     required: true,
   },
+  logo: { type: String, default: "https://cdn-icons-png.flaticon.com/512/10872/10872139.png" },
+  agent: { type: String },
   members: [memberSchema],
 }, { timestamps: true });
 

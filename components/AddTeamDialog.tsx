@@ -1,38 +1,38 @@
 "use client";
 
-import { Dialog, Transition } from '@headlessui/react';
-import { useState, Fragment } from 'react';
-import { mutate } from 'swr';
-import toast from 'react-hot-toast';
-import { axiosInstance } from '@/lib/fetcher';
+import { Dialog, Transition } from "@headlessui/react";
+import { useState, Fragment } from "react";
+import { mutate } from "swr";
+import toast from "react-hot-toast";
+import { axiosInstance } from "@/lib/fetcher";
 
 export default function AddTeamDialog({ userId }: { userId: string }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [teamName, setTeamName] = useState('');
+  const [teamName, setTeamName] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleCreate = async () => {
     if (!teamName.trim()) {
-      toast.error('Team name is required');
+      toast.error("Team name is required");
       return;
     }
 
     setLoading(true);
-    const toastId = toast.loading('Creating team...');
+    const toastId = toast.loading("Creating team...");
 
     try {
-      await axiosInstance.post('/api/team', {
+      await axiosInstance.post("/api/team", {
         name: teamName,
         adminId: userId,
       });
 
-      toast.success('Team created successfully', { id: toastId });
+      toast.success("Team created successfully", { id: toastId });
 
       mutate(`/api/team/user?id=${userId}`); // update teams list
-      setTeamName('');
+      setTeamName("");
       setIsOpen(false);
     } catch (err: any) {
-      const msg = err?.response?.data?.error || 'Something went wrong';
+      const msg = err?.response?.data?.error || "Something went wrong";
       toast.error(msg, { id: toastId });
     } finally {
       setLoading(false);
@@ -43,14 +43,21 @@ export default function AddTeamDialog({ userId }: { userId: string }) {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="bg-blue-600 text-white text-xs px-4 py-2 rounded-lg"
+        className="bg-blue-600 text-white text-xs px-4 py-2 rounded-lg hover:bg-blue-700 transition"
       >
         + Add Team
       </button>
 
       <Transition show={isOpen} as={Fragment}>
-        <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50">
-          <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" aria-hidden="true" />
+        <Dialog
+          open={isOpen}
+          onClose={() => setIsOpen(false)}
+          className="relative z-50"
+        >
+          <div
+            className="fixed inset-0 bg-black/20 backdrop-blur-sm"
+            aria-hidden="true"
+          />
 
           <Transition.Child
             as={Fragment}
@@ -61,30 +68,76 @@ export default function AddTeamDialog({ userId }: { userId: string }) {
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <Dialog.Panel className="fixed top-1/3 left-1/2 -translate-x-1/2 transform bg-white dark:bg-slate-800 p-6 z-50 rounded-xl shadow-md w-96">
-              <Dialog.Title className="text-lg font-semibold mb-2">New Team</Dialog.Title>
+            <Dialog.Panel
+              className="
+                fixed top-1/3 left-1/2 -translate-x-1/2 transform
+                bg-white
+                p-6
+                z-50
+                rounded-xl
+                shadow-md
+                w-96
+              "
+            >
+              <Dialog.Title className="text-lg font-semibold mb-4 text-gray-900">
+                New Team
+              </Dialog.Title>
+
               <input
                 type="text"
                 value={teamName}
                 onChange={(e) => setTeamName(e.target.value)}
                 placeholder="Team name"
-                className="border p-2 w-full mb-2 rounded text-sm dark:border-gray-700 border-gray-200"
+                className="
+                  border border-gray-300
+                  p-2
+                  w-full
+                  mb-4
+                  rounded
+                  text-sm
+                  text-gray-900
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-blue-500
+                  focus:border-blue-500
+                  transition
+                "
                 disabled={loading}
               />
-              <div className="flex justify-end space-x-2">
+
+              <div className="flex justify-end space-x-3">
                 <button
-                  className="px-4 py-2 rounded bg-gray-200 text-xs dark:text-black"
+                  className="
+                    px-4 py-2
+                    rounded
+                    bg-gray-200
+                    text-sm
+                    text-gray-800
+                    hover:bg-gray-300
+                    transition
+                    disabled:opacity-50
+                  "
                   onClick={() => setIsOpen(false)}
                   disabled={loading}
                 >
                   Cancel
                 </button>
+
                 <button
-                  className="px-4 py-2 rounded bg-blue-600 text-xs text-white"
+                  className="
+                    px-4 py-2
+                    rounded
+                    bg-blue-600
+                    text-sm
+                    text-white
+                    hover:bg-blue-700
+                    transition
+                    disabled:opacity-50
+                  "
                   onClick={handleCreate}
                   disabled={loading}
                 >
-                  {loading ? 'Creating...' : 'Create'}
+                  {loading ? "Creating..." : "Create"}
                 </button>
               </div>
             </Dialog.Panel>

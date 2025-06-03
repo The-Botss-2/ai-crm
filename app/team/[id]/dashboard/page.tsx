@@ -20,7 +20,6 @@ export default function Page() {
     meetingCount: data?.upcomingMeetings?.length || 0,
     pendingTasks: data?.pendingTasks || 0,
     completedTasks: data?.completedTasks || 0,
-
   };
 
   const upcomingMeetings = data?.upcomingMeetings || [];
@@ -38,7 +37,6 @@ export default function Page() {
       <div className="mb-6">
         <p className="text-gray-600">Here's what's happening with your CRM today</p>
       </div>
-
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <StatCard
@@ -62,7 +60,7 @@ export default function Page() {
         <StatCard
           title="Complete Tasks"
           value={stats.completedTasks}
-          icon={<MdOutlineTask size={24}/>}
+          icon={<MdOutlineTask size={24} />}
         />
         <StatCard
           title="Pending Tasks"
@@ -75,22 +73,20 @@ export default function Page() {
         />
       </div>
 
-
-
       {/* Upcoming Meetings */}
-      <div className="bg-white dark:bg-slate-800 rounded-lg shadow p-6">
-        <h2 className="text-xl font-semibold mb-4">Upcoming Meetings</h2>
+      <div className="bg-white rounded-lg shadow-lg p-6">
+        <h2 className="text-xl font-semibold mb-4 text-gray-900">Upcoming Meetings</h2>
         {upcomingMeetings.length > 0 ? (
           <ul className="space-y-3">
             {upcomingMeetings.map((m: any, i: number) => (
-              <li key={i} className="flex items-start justify-between text-sm text-gray-700 dark:text-gray-200">
+              <li key={i} className="flex items-start justify-between text-sm text-gray-700">
                 <span>{m.title}</span>
                 <span className="text-xs text-gray-400">{new Date(m.startTime).toLocaleString()}</span>
               </li>
             ))}
           </ul>
         ) : (
-          <p className="text-gray-500 dark:text-gray-400">No upcoming meetings scheduled.</p>
+          <p className="text-gray-500">No upcoming meetings scheduled.</p>
         )}
       </div>
     </div>

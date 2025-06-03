@@ -1,0 +1,5 @@
+.react-datepicker-wrapper {
+    min-width: 100% !important;
+    z-index: 10000 !important;
+  }
+  

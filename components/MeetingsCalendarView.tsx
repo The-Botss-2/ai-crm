@@ -23,7 +23,6 @@ interface MeetingEvent {
   createdBy: string;
 }
 
-
 const MeetingsCalendarView = () => {
   const { id: teamId } = useParams<{ id: string }>();
 
@@ -44,7 +43,7 @@ const MeetingsCalendarView = () => {
   })) ?? [];
 
   return (
-    <div className="h-[80vh] overflow-hidden  rounded shadow bg-white dark:bg-slate-900 p-2">
+    <div className="h-[80vh] overflow-hidden rounded shadow bg-white p-2">
       <Calendar
         localizer={localizer}
         events={mappedEvents}

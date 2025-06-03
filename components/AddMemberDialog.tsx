@@ -3,7 +3,6 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useState } from 'react';
 import toast from 'react-hot-toast';
-import axios from 'axios';
 import { axiosInstance } from '@/lib/fetcher';
 
 export default function AddMemberDialog({ teamId, requesterId, mutate }: any) {
@@ -41,7 +40,10 @@ export default function AddMemberDialog({ teamId, requesterId, mutate }: any) {
 
   return (
     <>
-      <button onClick={() => setIsOpen(true)} className="bg-blue-600 text-white px-4 py-2 rounded-lg text-xs">
+      <button
+        onClick={() => setIsOpen(true)}
+        className="bg-blue-600 text-white px-4 py-2 rounded-lg text-xs hover:bg-blue-700 transition"
+      >
         + Add Member
       </button>
 
@@ -57,20 +59,20 @@ export default function AddMemberDialog({ teamId, requesterId, mutate }: any) {
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <Dialog.Panel className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-slate-900 p-6 z-[9999] rounded-xl shadow-md w-96">
-              <Dialog.Title className="text-lg font-semibold mb-4">Add Member</Dialog.Title>
+            <Dialog.Panel className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-6 z-[9999] rounded-xl shadow-md w-96">
+              <Dialog.Title className="text-lg font-semibold mb-4 text-gray-900">Add Member</Dialog.Title>
               <input
                 type="email"
                 placeholder="User email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="border p-2 w-full mb-2 rounded text-sm dark:border-gray-700 border-gray-200"
+                className="border p-2 w-full mb-2 rounded text-sm border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 disabled={loading}
               />
               <select
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
-                className="border p-2 w-full mb-2 rounded text-sm dark:border-gray-700 border-gray-200"
+                className="border p-2 w-full mb-2 rounded text-sm border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 disabled={loading}
               >
                 <option value="manager">Manager</option>
@@ -80,14 +82,14 @@ export default function AddMemberDialog({ teamId, requesterId, mutate }: any) {
               <div className="flex justify-end space-x-2">
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="px-4 py-2 bg-gray-200 rounded text-xs dark:text-black"
+                  className="px-4 py-2 bg-gray-200 rounded text-xs text-gray-800 hover:bg-gray-300 transition"
                   disabled={loading}
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleAdd}
-                  className="px-4 py-2 bg-blue-600 text-white rounded text-xs"
+                  className="px-4 py-2 bg-blue-600 text-white rounded text-xs hover:bg-blue-700 transition"
                   disabled={loading}
                 >
                   {loading ? 'Adding...' : 'Add'}
