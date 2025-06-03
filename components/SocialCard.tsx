@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import useSWR from 'swr';
 import toast from 'react-hot-toast';
@@ -70,7 +70,11 @@ export function SocialCard({
       toast.error('Failed to unlink email. Please try again.', { id: toastId });
     }
   }
-
+useEffect(() => {
+  if (name === 'Email' && isConnected) {
+ setIsCardConnected(true)
+  }
+}, [name, isConnected]);
 
 
   return (

@@ -61,7 +61,7 @@ export default function ConnectDialog({
       await axios.post(apiUrl, payload, {
         headers: { 'Content-Type': 'application/json' },
       });
-
+      console.log('Connected successfully!',name);
       if (name == 'email') {
         setIsCardConnected(true)
       }

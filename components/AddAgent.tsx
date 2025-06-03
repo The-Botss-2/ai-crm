@@ -176,7 +176,7 @@ export default function AddAgentDialog({ crmUserId, mutate }: AddAgentDialogProp
                                 <select
                                     id="phone_number"
                                     name="phone_number"
-                                    className="mt-1 block w-full rounded-md border bg-slate-950 text-white border-gray-300 p-2"
+                                    className="mt-1 block w-full rounded-md border text-gray-300 border-gray-300 p-2"
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     value={formik.values.phone_number}

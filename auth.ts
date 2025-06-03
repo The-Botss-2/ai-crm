@@ -44,8 +44,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             return session;
         },
 
-        redirect() {
-            return "/signin";
-        },
+        // redirect() {
+        //     return "/signin";
+        // },
     },
 });
