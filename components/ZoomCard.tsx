@@ -34,7 +34,7 @@ export function ZoomCard({ isConnected, zoomUserId, onConnect }: ZoomCardProps) 
 
   return (
     <>
-      <div className="bg-white/50 border border-gray-200 rounded-xl py-8 flex gap-3 flex-col items-center justify-center shadow-md hover:shadow-lg transition">
+      <div className="bg-white/50 dark:bg-slate-900 border dark:border-gray-700 border-gray-200 rounded-xl py-8 flex gap-3 flex-col items-center justify-center shadow-md hover:shadow-lg transition">
         <div>
           <div className="size-10 bg-[#0871f4] rounded-full p-2 flex mb-2 items-center justify-center">
             <BiLogoZoom color="white" size={20} />

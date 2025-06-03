@@ -1,17 +1,17 @@
-import React from 'react'
+// app/forms/page.tsx
 import { auth } from '@/auth';
-import { notFound } from "next/navigation";
-import Forms from '@/components/Forms';
-const page = async() => {
-    const session = await auth();
-    if (!session) return notFound();
-  
-    return (session.user?.id &&    <div className="p-4">
-                <div className="flex justify-between items-center mb-4 pb-4 border-b border-gray-200">
-                    <h1 className="text-2xl font-bold">Forms</h1>
-                </div>
-                <Forms user_id={session.user?.id} /> 
-            </div>);
-  }
+import { notFound } from 'next/navigation';
+import FormGrid from '@/components/FormGrid';
 
-export default page
+export default async function Page() {
+  const session = await auth();
+  if (!session?.user?.id) return notFound();
+  return (
+    <div className="p-4">
+      <div className="flex justify-between items-center mb-4 border-b  pb-4">
+        <h1 className="text-2xl font-bold">Forms</h1>
+      </div>
+      <FormGrid />
+    </div>
+  );
+}
