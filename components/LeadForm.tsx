@@ -9,7 +9,7 @@ interface Props {
   initialValues: Partial<Lead>;
   onClose: () => void;
   isEdit: boolean;
-  isPreview?: boolean; // Added preview mode
+  isPreview?: boolean;
   reload: () => void;
   submittedBy: string;
 }
@@ -57,35 +57,52 @@ export default function LeadForm({ initialValues, onClose, isEdit, isPreview, re
 
   return (
     <Formik initialValues={initialValues} validate={validate} onSubmit={handleSubmit} enableReinitialize>
-      {({ isSubmitting }) => (
-        <Form className="space-y-4">
-          <div>
-            <label className="block mb-1 text-xs">Name</label>
-            <Field name="name" disabled={isPreview} className="w-full border px-3 py-2 rounded text-xs dark:border-gray-700 border-gray-200 " />
-            <ErrorMessage name="name" component="div" className="text-red-500 text-xs" />
-          </div>
+      {({ isSubmitting, errors, touched }) => (
+        <Form className="space-y-6">
+          {[
+            { label: 'Name', name: 'name', type: 'text' },
+            { label: 'Email', name: 'email', type: 'email' },
+            { label: 'Phone', name: 'phone', type: 'tel' },
+            { label: 'Company', name: 'company', type: 'text' },
+          ].map(({ label, name, type }) => {
+            const showError = !!(errors[name as keyof Lead] && touched[name as keyof Lead]);
+            return (
+              <div key={name}>
+                <label htmlFor={name} className="block mb-1 text-sm font-medium text-gray-700">
+                  {label}
+                </label>
+                <Field
+                  id={name}
+                  name={name}
+                  type={type}
+                  disabled={isPreview}
+                  className={`w-full border rounded-md px-3 py-2 text-sm placeholder-gray-400
+                    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-500
+                    transition
+                    ${showError ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300'}
+                  `}
+                  placeholder={label}
+                />
+                <ErrorMessage
+                  name={name}
+                  component="div"
+                  className="text-red-600 text-xs mt-1 font-semibold select-none"
+                />
+              </div>
+            );
+          })}
 
           <div>
-            <label className="block mb-1 text-xs">Email</label>
-            <Field name="email" disabled={isPreview} className="w-full border px-3 py-2 rounded text-xs dark:border-gray-700 border-gray-200 " />
-            <ErrorMessage name="email" component="div" className="text-red-500 text-xs" />
-          </div>
-
-          <div>
-            <label className="block mb-1 text-xs">Phone</label>
-            <Field name="phone" disabled={isPreview} className="w-full border px-3 py-2 rounded text-xs dark:border-gray-700 border-gray-200 " />
-            <ErrorMessage name="phone" component="div" className="text-red-500 text-xs" />
-          </div>
-
-          <div>
-            <label className="block mb-1 text-xs">Company</label>
-            <Field name="company" disabled={isPreview} className="w-full border px-3 py-2 rounded text-xs dark:border-gray-700 border-gray-200 " />
-            <ErrorMessage name="company" component="div" className="text-red-500 text-xs" />
-          </div>
-
-          <div>
-            <label className="block mb-1 text-xs">Status</label>
-            <Field as="select" name="status" disabled={isPreview} className=" text-xs dark:border-gray-700 border-gray-200 w-full border px-3 py-2 rounded dark:bg-slate-900">
+            <label htmlFor="status" className="block mb-1 text-sm font-medium text-gray-700">
+              Status
+            </label>
+            <Field
+              as="select"
+              id="status"
+              name="status"
+              disabled={isPreview}
+              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-500 transition"
+            >
               <option value="new">New</option>
               <option value="contacted">Contacted</option>
               <option value="qualified">Qualified</option>
@@ -94,26 +111,57 @@ export default function LeadForm({ initialValues, onClose, isEdit, isPreview, re
               <option value="closed_won">Closed Won</option>
               <option value="closed_lost">Closed Lost</option>
             </Field>
-            <ErrorMessage name="status" component="div" className="text-red-500 text-xs" />
+            <ErrorMessage
+              name="status"
+              component="div"
+              className="text-red-600 text-xs mt-1 font-semibold select-none"
+            />
           </div>
 
           <div>
-            <label className="block mb-1 text-xs">Source</label>
-            <Field name="source" disabled={isPreview} className=" text-xs dark:border-gray-700 border-gray-200 w-full border px-3 py-2 rounded" />
-            <ErrorMessage name="source" component="div" className="text-red-500 text-xs" />
+            <label htmlFor="source" className="block mb-1 text-sm font-medium text-gray-700">
+              Source
+            </label>
+            <Field
+              id="source"
+              name="source"
+              disabled={isPreview}
+              type="text"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-500 transition"
+              placeholder="Source"
+            />
+            <ErrorMessage
+              name="source"
+              component="div"
+              className="text-red-600 text-xs mt-1 font-semibold select-none"
+            />
           </div>
 
           <div>
-            <label className="block mb-1 text-xs">Notes</label>
-            <Field as="textarea" name="notes" disabled={isPreview} rows={3} className=" text-xs dark:border-gray-700 border-gray-200 w-full border px-3 py-2 rounded" />
-            <ErrorMessage name="notes" component="div" className="text-red-500 text-xs" />
+            <label htmlFor="notes" className="block mb-1 text-sm font-medium text-gray-700">
+              Notes
+            </label>
+            <Field
+              as="textarea"
+              id="notes"
+              name="notes"
+              disabled={isPreview}
+              rows={3}
+              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-500 resize-none transition"
+              placeholder="Additional notes"
+            />
+            <ErrorMessage
+              name="notes"
+              component="div"
+              className="text-red-600 text-xs mt-1 font-semibold select-none"
+            />
           </div>
 
           {!isPreview && (
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-blue-100 text-blue-800 py-2 rounded-lg font-bold text-sm "
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md font-semibold text-sm transition disabled:opacity-50"
             >
               {isSubmitting ? 'Submitting...' : isEdit ? 'Update Lead' : 'Add Lead'}
             </button>

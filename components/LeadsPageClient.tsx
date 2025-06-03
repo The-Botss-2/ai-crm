@@ -13,7 +13,7 @@ import LeadsToolbar from './LeadsToolbar';
 export default function LeadsPage({ user_id }: any) {
     const searchParams = useSearchParams();
     const router = useRouter();
-    const params = useParams<{ id: string; }>()
+    const params = useParams<{ id: string }>()
     const team_id = params.id;
 
     const initialSearch = searchParams.get('search') || '';
@@ -65,9 +65,9 @@ export default function LeadsPage({ user_id }: any) {
     }, [rawLeads, search, sortBy, order]);
 
     return (
-        <div className="p-6">
-            <div className="flex justify-between items-center mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
-                <h1 className="text-2xl font-bold">Leads</h1>
+        <div className="p-6 bg-gray-50 min-h-screen">
+            <div className="flex justify-between items-center mb-4 pb-4 border-b border-gray-300">
+                <h1 className="text-2xl font-bold text-gray-900">Leads</h1>
                 <button
                     onClick={() => {
                         setEditLead(null);

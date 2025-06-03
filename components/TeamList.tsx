@@ -13,8 +13,8 @@ export default function TeamList({ id }: { id: string }) {
     if (error) return <p className="text-red-500">Failed to load teams.</p>;
 
     return (
-        <div className="grid gap-4 grid-cols-1 md:grid-cols-4 p-6">
-            {data?.teams?.map((team: any) => (
+          <div className="flex flex-wrap gap-6 justify-start p-4">
+     {data?.teams?.map((team: any) => (
                 <TeamCard key={team._id} team={team} userId={id} />
             ))}
         </div>
