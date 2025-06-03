@@ -9,15 +9,18 @@ import { MdDeleteOutline } from 'react-icons/md';
 import { FaArrowRight } from 'react-icons/fa6';
 import Link from 'next/link';
 
-export default function TeamCard({ team, userId }: { team: any; userId: string }) {
+export default function TeamCard({ teams, userId }: { teams: any[]; userId: string }) {
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [selectedTeam, setSelectedTeam] = useState<any>(null);
   const [deleting, setDeleting] = useState(false);
 
   const handleDelete = async () => {
+    if (!selectedTeam) return;
+
     setDeleting(true);
     const toastId = toast.loading('Deleting team...');
     try {
-      await axios.delete(`/api/team?id=${team._id}`, {
+      await axios.delete(`/api/team?id=${selectedTeam._id}`, {
         data: { requesterId: userId },
       });
       toast.success('Team deleted', { id: toastId });
@@ -28,65 +31,67 @@ export default function TeamCard({ team, userId }: { team: any; userId: string }
     } finally {
       setDeleting(false);
       setConfirmOpen(false);
+      setSelectedTeam(null);
     }
   };
 
   return (
-    <>
-      <div
-        className="
-          relative
-          flex-shrink-0
-          w-full max-w-xs sm:w-72
-          bg-white
-          border-l-4 border-blue-400/70
-          rounded-2xl
-          shadow-md
-          p-5
-          transition-transform transform
-          hover:-translate-y-1 hover:shadow-xl
-          space-y-3
-          cursor-pointer
-          flex flex-col justify-between
-        "
-        title={team.name}
-      >
-        <div className="flex justify-between items-start">
-          <div>
-            <h2 className="text-lg font-semibold text-gray-900 truncate">{team.name}</h2>
-            <p className="text-xs text-gray-500">
-              {team.members.length} member{team.members.length !== 1 && 's'}
-            </p>
-          </div>
+    <div className="w-full bg-white rounded-2xl shadow-lg p-6 overflow-x-auto">
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">Your Teams</h2>
 
-          <div className="flex gap-2 items-center">
-            {team.createdBy === userId && (
-              <button
-                onClick={() => setConfirmOpen(true)}
-                title="Delete Team"
-                className="p-2 bg-red-100 hover:bg-red-200 text-red-600 rounded-full transition"
-                aria-label="Delete Team"
-              >
-                <MdDeleteOutline size={16} />
-              </button>
-            )}
-            <Link
-              href={`/team/${team._id}/dashboard`}
-              title="Go to Dashboard"
-              className="p-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-full transition"
-              aria-label="Go to Dashboard"
-            >
-              <FaArrowRight size={14} />
-            </Link>
-          </div>
-        </div>
-      </div>
+      <table className="w-full table-auto text-sm text-left border border-gray-200 rounded-lg">
+        <thead className="bg-blue-100 text-blue-800 uppercase tracking-wider text-xs font-bold">
+          <tr>
+            <th className="px-5 py-3">Team Name</th>
+            <th className="px-5 py-3">Members</th>
+            <th className="px-5 py-3 text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody className="text-gray-700 divide-y divide-gray-200">
+          {teams.length === 0 ? (
+            <tr>
+              <td colSpan={3} className="text-center py-6 text-gray-500">
+                You don’t have any teams yet.
+              </td>
+            </tr>
+          ) : (
+            teams.map((team) => (
+              <tr key={team._id} className="hover:bg-gray-50 transition-colors">
+                <td className="px-5 py-4 font-medium truncate">{team.name}</td>
+                <td className="px-5 py-4">
+                  {team.members.length} member{team.members.length !== 1 && 's'}
+                </td>
+                <td className="px-5 py-4 flex justify-center gap-2">
+                  {team.createdBy === userId && (
+                    <button
+                      onClick={() => {
+                        setSelectedTeam(team);
+                        setConfirmOpen(true);
+                      }}
+                      className="p-2 bg-red-100 hover:bg-red-200 text-red-600 rounded-full transition"
+                      title="Delete Team"
+                    >
+                      <MdDeleteOutline size={16} />
+                    </button>
+                  )}
+                  <Link
+                    href={`/team/${team._id}/dashboard`}
+                    title="Go to Dashboard"
+                    className="p-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-full transition"
+                  >
+                    <FaArrowRight size={14} />
+                  </Link>
+                </td>
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
 
-      {/* Confirm Delete Modal */}
+      {/* Delete Confirmation Modal */}
       <Transition appear show={confirmOpen} as={Fragment}>
         <Dialog as="div" className="relative z-50" onClose={() => setConfirmOpen(false)}>
-          {/* Glassmorphic background overlay */}
-          <div className="fixed inset-0 bg-white/30 backdrop-blur-md" aria-hidden="true" />
+          <div className="fixed inset-0 bg-black/10 backdrop-blur-sm" aria-hidden="true" />
           <div className="fixed inset-0 flex items-center justify-center p-4">
             <Transition.Child
               as={Fragment}
@@ -100,7 +105,7 @@ export default function TeamCard({ team, userId }: { team: any; userId: string }
               <Dialog.Panel className="bg-white rounded-xl p-6 max-w-sm w-full shadow-lg">
                 <Dialog.Title className="text-lg font-semibold text-red-600 mb-3">Delete Team</Dialog.Title>
                 <p className="text-sm text-gray-700 mt-2">
-                  Are you sure you want to delete <strong>{team.name}</strong>? This action cannot be undone.
+                  Are you sure you want to delete <strong>{selectedTeam?.name}</strong>? This action cannot be undone.
                 </p>
 
                 <div className="mt-6 flex justify-end gap-2">
@@ -124,6 +129,6 @@ export default function TeamCard({ team, userId }: { team: any; userId: string }
           </div>
         </Dialog>
       </Transition>
-    </>
+    </div>
   );
 }

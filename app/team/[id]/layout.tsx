@@ -29,7 +29,7 @@ export default async function DashboardLayout({ children, params }: LayoutProps)
                             {children}
                         </main>
                     </div>
-                    <VoiceCallWidget />
+                    {/* <VoiceCallWidget /> */}
                 </div>
             </CardConnectionProvider>
         </TeamRoleProvider>)

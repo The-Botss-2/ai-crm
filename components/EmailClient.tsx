@@ -194,7 +194,7 @@ const EmailClient: React.FC<EmailClientProps> = ({ userid }) => {
 
   if (error) {
     return (
-      <div className="flex h-screen bg-slate-900 text-white items-center justify-center overflow-x-hidden">
+      <div className="flex h-screen text-black items-center justify-center overflow-x-hidden">
         <div className="text-center">
           <Mail className="w-16 h-16 mx-auto mb-4 opacity-50" />
           <p>Error loading emails. Please try again later.</p>
@@ -205,7 +205,7 @@ const EmailClient: React.FC<EmailClientProps> = ({ userid }) => {
 
   if (!emails || emails.length === 0) {
     return (
-      <div className="flex h-screen bg-slate-900 text-white items-center justify-center overflow-x-hidden">
+      <div className="flex h-screen  text-black items-center justify-center overflow-x-hidden">
         <div className="text-center">
           <Mail className="w-16 h-16 mx-auto mb-4 opacity-50" />
           <p>No emails found.</p>
@@ -213,146 +213,105 @@ const EmailClient: React.FC<EmailClientProps> = ({ userid }) => {
       </div>
     );
   }
-
-  return (
-    <div className="grid grid-cols-3 h-screen bg-slate-900 text-white overflow-x-hidden">
-      <div className=" border-r border-slate-700 flex flex-col overflow-x-hidden col-span-1">
-        <div className="p-4 border-b border-slate-700">
-          <div className="flex items-center gap-2">
-            <Mail className="w-6 h-6 text-blue-400" />
-            <h1 className="text-xl font-semibold truncate">Inbox</h1>
-          </div>
-        </div>
-
-        <div className="flex-1 overflow-y-auto overflow-x-hidden">
-          {emails.map((email) => (
-            <div
-              key={email.id}
-              onClick={() => handleEmailClick(email.id)}
-              className={`p-4 border-b border-slate-700 cursor-pointer transition-colors hover:bg-slate-800 ${selectedEmailId === email.id ? 'bg-slate-800 border-l-4 border-l-blue-400' : ''}`}
-            >
-              <div className="flex items-start gap-3">
-                <img
-                  src={email.sender.avatar}
-                  alt={email.sender.name}
-                  className="w-10 h-10 rounded-full object-cover"
-                />
-                <div className="flex-1 min-w-0">
-                  <div className="flex justify-between items-start mb-1">
-                    <h3 className="font-medium text-sm truncate">{email.sender.name}</h3>
-                    <span className="text-xs text-slate-400 ml-2">{formatDate(email.date)}</span>
-                  </div>
-                  <p className="text-sm font-medium text-white mb-1 truncate">{email.subject}</p>
-                  <pre className="text-xs text-slate-400 line-clamp-2 overflow-hidden">{email.body}</pre>
-                  {email.replies.length > 0 && (
-                    <div className="mt-2">
-                      <span className="text-xs bg-slate-700 px-2 py-1 rounded">
-                        {email.replies.length} replies
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))}
+  return <div className="grid grid-cols-3 h-screen bg-gray-100 text-gray-800">
+    <div className="border-r border-gray-300 bg-white overflow-y-auto">
+      <div className="p-4 border-b border-gray-200">
+        <div className="flex items-center gap-2">
+          <Mail className="w-5 h-5 text-blue-600" />
+          <h1 className="text-lg font-semibold">Inbox</h1>
         </div>
       </div>
-
-      <div className="flex-1 flex flex-col min-w-0 overflow-x-hidden col-span-2">
-        {selectedEmail ? (
-          <>
-            <div className="p-6 border-b border-slate-700">
-              <div className="flex items-start justify-between">
-                <div className="flex items-start gap-4">
-                  <img
-                    src={selectedEmail.sender.avatar}
-                    alt={selectedEmail.sender.name}
-                    className="w-12 h-12 rounded-full object-cover"
-                  />
-                  <div className="min-w-0">
-                    <h2 className="font-semibold mb-1 text-sm truncate">{selectedEmail.subject} </h2>
-                    <div className="text-xs text-slate-400 flex flex-wrap gap-x-2">
-                      <span className="font-medium truncate">{selectedEmail.sender.name}</span>
-                      <span className="mx-2">•</span>
-                      <span className="truncate">{selectedEmail.sender.email}</span>
-                      <span className="mx-2">•</span>
-                      <span>{formatDate(selectedEmail.date)}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex-1 overflow-y-auto overflow-x-hidden">
-              <div className="p-6">
-                <div className="bg-slate-800 rounded-lg p-4 mb-6">
-                  <pre className="text-slate-200 leading-relaxed text-sm break-words whitespace-pre-wrap font-sans">{selectedEmail.body}</pre>
-                </div>
-
-                {selectedEmail.replies.length > 0 && (
-                  <div className="space-y-4 mb-6">
-                    <h3 className="font-medium text-slate-300 text-xs">Replies</h3>
-                    {selectedEmail.replies.map((reply) => (
-                      <div
-                        key={reply.id}
-                        className={`text-sm p-4 rounded-lg ${reply.isUser ? 'bg-blue-900/30 ml-8' : 'bg-slate-800 mr-8'}`}
-                      >
-                        <div className="flex justify-between items-center mb-2">
-                          <span className="text-sm font-medium truncate">{reply.sender}</span>
-                          <span className="text-xs text-slate-400">
-                            {formatDate(reply.timestamp)}
-                          </span>
-                        </div>
-                        <p className="text-slate-200 break-words">{reply.content}</p>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="border-t border-slate-700 p-6">
-              <div className="space-y-4">
-                <h3 className="text-xs font-medium">Reply</h3>
-                <textarea
-                  value={replyText}
-                  onChange={(e) => setReplyText(e.target.value)}
-                  placeholder="Type your reply here..."
-                  className="w-full h-20 text-sm bg-slate-800 border border-slate-600 rounded-lg p-3 text-white placeholder-slate-400 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <div className="flex gap-3">
-                  <button
-                    onClick={() => handleGenerateAIResponse(selectedEmail.id)}
-                    disabled={isGeneratingReply}
-                    className="flex items-center gap-2 text-xs px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
-                  >
-                    <Sparkles className="w-4 h-4" />
-                    {isGeneratingReply ? 'Generating...' : 'Generate AI Response'}
-                  </button>
-                  <button
-                    onClick={() => handleSendReply(selectedEmail.sender.email, selectedEmail.subject)}
-                    disabled={!replyText.trim() || isSendingReply}
-                    className="flex items-center gap-2 text-xs px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
-                  >
-                    <Send className="w-4 h-4" />
-                    {isSendingReply ? 'Sending...' : 'Send Reply'}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </>
-        ) : (
-          <div className="flex-1 flex items-center justify-center overflow-x-hidden">
-            <div className="text-center text-slate-400">
-              <Mail className="w-16 h-16 mx-auto mb-4 opacity-50" />
-              <h2 className="text-xl font-medium mb-2">Select an email to read</h2>
-              <p>Choose an email from the list to view its contents and reply</p>
+      {emails.map(email => (
+        <div
+          key={email.id}
+          onClick={() => handleEmailClick(email.id)}
+          className={`p-4 border-b border-gray-200 cursor-pointer hover:bg-blue-50 transition ${selectedEmailId === email.id ? 'bg-blue-100 border-l-4 border-blue-500' : ''}`}
+        >
+          <div className="flex items-start gap-3">
+            <img src={email.sender.avatar} alt={email.sender.name} className="w-10 h-10 rounded-full" />
+            <div className="flex-1">
+              <h3 className="text-sm font-semibold truncate">{email.sender.name}</h3>
+              <p className="text-xs text-gray-500 truncate">{email.subject}</p>
+              <p className="text-xs text-gray-500 truncate">{email.body}</p>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      ))}
     </div>
-  );
+    <div className="col-span-2 flex flex-col">
+      {selectedEmail ? (
+        <div className="flex-1 flex flex-col">
+          <div className="p-6 border-b border-gray-300 bg-white">
+            <div className="flex items-start gap-4">
+              <img src={selectedEmail.sender.avatar} alt={selectedEmail.sender.name} className="w-12 h-12 rounded-full" />
+              <div>
+                <h2 className="text-base font-semibold">{selectedEmail.subject}</h2>
+                <div className="text-sm text-gray-500">
+                  {selectedEmail.sender.name} • {selectedEmail.sender.email} • {formatDate(selectedEmail.date)}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="flex-1 overflow-y-auto p-6">
+            <div className="bg-gray-50 p-4 rounded-lg mb-6 border border-gray-200 h-[100vh]">
+              <pre className="whitespace-pre-wrap text-sm text-gray-700">{selectedEmail.body}</pre>
+            </div>
+            {selectedEmail.replies.length > 0 && (
+              <div className="space-y-4">
+                <h3 className="text-sm font-semibold text-gray-700">Replies</h3>
+                {selectedEmail.replies.map(reply => (
+                  <div
+                    key={reply.id}
+                    className={`p-4 text-sm rounded-lg ${reply.isUser ? 'bg-blue-100 ml-8' : 'bg-gray-100 mr-8'} border`}
+                  >
+                    <div className="flex justify-between mb-2">
+                      <span className="font-medium">{reply.sender}</span>
+                      <span className="text-xs text-gray-500">{formatDate(reply.timestamp)}</span>
+                    </div>
+                    <p className="text-gray-800">{reply.content}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="p-6 border-t border-gray-300 bg-white">
+            <textarea
+              value={replyText}
+              onChange={(e) => setReplyText(e.target.value)}
+              placeholder="Type your reply..."
+              className="w-full p-3 border border-gray-300 rounded-lg resize-none text-sm focus:ring focus:ring-blue-200"
+            />
+            <div className="flex gap-3 mt-4">
+              <button
+                onClick={() => handleGenerateAIResponse(selectedEmail.id)}
+                disabled={isGeneratingReply}
+                className="flex items-center gap-2 px-4 py-2 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
+              >
+                <Sparkles className="w-4 h-4" />
+                {isGeneratingReply ? 'Generating...' : 'Generate AI Response'}
+              </button>
+              <button
+                onClick={() => handleSendReply(selectedEmail.sender.email, selectedEmail.subject)}
+                disabled={!replyText.trim() || isSendingReply}
+                className="flex items-center gap-2 px-4 py-2 text-sm bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50"
+              >
+                <Send className="w-4 h-4" />
+                {isSendingReply ? 'Sending...' : 'Send Reply'}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-1 items-center justify-center text-center text-gray-500">
+          <div>
+            <Mail className="w-16 h-16 mx-auto mb-4 text-blue-400" />
+            <h2 className="text-xl font-semibold">Select an email to read</h2>
+            <p>Choose an email from the list to view its contents and reply.</p>
+          </div>
+        </div>
+      )}
+    </div>
+  </div>;
 };
 
 export default EmailClient;
