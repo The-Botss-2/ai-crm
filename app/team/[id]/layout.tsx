@@ -22,7 +22,7 @@ export default async function DashboardLayout({ children, params }: LayoutProps)
     return (session.user?.id && (
         <TeamRoleProvider teamId={id} userId={session.user.id}>
             <CardConnectionProvider>
-                <div className="flex min-h-screen bg-gray-50 dark:bg-slate-950">
+                <div className="flex min-h-screen ">
                     <Sidebar team_id={id} />
                     <div className="flex-1 pl-16 lg:pl-64 transition-all duration-300">
                         <main>
