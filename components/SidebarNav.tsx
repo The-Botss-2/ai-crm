@@ -21,6 +21,7 @@ import { useCardConnection } from '@/context/CardConnectionContext';
 import { FaWpforms } from 'react-icons/fa';
 import { CiSettings } from 'react-icons/ci';
 import { GiClassicalKnowledge } from 'react-icons/gi';
+import { MdOutbound, MdOutlineOutbound } from 'react-icons/md';
 
 interface Props {
     teamId: string;
@@ -60,6 +61,11 @@ export default function SidebarNav({ teamId, pathname, userId, session }: Props)
             icon: <AiTwotoneBuild size={22} />
         },
         {
+          name: "Outbound Campaigns",
+          href: `/team/${teamId}/outbound-calls`,
+          icon: <MdOutlineOutbound size={22} />
+        },
+        {
             name: 'Integrations',
             href: `/team/${teamId}/integrations`,
             icon: <PiLinkSimpleDuotone size={22} />
@@ -92,6 +98,8 @@ export default function SidebarNav({ teamId, pathname, userId, session }: Props)
         href: `/team/${teamId}/settings`,
         icon: <AiTwotoneSetting size={22} />,
     });
+
+
 
     return (
         <>

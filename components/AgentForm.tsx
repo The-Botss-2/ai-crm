@@ -157,17 +157,16 @@ export default function AgentForm({ agentId, crmUserId, initialData, error }: Ag
 
     return (
         <div>
-
             <Breadcrumb />
             <div className="my-6">
-                <h1 className="text-2xl font-bold dark:text-white text-slate-900">Edit Agent</h1>
+                <h1 className="text-2xl font-bold text-slate-900">Edit Agent</h1>
                 <p className="mt-1 text-sm text-gray-600">Update details for agent ID: {agentId}</p>
             </div>
-            <div className="bg-white dark:bg-slate-900 shadow overflow-hidden sm:rounded-md">
+            <div className="bg-white shadow overflow-hidden sm:rounded-md">
                 <form onSubmit={formik.handleSubmit} className="p-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label htmlFor="agent_name" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                            <label htmlFor="agent_name" className="block text-sm font-medium text-gray-700">
                                 Agent Name
                             </label>
                             <input
@@ -177,14 +176,14 @@ export default function AgentForm({ agentId, crmUserId, initialData, error }: Ag
                                 value={formik.values.agent_name}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
-                                className="mt-1 block w-full rounded-md px-4 py-3 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm dark:bg-slate-800 dark:border-gray-600 dark:text-gray-200"
+                                className="mt-1 block w-full rounded-md px-4 py-3 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                             />
                             {formik.touched.agent_name && formik.errors.agent_name ? (
                                 <p className="mt-1 text-sm text-red-600">{formik.errors.agent_name}</p>
                             ) : null}
                         </div>
                         <div>
-                            <label htmlFor="phone_number" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                            <label htmlFor="phone_number" className="block text-sm font-medium text-gray-700">
                                 Phone Number
                             </label>
                             {hasNoPhoneNumbers ? (
@@ -195,7 +194,7 @@ export default function AgentForm({ agentId, crmUserId, initialData, error }: Ag
                                         id="phone_number"
                                         value={formik.values.phone_number}
                                         readOnly
-                                        className="mt-1 block w-full rounded-md px-4 py-3 border-gray-300 shadow-sm bg-gray-50 text-gray-500 cursor-not-allowed sm:text-sm dark:bg-slate-700 dark:border-gray-600 dark:text-gray-400"
+                                        className="mt-1 block w-full rounded-md px-4 py-3 border-gray-300 shadow-sm bg-gray-50 text-gray-500 cursor-not-allowed sm:text-sm"
                                         placeholder="No phone number assigned"
                                     />
                                     <p className="mt-1 text-sm text-gray-700">
@@ -209,7 +208,7 @@ export default function AgentForm({ agentId, crmUserId, initialData, error }: Ag
                                     value={formik.values.phone_number}
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
-                                    className="mt-1 block w-full rounded-md px-4 py-3 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm dark:bg-slate-800 dark:border-gray-600 dark:text-gray-200"
+                                    className="mt-1 block w-full rounded-md px-4 py-3 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                                 >
                                     <option value="">Select a phone number</option>
                                     {availablePhoneNumbers.map((phone) => (
@@ -226,7 +225,7 @@ export default function AgentForm({ agentId, crmUserId, initialData, error }: Ag
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                         <div>
-                            <label htmlFor="system_prompt" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                            <label htmlFor="system_prompt" className="block text-sm font-medium text-gray-700">
                                 System Prompt
                             </label>
                             <textarea
@@ -236,14 +235,14 @@ export default function AgentForm({ agentId, crmUserId, initialData, error }: Ag
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
                                 rows={6}
-                                className="mt-1 block w-full rounded-md px-4 py-3 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm dark:bg-slate-800 dark:border-gray-600 dark:text-gray-200"
+                                className="mt-1 block w-full rounded-md px-4 py-3 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                             />
                             {formik.touched.system_prompt && formik.errors.system_prompt ? (
                                 <p className="mt-1 text-sm text-red-600">{formik.errors.system_prompt}</p>
                             ) : null}
                         </div>
                         <div>
-                            <label htmlFor="first_message" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                            <label htmlFor="first_message" className="block text-sm font-medium text-gray-700">
                                 First Message
                             </label>
                             <textarea
@@ -253,7 +252,7 @@ export default function AgentForm({ agentId, crmUserId, initialData, error }: Ag
                                 value={formik.values.first_message}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
-                                className="mt-1 block w-full rounded-md px-4 py-3 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm dark:bg-slate-800 dark:border-gray-600 dark:text-gray-200"
+                                className="mt-1 block w-full rounded-md px-4 py-3 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                             />
                             {formik.touched.first_message && formik.errors.first_message ? (
                                 <p className="mt-1 text-sm text-red-600">{formik.errors.first_message}</p>

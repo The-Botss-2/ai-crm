@@ -183,7 +183,7 @@ const EmailClient: React.FC<EmailClientProps> = ({ userid }) => {
 
   if (isLoading) {
     return (
-      <div className="flex h-screen bg-slate-900 text-white items-center justify-center overflow-x-hidden">
+      <div className="flex h-screen text-dark items-center justify-center overflow-x-hidden">
         <div className="text-center">
           <Mail className="w-16 h-16 mx-auto mb-4 opacity-50" />
           <p>Loading emails...</p>

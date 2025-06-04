@@ -7,6 +7,7 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { KeyedMutator } from 'swr';
+import { IoClose } from 'react-icons/io5';
 
 // Interface for phone number option
 interface PhoneNumber {
@@ -114,8 +115,13 @@ export default function AddAgentDialog({ crmUserId, mutate }: AddAgentDialogProp
             <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50">
                 <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" aria-hidden="true" />
                 <div className="fixed inset-0 flex items-center justify-center p-4">
-                    <DialogPanel className="w-full max-w-md rounded-lg bg-white dark:bg-slate-900 p-6">
-                        <DialogTitle className="text-lg font-semibold">Add New Agent</DialogTitle>
+                    <DialogPanel className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
+                        <DialogTitle className="text-lg font-semibold text-gray-900 border-b border-gray-200 pb-3 mb-4 flex justify-between items-center">
+                            Add New Agent
+                            <button onClick={() => setIsOpen(false)} className="text-gray-600 hover:text-gray-900">
+                                <IoClose size={18} />
+                            </button>
+                        </DialogTitle>
                         <form onSubmit={formik.handleSubmit} className="mt-4 space-y-4">
                             <div>
                                 <label htmlFor="agent_name" className="block text-sm font-medium text-gray-700">
@@ -125,7 +131,7 @@ export default function AddAgentDialog({ crmUserId, mutate }: AddAgentDialogProp
                                     id="agent_name"
                                     name="agent_name"
                                     type="text"
-                                    className="mt-1 block w-full rounded-md border border-gray-300 p-2"
+                                    className="mt-1 block w-full rounded-md border border-gray-300 p-2 text-gray-900"
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     value={formik.values.agent_name}
@@ -142,7 +148,7 @@ export default function AddAgentDialog({ crmUserId, mutate }: AddAgentDialogProp
                                 <textarea
                                     id="system_prompt"
                                     name="system_prompt"
-                                    className="mt-1 block w-full rounded-md border border-gray-300 p-2"
+                                    className="mt-1 block w-full rounded-md border border-gray-300 p-2 text-gray-900"
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     value={formik.values.system_prompt}
@@ -159,7 +165,7 @@ export default function AddAgentDialog({ crmUserId, mutate }: AddAgentDialogProp
                                 <textarea
                                     id="first_message"
                                     name="first_message"
-                                    className="mt-1 block w-full rounded-md border border-gray-300 p-2"
+                                    className="mt-1 block w-full rounded-md border border-gray-300 p-2 text-gray-900"
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     value={formik.values.first_message}
@@ -176,7 +182,7 @@ export default function AddAgentDialog({ crmUserId, mutate }: AddAgentDialogProp
                                 <select
                                     id="phone_number"
                                     name="phone_number"
-                                    className="mt-1 block w-full rounded-md border text-gray-300 border-gray-300 p-2"
+                                    className="mt-1 block w-full rounded-md border text-gray-900 border-gray-300 p-2"
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     value={formik.values.phone_number}

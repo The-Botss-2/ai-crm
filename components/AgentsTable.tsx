@@ -120,15 +120,13 @@ export default function AgentsTable({ crmUserId }: AgentsTableProps) {
         <div className="container mx-auto">
             <div className="mb-6 flex justify-between items-center">
                 <div>
-                    <h1 className="text-2xl font-bold dark:text-white text-slate-900">Agents</h1>
+                    <h1 className="text-2xl font-bold text-slate-900">Agents</h1>
                     <p className="mt-1 text-sm text-gray-600">
                         Manage your agents for user ID: {crmUserId}
                     </p>
                 </div>
                 <AddAgentDialog crmUserId={crmUserId} mutate={mutate} />
             </div>
-
-
 
             {data?.agents.length === 0 ? (
                 <div className="bg-gray-50 border border-gray-200 rounded-md p-8 text-center">
@@ -139,10 +137,10 @@ export default function AgentsTable({ crmUserId }: AgentsTableProps) {
                     <p className="mt-1 text-sm text-gray-500">No agents found for your account.</p>
                 </div>
             ) : (
-                <div className="bg-white dark:bg-slate-900 shadow overflow-hidden sm:rounded-md">
+                <div className="bg-white shadow overflow-hidden sm:rounded-md">
                     <div className="overflow-x-auto">
                         <table className="min-w-full divide-y divide-gray-200">
-                            <thead className="bg-gray-50 dark:bg-slate-900">
+                            <thead className="bg-gray-50">
                                 <tr>
                                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Name
@@ -163,8 +161,8 @@ export default function AgentsTable({ crmUserId }: AgentsTableProps) {
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
                                 {data?.agents.map((agent, index) => (
-                                    <tr key={agent.agent_id} className={index % 2 === 0 ? 'bg-white dark:bg-slate-900' : 'bg-gray-50 dark:bg-slate-800'}>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-200">
+                                    <tr key={agent.agent_id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                             {agent.name}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -195,7 +193,7 @@ export default function AgentsTable({ crmUserId }: AgentsTableProps) {
                             </tbody>
                         </table>
                     </div>
-                    <div className="bg-gray-50 dark:bg-slate-900 px-6 py-3 border-t border-gray-200">
+                    <div className="bg-gray-50 px-6 py-3 border-t border-gray-200">
                         <p className="text-sm text-gray-700">
                             Showing <span className="font-medium">{data?.agents.length}</span> agent{data?.agents.length !== 1 ? 's' : ''}
                         </p>
