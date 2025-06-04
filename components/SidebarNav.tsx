@@ -104,7 +104,7 @@ export default function SidebarNav({ teamId, pathname, userId, session }: Props)
     return (
         <>
             <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
-                <Link href="/dashboard" className="flex items-center space-x-3 text-blue-600 hover:underline">
+                <Link href="/teams" className="flex items-center space-x-3 text-blue-600 hover:underline">
                     {session?.user?.image && (
                         <Image
                             src={session.user.image}
