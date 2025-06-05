@@ -8,11 +8,12 @@ import Link from 'next/link';
 interface Props {
   team_id: string;
   pathname: string;
-  session: any
+  session: any,
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
 }
-export default function Sidebar({ team_id, pathname ,session}: Props) {
+export default function Sidebar({ team_id, pathname ,session, isOpen, setIsOpen}: Props) {
 
-  const [isOpen, setIsOpen] = useState(true);
 
   // Persist sidebar state in localStorage (optional)
   useEffect(() => {

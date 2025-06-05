@@ -21,12 +21,8 @@ interface CampaignFormProps {
   user_id: string,
   agendId: string
 }
-interface PhoneNumber {
-  phone_number: string;
-  sid: string;
-}
 
-const CampaignForm: React.FC<CampaignFormProps> = ({ initialValues, onSubmit, onCancel, user_id ,agendId}) => {
+const CampaignForm: React.FC<CampaignFormProps> = ({ initialValues, onSubmit, onCancel}) => {
   
   return (
     <Formik
@@ -53,7 +49,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ initialValues, onSubmit, on
         setSubmitting(false);
       }}
     >
-      {({ isSubmitting, setFieldValue, values, errors, touched }) => (
+      {({ isSubmitting,errors, touched }) => (
         <Form className="space-y-6">
           {/* Agent Name */}
           <div>
@@ -113,7 +109,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ initialValues, onSubmit, on
               disabled={isSubmitting}
               className="bg-blue-600 text-white px-5 py-2 rounded text-sm hover:bg-blue-700 transition"
             >
-              {initialValues.agentName ? 'Update' : 'Create'}
+              {isSubmitting ? 'Saving...' : 'Create'}
             </button>
           </div>
         </Form>

@@ -17,11 +17,12 @@ interface CampaignDetailsFormProps {
 const CampaignDetailsForm: React.FC<CampaignDetailsFormProps> = ({ agentId, user_id, onSuccess }) => {
   const [fileName, setFileName] = useState('');
   const [phoneNumbers, setPhoneNumbers] = useState<string[]>([]);
+  const Api_BASE_URL = 'https://callingagent.thebotss.com/api'
 
   useEffect(() => {
     const loadNumbers = async () => {
       try {
-        const res = await axios.get(`https://callingagent.thebotss.com/api/elevenlabs/free-numbers?crm_user_id=${user_id}`);
+        const res = await axios.get(`${Api_BASE_URL}/elevenlabs/free-numbers?crm_user_id=${user_id}`);
         setPhoneNumbers(res.data.map((p: any) => p.phone_number));
       } catch {
         toast.error('Failed to load phone numbers');
@@ -29,7 +30,6 @@ const CampaignDetailsForm: React.FC<CampaignDetailsFormProps> = ({ agentId, user
     };
     loadNumbers();
   }, [user_id]);
-
   return (
     <Formik
       initialValues={{
@@ -47,7 +47,7 @@ const CampaignDetailsForm: React.FC<CampaignDetailsFormProps> = ({ agentId, user
       onSubmit={async (values) => {
         const toastId = toast.loading('Scheduling campaign...');
         try {
-          await axios.post('https://callingagent.thebotss.com/api/schedule_campaign', {
+          await axios.post(`${Api_BASE_URL}/schedule_campaign`, {
             agent_id: agentId,
             crm_user_id: user_id,
             phone_number: values.phoneNumber,

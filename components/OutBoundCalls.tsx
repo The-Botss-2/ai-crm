@@ -9,6 +9,7 @@ import CampaignTable from './CampaignTable';
 import axios, { Axios } from 'axios';
 import toast from 'react-hot-toast';
 import CampaignDetailsForm from './CampaignDetailsForm';
+import CampaignEditForm from './CampaignEditForm';
 
 export interface Campaign {
   id: string;
@@ -68,6 +69,7 @@ export default function OutBoundCalls({ user_id }: { user_id: string }) {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'draft' | 'scheduled' | 'running' | 'stopped'>('all');
   const [step, setStep] = useState<'agent' | 'details'>('agent');
+  const Api_BASE_URL = 'https://callingagent.thebotss.com/api'
   const handleAddClick = () => {
     setEditingCampaign(null);
     setDrawerOpen(true);
@@ -100,7 +102,7 @@ export default function OutBoundCalls({ user_id }: { user_id: string }) {
     const toastId = toast.loading('Creating agent...');
     try {
       const response = await axios.post(
-        'https://callingagent.thebotss.com/api/create_outbound_agent', {
+        `${Api_BASE_URL}/create_outbound_agent`, {
         crm_user_id: user_id,
         agent_name: values.agentName,
         system_prompt: values.systemPrompt,
@@ -119,9 +121,9 @@ export default function OutBoundCalls({ user_id }: { user_id: string }) {
       // Save agentId and move to step 2
       setAgendId(agentId);
       setStep('details');
-    } catch (error:any) {
+    } catch (error: any) {
       console.error('Error creating agent:', error);
-      toast.error(error?.response?.data?.detail ||'Failed to create agent. Please try again.', { id: toastId });
+      toast.error(error?.response?.data?.detail || 'Failed to create agent. Please try again.', { id: toastId });
     }
   };
   // NEW: compute filtered campaigns based on searchTerm + statusFilter
@@ -211,7 +213,6 @@ export default function OutBoundCalls({ user_id }: { user_id: string }) {
               <button
                 onClick={() => {
                   setDrawerOpen(false);
-                  setEditingCampaign(null);
                   setStep('agent');
                   setAgendId(null);
                 }}
@@ -221,35 +222,60 @@ export default function OutBoundCalls({ user_id }: { user_id: string }) {
               </button>
             </div>
 
-            {step === 'agent' ? (
-              <CampaignForm
+            {editingCampaign && (
+              <CampaignEditForm
                 initialValues={{
-                  agentName: '',
-                  firstMessage: '',
-                  systemPrompt: '',
-
+                  agentName: editingCampaign.agentName,
+                  firstMessage: editingCampaign.firstMessage,
+                  systemPrompt: editingCampaign.systemPrompt,
+                  phoneNumber: editingCampaign.phoneNumber,
+                  contactsFileName: editingCampaign.contactsFileName,
+                  scheduledAt: editingCampaign.scheduledAt,
+                  status: editingCampaign.status,
                 }}
-                onSubmit={handleSubmitForm}
-                onCancel={() => {
+                onSubmit={(updatedCampaign) => {
+                  setCampaigns((prevCampaigns) =>
+                    prevCampaigns.map((c) => (c.id === updatedCampaign.id ? updatedCampaign : c))
+                  );
                   setDrawerOpen(false);
-                  setEditingCampaign(null);
-                  setStep('agent');
                 }}
-                user_id={user_id}
-                agendId=""
-              />
-            ) : (
-              <CampaignDetailsForm
-                agentId={agendId!}
-                user_id={user_id}
-                onSuccess={() => {
-                  toast.success('Campaign created successfully!');
-                  setDrawerOpen(false);
-                  setStep('agent');
-                  setAgendId(null);
-                }}
+                onCancel={() => setDrawerOpen(false)}
+                agentId={editingCampaign.id}
+                userId={user_id}
               />
             )}
+            {!editingCampaign ? (
+
+              step === 'agent' ? (
+                <CampaignForm
+                  initialValues={{
+                    agentName: '',
+                    firstMessage: '',
+                    systemPrompt: '',
+
+                  }}
+                  onSubmit={handleSubmitForm}
+                  onCancel={() => {
+                    setDrawerOpen(false);
+                    setStep('agent');
+                  }}
+                  user_id={user_id}
+                  agendId=""
+                />
+              ) : (
+                <CampaignDetailsForm
+                  agentId={agendId!}
+                  user_id={user_id}
+                  onSuccess={() => {
+                    toast.success('Campaign created successfully!');
+                    setDrawerOpen(false);
+                    setStep('agent');
+                    setAgendId(null);
+                  }}
+                />
+              )
+
+            ) : (null)}
           </div>
         </div>
       )}

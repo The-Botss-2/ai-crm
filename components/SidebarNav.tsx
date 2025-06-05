@@ -125,7 +125,7 @@ export default function SidebarNav({ teamId, pathname, userId, session, isOpen }
             </div>
 
             {/* Menu Items */}
-            <nav className="flex-1 overflow-y-auto py-4">
+            <nav className="flex-1 overflow-y-auto py-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400">
                 <ul className="space-y-1 px-2">
                     {groupedNavigation.map((section) => {
                         if (!section.items.length) return null;

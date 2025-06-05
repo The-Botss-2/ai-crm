@@ -2,10 +2,9 @@ import Sidebar from '@/components/sidebar';
 import { auth } from "@/auth";
 import { notFound } from "next/navigation";
 import { TeamRoleProvider } from '@/context/TeamRoleContext';
-import BotWidget from '@/components/BotWidget';
 import { CardConnectionProvider } from '@/context/CardConnectionContext';
-import VoiceCallWidget from '@/components/VoiceCallWidget';
 import { headers } from 'next/headers';
+import Main from './Main';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -24,12 +23,7 @@ export default async function DashboardLayout({ children, params }: LayoutProps)
         <TeamRoleProvider teamId={id} userId={session.user.id}>
             <CardConnectionProvider>
                 <div className="flex min-h-screen ">
-                    <Sidebar team_id={id} pathname={pathname}  session={session}/>
-                    <div className="flex-1 pl-16 lg:pl-64 transition-all duration-300">
-                        <main>
-                            {children}
-                        </main>
-                    </div>
+                    <Main id={id} pathname={pathname} session={session} children={children} />
                     {/* <VoiceCallWidget /> */}
                 </div>
             </CardConnectionProvider>
