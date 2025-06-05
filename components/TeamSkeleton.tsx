@@ -8,7 +8,7 @@ export default function TeamSkeleton() {
           Loading Team Data...
         </div>
         <div className="divide-y divide-gray-200">
-          {[...Array(6)].map((_, idx) => (
+          {[...Array(3)].map((_, idx) => (
             <div key={idx} className="flex items-center px-4 py-4 space-x-4 animate-pulse">
               <div className="w-6 h-6 rounded-full bg-gray-200" />
               <div className="w-1/4 h-4 bg-gray-200 rounded" />

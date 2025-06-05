@@ -71,6 +71,8 @@ export function SocialCard({
     }
   }
 useEffect(() => {
+  console.log("name", name, "isConnected", isConnected);
+  
   if (name === 'Email' && isConnected) {
  setIsCardConnected(true)
   }

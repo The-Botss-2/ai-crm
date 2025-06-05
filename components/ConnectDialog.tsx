@@ -82,7 +82,7 @@ export default function ConnectDialog({
     <Transition show={isOpen} as={Fragment}>
       <Dialog onClose={onClose} className="relative z-50">
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
-        <div className="fixed inset-y-0 right-0 max-w-sm w-full bg-white dark:bg-slate-900 p-6 overflow-y-auto shadow-lg">
+        <div className="fixed inset-y-0 right-0 max-w-sm w-full bg-white p-6 overflow-y-auto shadow-lg">
           <Dialog.Title className="text-md font-semibold border-b dark:border-gray-700 border-gray-200 pb-4 mb-4 flex justify-between items-center capitalize">
             Connect {name}
             <button onClick={onClose}>
@@ -96,7 +96,7 @@ export default function ConnectDialog({
                 <label className="block text-xs font-medium mb-1">{field.label}</label>
                 <input
                   type={field.type || 'text'}
-                  className={`w-full border rounded px-2 py-1 text-sm ${errors[field.name] ? 'border-red-500' : ''
+                  className={`w-full border rounded px-2 py-3 text-sm ${errors[field.name] ? 'border-red-500' : ''
                     }`}
                   value={formData[field.name] || ''}
                   onChange={e => handleChange(field.name, e.target.value)}
