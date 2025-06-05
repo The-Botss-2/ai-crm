@@ -145,7 +145,7 @@ export default function OutBoundCalls({ user_id }: { user_id: string }) {
   }, [campaigns, searchTerm, statusFilter]);
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="p-3 min-h-screen">
       {/* Header */}
       <div className="flex justify-between items-center mb-4 pb-4 border-b border-gray-300">
         <h1 className="text-2xl font-bold text-gray-900">Outbound Campaigns</h1>

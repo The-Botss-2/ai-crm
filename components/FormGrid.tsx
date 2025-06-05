@@ -80,7 +80,7 @@ export default function FormGrid() {
 
   return (
     <>
-      <Tab.Group selectedIndex={categories.indexOf(selectedTab)} onChange={handleTabChange}>
+      <Tab.Group selectedIndex={categories.indexOf(selectedTab)} onChange={handleTabChange} className="p-3">
         <Tab.List className="flex space-x-2 mb-4 border-b border-gray-300">
           {categories.map((cat) => (
             <Tab
@@ -99,7 +99,7 @@ export default function FormGrid() {
         </Tab.List>
       </Tab.Group>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6 text-gray-900">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6 text-gray-900 p-3">
         {/* Create New Form */}
         <button
           className="flex flex-col justify-center gap-4"

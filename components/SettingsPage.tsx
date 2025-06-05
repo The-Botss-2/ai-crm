@@ -105,7 +105,7 @@ export default function SettingsPage({ user_id }: { user_id: string }) {
 
   return (
     isLoadingGet ? (<Loading />):(
-    <div className="max-w-7xl mx-auto p-8 bg-gray-50 min-h-screen">
+    <div className="max-w-7xl mx-auto p-8 min-h-screen">
 
       <div className="flex flex-col md:flex-row md:space-x-14 gap-12">
         {/* Profile */}

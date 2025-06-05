@@ -8,7 +8,7 @@ export default async function Page() {
   if (!session?.user?.id) return notFound();
   return (
     <div className="p-4">
-      <div className="flex justify-between items-center mb-4 border-b  pb-4">
+      <div className="flex justify-between items-center mb-4 border-b p-3 pb-4">
         <h1 className="text-2xl font-bold">Forms</h1>
       </div>
       <FormGrid />

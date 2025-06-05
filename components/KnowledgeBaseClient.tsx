@@ -59,7 +59,7 @@ export function KnowledgeBaseClient({ teamId }: KnowledgeBaseClientProps) {
     if (isLoading || isInitializing) return <LoadingSkeleton message={isInitializing ? 'Initializing Knowledge Base...' : 'Loading Knowledge Base...'} />;
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6  p-3">
             <FileGrid files={data?.file || []}data={data} onDeleteFile={handleDeleteFile} />
             <KnowledgeBaseForm
                 knowledgeBase={knowledgeBase}

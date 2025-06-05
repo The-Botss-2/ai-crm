@@ -11,7 +11,7 @@ export default async function KnowledgeBasePage({ params }: { params: Promise<{ 
 
     return (
         <div className="p-4">
-            <div className="flex justify-between items-center mb-4 pb-4 border-b border-gray-200">
+            <div className="flex justify-between items-center mb-4 p-3 pb-4 border-b border-gray-200">
                 <h1 className="text-2xl font-bold">Knowledge Base</h1>
             </div>
 
