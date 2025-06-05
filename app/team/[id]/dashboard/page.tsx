@@ -33,7 +33,7 @@ export default function Page() {
   }
 
   return (
-    <div className="container mx-auto px-8 py-2">
+    <div className="mx-auto px-8 py-2">
       <div className="mb-6">
         <p className="text-gray-600">Here's what's happening with your CRM today</p>
       </div>
