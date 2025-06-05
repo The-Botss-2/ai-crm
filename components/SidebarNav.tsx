@@ -107,7 +107,7 @@ export default function SidebarNav({ teamId, pathname, userId, session, isOpen }
     return (
         <>
             {/* Logo / Team Header */}
-            <div className="flex items-center h-16 px-4 border-b border-gray-200">
+            {/* <div className="flex items-center h-16 px-4 border-b border-gray-200">
                 <Link href="/teams" className="flex items-center space-x-3 text-blue-600 hover:underline">
                     {logo && (
                         <Image
@@ -119,10 +119,10 @@ export default function SidebarNav({ teamId, pathname, userId, session, isOpen }
                         />
                     )}
                     {isOpen && teamName && (
-                        <span className="font-semibold mx-1" style={{fontSize: '25px'}}>{teamName || "Team name"}</span>
+                        <span className="font-semibold mx-1" style={{fontSize: '25px'}}>{teamName || "..."}</span>
                     )}
                 </Link>
-            </div>
+            </div> */}
 
             {/* Menu Items */}
             <nav className="flex-1 overflow-y-auto py-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400">

@@ -5,6 +5,7 @@ import { IoMdMenu } from 'react-icons/io';
 import SignOutBtn from './SignOutBtn';
 import SidebarNav from './SidebarNav';
 import Link from 'next/link';
+import { useTeamRole } from '@/context/TeamRoleContext';
 interface Props {
   team_id: string;
   pathname: string;
@@ -13,6 +14,7 @@ interface Props {
   setIsOpen: (isOpen: boolean) => void;
 }
 export default function Sidebar({ team_id, pathname ,session, isOpen, setIsOpen}: Props) {
+    const { teamName} = useTeamRole();
 
 
   // Persist sidebar state in localStorage (optional)
@@ -35,7 +37,7 @@ export default function Sidebar({ team_id, pathname ,session, isOpen, setIsOpen}
         <button onClick={() => setIsOpen(!isOpen)} className="text-gray-600 hover:text-blue-600">
           <IoMdMenu size={24} />
         </button>
-        {isOpen && <span className="text-xl font-bold text-blue-600">CRM</span>}
+        {isOpen && <span className=" font-bold text-blue-600" style={{fontSize: '22px'}}>{teamName ? teamName : '...'}</span>}
       </div>
 
       {/* Sidebar Navigation */}
