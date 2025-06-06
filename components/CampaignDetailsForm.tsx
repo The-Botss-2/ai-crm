@@ -12,10 +12,21 @@ interface CampaignDetailsFormProps {
   agentId: string;
   user_id: string;
   onSuccess: () => void;
+  fetchCampaigns: () => void
 }
+type Payload = {
+  agent_id: string;
+  crm_user_id: string;
+  source_number: string;
+  contacts_file?: File;
+  agent_name: string;
+  scheduled_at?: string;
+  start_immediately?: boolean;
+};
 
-const CampaignDetailsForm: React.FC<CampaignDetailsFormProps> = ({ agentId, user_id, onSuccess }) => {
-  const [fileName, setFileName] = useState('');
+const CampaignDetailsForm: React.FC<CampaignDetailsFormProps> = ({ agentId, user_id, onSuccess,fetchCampaigns }) => {
+  const [file, setFile] = useState<File | null>(null);
+
   const [phoneNumbers, setPhoneNumbers] = useState<string[]>([]);
   const Api_BASE_URL = 'https://callingagent.thebotss.com/api'
 
@@ -30,40 +41,86 @@ const CampaignDetailsForm: React.FC<CampaignDetailsFormProps> = ({ agentId, user
     };
     loadNumbers();
   }, [user_id]);
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+    };
+  };
   return (
     <Formik
       initialValues={{
         phoneNumber: '',
-        contactsFileName: '',
+        contactsFile: '',
+        campaignName: '',
         scheduledAt: null as Date | null,
         statusAction: 'startNow' as 'startNow' | 'schedule',
       }}
       validate={(values) => {
         const errors: any = {};
+        if (!values.campaignName) errors.campaignName = 'Required';
         if (!values.phoneNumber) errors.phoneNumber = 'Required';
         if (values.statusAction === 'schedule' && !values.scheduledAt) errors.scheduledAt = 'Pick a date';
         return errors;
       }}
       onSubmit={async (values) => {
+        if (!file) {
+          toast.error('File is required');
+          return;
+        }
         const toastId = toast.loading('Scheduling campaign...');
-        try {
-          await axios.post(`${Api_BASE_URL}/schedule_campaign`, {
-            agent_id: agentId,
-            crm_user_id: user_id,
-            phone_number: values.phoneNumber,
-            contacts_file: fileName, // Optional: Upload logic separately
-            scheduled_at: values.statusAction === 'schedule' ? values.scheduledAt?.toISOString() : new Date().toISOString(),
-          });
 
-          toast.success('Campaign scheduled!', { id: toastId });
-          onSuccess();
-        } catch (err:any) {
+        // Build URL with query parameters
+        const url = new URL(`${Api_BASE_URL}/outbound-campaign`);
+        url.searchParams.append('crm_user_id', user_id);
+        url.searchParams.append('agent_id', agentId);
+        url.searchParams.append('agent_name', values.campaignName);
+        url.searchParams.append('source_number', values.phoneNumber);
+        url.searchParams.append('start_immediately', values.statusAction === 'startNow' ? 'true' : 'false');
+
+        if (values.statusAction === 'schedule' && values.scheduledAt instanceof Date) {
+          console.log(values.scheduledAt.toISOString(), 'values.scheduledAt');
+          url.searchParams.append('scheduled_at', values.scheduledAt.toISOString());
+        }
+
+        // Prepare FormData with file only
+        const formData = new FormData();
+        formData.append('contacts_file', file);
+
+        try {
+          const res = await axios.post(url.toString(), formData, {
+            headers: {
+              'accept': 'application/json',
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+          console.log(res, 'outbound-campaig');
+          if(res && res?.data?.success == true){
+            toast.success('Campaign scheduled!', { id: toastId });
+            onSuccess()
+            fetchCampaigns();
+          }
+        } catch (err: any) {
           toast.error(err?.response?.data?.detail || 'Failed to schedule campaign', { id: toastId });
         }
       }}
+
+
     >
       {({ setFieldValue, values, errors, touched }) => (
         <Form className="space-y-4">
+          <div>
+            <label className="block mb-2 text-sm font-medium text-gray-700">Campaign Name</label>
+            <Field
+              name="campaignName"
+              type="text"
+              className="w-full border border-gray-300 text-sm p-3 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Campaign Name"
+            />
+            {errors.campaignName && touched.campaignName && (
+              <p className="text-red-600 text-sm mt-1">{errors.campaignName}</p>
+            )}
+          </div>
           <div>
             <label className="block text-sm font-medium mb-1">Phone Number</label>
             <Field
@@ -89,12 +146,10 @@ const CampaignDetailsForm: React.FC<CampaignDetailsFormProps> = ({ agentId, user
               type="file"
               accept=".csv,.xlsx,.txt"
               onChange={(e) => {
-                if (e.target.files?.[0]) {
-                  setFileName(e.target.files[0].name);
-                }
+                handleFileInputChange(e);
               }}
             />
-            {fileName && <p className="text-sm mt-1">Selected: {fileName}</p>}
+            {file && <p className="text-sm mt-1">Selected: {file.name}</p>}
           </div>
 
           <div className="flex gap-4">

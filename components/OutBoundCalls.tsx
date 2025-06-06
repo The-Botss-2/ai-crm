@@ -1,7 +1,7 @@
 // components/OutBoundCalls.tsx
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { format } from 'date-fns';
 import { IoAdd, IoClose } from 'react-icons/io5';
 import CampaignForm from './CampaignForm';
@@ -13,12 +13,12 @@ import CampaignEditForm from './CampaignEditForm';
 
 export interface Campaign {
   id: string;
-  agentName: string;
+  agent_name: string;
   firstMessage: string;
   systemPrompt: string;
-  phoneNumber: string;
-  contactsFileName: string; // just store the uploaded filename
-  scheduledAt: Date | null;
+  source_number: string;
+  contacts_file: string; // just store the uploaded filename
+  scheduled_at: Date | null;
   status: 'draft' | 'scheduled' | 'running' | 'stopped';
 }
 export interface AddCampaign {
@@ -31,37 +31,6 @@ export interface AddCampaign {
 
 export default function OutBoundCalls({ user_id }: { user_id: string }) {
   const [campaigns, setCampaigns] = useState<Campaign[]>([
-    // Example dummy campaigns
-    {
-      id: 'cmp1',
-      agentName: 'Alice Johnson',
-      firstMessage: 'Hello, this is Alice from Acme Corp.',
-      systemPrompt: 'Speak politely and ask how you can help.',
-      phoneNumber: '+1 (555) 123-4567',
-      contactsFileName: 'contacts_jan.csv',
-      scheduledAt: new Date(Date.now() + 3600_000), // one hour from now
-      status: 'scheduled',
-    },
-    {
-      id: 'cmp2',
-      agentName: 'Bob Smith',
-      firstMessage: 'Hey there, Bob here! Just checking in.',
-      systemPrompt: 'Keep it friendly and concise.',
-      phoneNumber: '+1 (555) 987-6543',
-      contactsFileName: 'leads_feb.xlsx',
-      scheduledAt: null,
-      status: 'running',
-    },
-    {
-      id: 'cmp3',
-      agentName: 'Carol Lee',
-      firstMessage: 'Good afternoon—Carol calling on behalf of XYZ Inc.',
-      systemPrompt: 'Be upbeat and confirm contact availability.',
-      phoneNumber: '+1 (555) 222-3333',
-      contactsFileName: 'mar_contacts.csv',
-      scheduledAt: null,
-      status: 'draft',
-    },
   ]);
   const [agendId, setAgendId] = useState<string | null>('');
   const [editingCampaign, setEditingCampaign] = useState<Campaign | null>(null);
@@ -89,8 +58,21 @@ export default function OutBoundCalls({ user_id }: { user_id: string }) {
       prev.map((c) => (c.id === id ? { ...c, status: 'stopped' } : c))
     );
   };
-
-
+  const fetchCampaigns = async () => {
+      try {
+        const res = await axios.get(`${Api_BASE_URL}/outbound-campaigns?crm_user_id=${user_id}`);
+        console.log(res, 'campaigns');
+        
+        setCampaigns(res?.data || []);
+      } catch {
+        toast.error('Failed to load campaigns');
+      }
+    };
+ useEffect(() => {
+  if (user_id){
+    fetchCampaigns();
+  }
+  }, [user_id]);
   const handleSubmitForm = async (
     values: Omit<AddCampaign, 'id' | 'status'>
   ) => {
@@ -115,12 +97,13 @@ export default function OutBoundCalls({ user_id }: { user_id: string }) {
         }
       );
 
-      const agentId = response.data.agent_id; // Ensure API returns agent_id
-      toast.success('Agent created successfully!', { id: toastId });
-
+      const agentId = response?.data?.agent_id; // Ensure API returns agent_id
+      console.log('Agent ID:', agentId,response);
+      
+        toast.success('Agent created successfully!', { id: toastId });
+        setAgendId(agentId);
+        setStep('details');
       // Save agentId and move to step 2
-      setAgendId(agentId);
-      setStep('details');
     } catch (error: any) {
       console.error('Error creating agent:', error);
       toast.error(error?.response?.data?.detail || 'Failed to create agent. Please try again.', { id: toastId });
@@ -137,8 +120,8 @@ export default function OutBoundCalls({ user_id }: { user_id: string }) {
       if (!lcTerm) return true;
 
       return (
-        c.agentName.toLowerCase().includes(lcTerm) ||
-        c.phoneNumber.toLowerCase().includes(lcTerm) ||
+        c.agent_name.toLowerCase().includes(lcTerm) ||
+        c.source_number.toLowerCase().includes(lcTerm) ||
         c.firstMessage.toLowerCase().includes(lcTerm)
       );
     });
@@ -225,12 +208,12 @@ export default function OutBoundCalls({ user_id }: { user_id: string }) {
             {editingCampaign && (
               <CampaignEditForm
                 initialValues={{
-                  agentName: editingCampaign.agentName,
+                  agentName: editingCampaign.agent_name,
                   firstMessage: editingCampaign.firstMessage,
                   systemPrompt: editingCampaign.systemPrompt,
-                  phoneNumber: editingCampaign.phoneNumber,
-                  contactsFileName: editingCampaign.contactsFileName,
-                  scheduledAt: editingCampaign.scheduledAt,
+                  phoneNumber: editingCampaign.source_number,
+                  contactsFileName: editingCampaign.contacts_file,
+                  scheduledAt: editingCampaign.scheduled_at,
                   status: editingCampaign.status,
                 }}
                 onSubmit={(updatedCampaign) => {
@@ -272,6 +255,7 @@ export default function OutBoundCalls({ user_id }: { user_id: string }) {
                     setStep('agent');
                     setAgendId(null);
                   }}
+                  fetchCampaigns={fetchCampaigns}
                 />
               )
 

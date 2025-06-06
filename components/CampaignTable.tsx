@@ -1,7 +1,6 @@
-// components/CampaignTable.tsx
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Campaign } from './OutBoundCalls';
 import { format } from 'date-fns';
 import { FiEdit3 } from 'react-icons/fi';
@@ -16,6 +15,23 @@ interface TableProps {
 }
 
 const CampaignTable: React.FC<TableProps> = ({ campaigns, onEdit, onDelete, onStop }) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
+
+  const totalPages = Math.ceil(campaigns.length / itemsPerPage);
+  const paginatedCampaigns = campaigns.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePrev = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleNext = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
+
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full text-sm border-separate border-spacing-y-2">
@@ -30,15 +46,16 @@ const CampaignTable: React.FC<TableProps> = ({ campaigns, onEdit, onDelete, onSt
           </tr>
         </thead>
         <tbody>
-          {campaigns.length > 0 ? (
-            campaigns.map((c) => (
-              <tr key={c.id} className="bg-white shadow-sm hover:shadow-md transition duration-150 rounded-md">
-                <td className="px-4 py-2 bg-blue-50 font-medium text-blue-700">{c.agentName}</td>
-                <td className="px-4 py-2 text-gray-800">{c.phoneNumber}</td>
+          {paginatedCampaigns.length > 0 ? (
+            paginatedCampaigns.map((c) => (
+              <tr
+                key={c.id}
+                className="bg-white shadow-sm hover:shadow-md transition duration-150 rounded-md"
+              >
+                <td className="px-4 py-2 bg-blue-50 font-medium text-blue-700">{c.agent_name}</td>
+                <td className="px-4 py-2 text-gray-800">{c.source_number}</td>
                 <td className="px-4 py-2 text-gray-600">
-                  {c.scheduledAt
-                    ? format(c.scheduledAt, 'yyyy-MM-dd HH:mm')
-                    : '—'}
+                  {c.scheduled_at ? format(c.scheduled_at, 'yyyy-MM-dd HH:mm') : '—'}
                 </td>
                 <td className="px-4 py-2">
                   <span
@@ -55,7 +72,7 @@ const CampaignTable: React.FC<TableProps> = ({ campaigns, onEdit, onDelete, onSt
                     {c.status}
                   </span>
                 </td>
-                <td className="px-4 py-2 text-gray-800">{c.contactsFileName || '—'}</td>
+                <td className="px-4 py-2 text-gray-800">{c.contacts_file || '—'}</td>
                 <td className="px-4 py-2 space-x-2">
                   <button
                     onClick={() => onEdit(c)}
@@ -89,6 +106,29 @@ const CampaignTable: React.FC<TableProps> = ({ campaigns, onEdit, onDelete, onSt
           )}
         </tbody>
       </table>
+
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="flex justify-end items-center mt-4 gap-2 text-sm">
+          <button
+            onClick={handlePrev}
+            disabled={currentPage === 1}
+            className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <span>
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={handleNext}
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 };
