@@ -12,9 +12,10 @@ interface TableProps {
   onEdit: (c: Campaign) => void;
   onDelete: (id: string) => void;
   onStop: (id: string) => void;
+  campaignLoading: boolean
 }
 
-const CampaignTable: React.FC<TableProps> = ({ campaigns, onEdit, onDelete, onStop }) => {
+const CampaignTable: React.FC<TableProps> = ({ campaigns, onEdit, onDelete, onStop,campaignLoading }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
@@ -97,7 +98,7 @@ const CampaignTable: React.FC<TableProps> = ({ campaigns, onEdit, onDelete, onSt
                 </td>
               </tr>
             ))
-          ) : (
+          ) : campaignLoading ? <tr><td colSpan={6} className="text-center py-4 text-gray-500">Loading...</td></tr> : (
             <tr>
               <td colSpan={6} className="text-center py-4 text-gray-500">
                 No campaigns found

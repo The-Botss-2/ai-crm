@@ -32,6 +32,7 @@ export interface AddCampaign {
 export default function OutBoundCalls({ user_id }: { user_id: string }) {
   const [campaigns, setCampaigns] = useState<Campaign[]>([
   ]);
+  const [campaignLoading, setCampaignLoading] = useState(false);
   const [agendId, setAgendId] = useState<string | null>('');
   const [editingCampaign, setEditingCampaign] = useState<Campaign | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -59,12 +60,14 @@ export default function OutBoundCalls({ user_id }: { user_id: string }) {
     );
   };
   const fetchCampaigns = async () => {
+    setCampaignLoading(true);
       try {
         const res = await axios.get(`${Api_BASE_URL}/outbound-campaigns?crm_user_id=${user_id}`);
         console.log(res, 'campaigns');
-        
+      setCampaignLoading(false);
         setCampaigns(res?.data || []);
       } catch {
+        setCampaignLoading(false);
         toast.error('Failed to load campaigns');
       }
     };
@@ -183,6 +186,7 @@ export default function OutBoundCalls({ user_id }: { user_id: string }) {
         onEdit={handleEdit}
         onDelete={handleDelete}
         onStop={handleStop}
+        campaignLoading={campaignLoading}
       />
 
       {/* Sliding Drawer for Create/Edit */}
