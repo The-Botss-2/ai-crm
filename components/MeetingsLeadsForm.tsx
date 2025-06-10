@@ -16,7 +16,7 @@ interface MeetingFormProps {
   reload: () => void;
 }
 
-const MeetingForm: React.FC<MeetingFormProps> = ({
+const MeetingsLeadsForm: React.FC<MeetingFormProps> = ({
   initialValues,
   isEdit,
   isPreview,
@@ -411,4 +411,4 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
   );
 };
 
-export default MeetingForm;
+export default MeetingsLeadsForm;

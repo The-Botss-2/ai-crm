@@ -3,7 +3,7 @@
 import React from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { IoClose } from 'react-icons/io5';
-import MeetingForm from './MeetingForm';
+import MeetingsLeadsForm from './MeetingsLeadsForm';
 
 interface MeetingPanelProps {
   meeting: any | null;
@@ -15,7 +15,7 @@ interface MeetingPanelProps {
   mutate: () => void;
 }
 
-const MeetingPanel: React.FC<MeetingPanelProps> = ({
+const MeetingLeadsPanel: React.FC<MeetingPanelProps> = ({
   meeting,
   isOpen,
   mode,
@@ -44,7 +44,7 @@ const MeetingPanel: React.FC<MeetingPanelProps> = ({
           </Dialog.Title>
 
           {(meeting || !isEdit) && (
-            <MeetingForm
+            <MeetingsLeadsForm
               initialValues={{
                 _id: meeting?._id || '',
                 title: meeting?.title || '',
@@ -76,4 +76,4 @@ const MeetingPanel: React.FC<MeetingPanelProps> = ({
   );
 };
 
-export default MeetingPanel;
+export default MeetingLeadsPanel;

@@ -4,6 +4,7 @@ import { getStatusColor } from '@/utils/lead';
 import { MdDeleteOutline, MdOutlineRemoveRedEye } from 'react-icons/md';
 import { FiEdit3 } from 'react-icons/fi';
 import { useTeamRole } from '@/context/TeamRoleContext';
+import { useRouter } from 'next/navigation';
 
 interface LeadsTableProps {
   leads: Lead[];
@@ -15,8 +16,10 @@ interface LeadsTableProps {
 
 const LeadsTable: React.FC<LeadsTableProps> = ({ leads, onEdit, onDelete, onPreview, error }) => {
   const { role, loading } = useTeamRole();
-
+  const router = useRouter()
   if (loading) return <p>Loading ...</p>;
+  console.log(leads, 'leads');
+  
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full text-sm border-separate border-spacing-y-2">
@@ -38,7 +41,7 @@ const LeadsTable: React.FC<LeadsTableProps> = ({ leads, onEdit, onDelete, onPrev
                 key={lead._id}
                 className="bg-white shadow-sm hover:shadow-md transition duration-150 rounded-md"
               >
-                <td className="px-4 py-2 rounded-l-md bg-blue-50 font-medium text-blue-700">{lead.name}</td>
+                <td className="px-4 py-2 rounded-l-md bg-blue-50 font-medium text-blue-700" onClick={() => router.push(`/team/${lead?.teamId}/leadsdetails/${lead._id}`)}>{lead.name}</td>
                 <td className="px-4 py-2 text-gray-800">{lead.email}</td>
                 <td className="px-4 py-2 text-gray-800">{lead.phone}</td>
                 <td className="px-4 py-2">
@@ -70,7 +73,7 @@ const LeadsTable: React.FC<LeadsTableProps> = ({ leads, onEdit, onDelete, onPrev
                     </button>
                   )}
                   <button
-                    onClick={() => onPreview(lead)}
+                    onClick={() => router.push(`/team/${lead?.teamId}/leadsdetails/${lead._id}`)}
                     className="bg-green-100 text-green-800 cursor-pointer p-1 rounded hover:underline"
                   >
                     <MdOutlineRemoveRedEye size={16} />

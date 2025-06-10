@@ -20,6 +20,11 @@ const MeetingSchema = new Schema({
     enum: ['onsite', 'online'],
     required: true,
   },
+    leadId: {
+            type: Schema.Types.ObjectId,
+            ref: 'Lead',
+            default: null,
+        },
   followUpStatus: { type: String, default: '' },
   notes: { type: String, default: '' },
   transcript: { type: String, default: '' },

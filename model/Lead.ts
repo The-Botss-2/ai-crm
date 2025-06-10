@@ -31,7 +31,7 @@ const leadSchema = new mongoose.Schema(
     },
     company: {
       type: String,
-      required: true,
+      default: 'not added yet',
     },
     status: {
       type: String,

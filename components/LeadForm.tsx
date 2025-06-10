@@ -20,7 +20,6 @@ export default function LeadForm({ initialValues, onClose, isEdit, isPreview, re
     if (!values.name) errors.name = 'Required';
     if (!values.email) errors.email = 'Required';
     if (!values.phone) errors.phone = 'Required';
-    if (!values.company) errors.company = 'Required';
     return errors;
   };
 
@@ -35,7 +34,7 @@ export default function LeadForm({ initialValues, onClose, isEdit, isPreview, re
         url,
         method,
         params: {
-          team: values.team,
+          team: values.teamId,
           user: submittedBy,
         },
         data: values,

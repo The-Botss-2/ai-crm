@@ -3,7 +3,7 @@ export interface Lead {
   name: string;
   email: string;
   phone: string;
-  team: string;
+  teamId: string;
   company: string;
   status: string;
   notes: string;

@@ -51,7 +51,7 @@ export default function Sidebar({ team_id, pathname ,session, isOpen, setIsOpen}
 
       {/* Footer */}
       <div className="flex items-center p-4 border-t border-gray-200">
-        <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center text-white">U</div>
+        <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center text-white"> {session?.user?.name.charAt(0).toUpperCase()}</div>
         {isOpen && (
           <div className="ml-3 flex w-full items-center justify-between min-w-0">
             <Link href={`/team/${team_id}/settings`} className="text-lg font-large text-gray-900 truncate">
