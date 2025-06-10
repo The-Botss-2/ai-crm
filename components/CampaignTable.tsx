@@ -17,7 +17,7 @@ interface TableProps {
 
 const CampaignTable: React.FC<TableProps> = ({ campaigns, onEdit, onDelete, onStop,campaignLoading }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8;
+  const itemsPerPage = 10;
 
   const totalPages = Math.ceil(campaigns.length / itemsPerPage);
   const paginatedCampaigns = campaigns.slice(
