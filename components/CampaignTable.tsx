@@ -6,19 +6,26 @@ import { format } from 'date-fns';
 import { FiEdit3 } from 'react-icons/fi';
 import { MdDeleteOutline } from 'react-icons/md';
 import { HiStop } from 'react-icons/hi';
+import { FaEye } from 'react-icons/fa';
+import { IoIosCall } from 'react-icons/io';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 interface TableProps {
   campaigns: Campaign[];
   onEdit: (c: Campaign) => void;
   onDelete: (id: string) => void;
   onStop: (id: string) => void;
-  campaignLoading: boolean
+  campaignLoading: boolean;
+  teamId: string
 }
 
-const CampaignTable: React.FC<TableProps> = ({ campaigns, onEdit, onDelete, onStop,campaignLoading }) => {
+const CampaignTable: React.FC<TableProps> = ({ campaigns, onEdit, onDelete, onStop,campaignLoading ,teamId}) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-
+  const Api_BASE_URL = 'https://callingagent.thebotss.com/api'
+  const router = useRouter()
   const totalPages = Math.ceil(campaigns.length / itemsPerPage);
   const paginatedCampaigns = campaigns.slice(
     (currentPage - 1) * itemsPerPage,
@@ -32,6 +39,25 @@ const CampaignTable: React.FC<TableProps> = ({ campaigns, onEdit, onDelete, onSt
   const handleNext = () => {
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
   };
+  const CallAgent = async (c: any) => {
+  try {
+    const payload = {
+      crm_user_id: c.crm_user_id,
+      agent_id: c.agent_id,
+      lead_id: c.lead_id,
+      to_number: c.source_number,
+      from_number: '03282637313', // You can replace with dynamic value if needed
+    };
+
+    const { data } = await axios.post(`${Api_BASE_URL}/api/outbound-single-call`, payload);
+
+    console.log('Call initiated:', data);
+    alert('Call initiated successfully');
+  } catch (error: any) {
+    console.error('Error initiating call:', error);
+    toast.error(error?.response?.data?.message || 'Failed to initiate call');
+  }
+};
 
   return (
     <div className="overflow-x-auto">
@@ -73,8 +99,14 @@ const CampaignTable: React.FC<TableProps> = ({ campaigns, onEdit, onDelete, onSt
                     {c.status}
                   </span>
                 </td>
-                <td className="px-4 py-2 text-gray-800">{c.contacts_file || '—'}</td>
+                <td className="px-4 py-2 text-gray-800"> {c.contacts_file ? c.contacts_file.split('/').pop() : '—'}</td>
                 <td className="px-4 py-2 space-x-2">
+                   <button
+                    onClick={() => router.push(`/team/${teamId}/outboundcalls/${c?.id}`)}
+                    className="bg-blue-100 text-blue-800 p-1 rounded hover:bg-blue-200"
+                  >
+                    <FaEye size={16} />
+                  </button>
                   <button
                     onClick={() => onEdit(c)}
                     className="bg-blue-100 text-blue-800 p-1 rounded hover:bg-blue-200"

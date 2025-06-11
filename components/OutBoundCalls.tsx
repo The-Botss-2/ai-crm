@@ -77,7 +77,7 @@ export default function OutBoundCalls({ user_id ,page, lead_id, team_id}: props)
         setCampaigns(res?.data || []);
       } catch {
         setCampaignLoading(false);
-        toast.error('Failed to load campaigns');
+        // toast.error('Failed to load campaigns');
       }
     };
  useEffect(() => {
@@ -196,6 +196,7 @@ export default function OutBoundCalls({ user_id ,page, lead_id, team_id}: props)
         onDelete={handleDelete}
         onStop={handleStop}
         campaignLoading={campaignLoading}
+        teamId={teamId}
       />
 
       {/* Sliding Drawer for Create/Edit */}
