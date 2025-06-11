@@ -26,7 +26,7 @@ export default function SignupForm() {
       const response = await axios.post('/api/auth/signup', formData);
 
       toast.success('Signup successful!', { id: toastId });
-      router.push('/teams');
+      router.push('/');
     } catch (error: any) {
       toast.dismiss(toastId);
       if (axios.isAxiosError(error) && error.response) {

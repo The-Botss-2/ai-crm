@@ -28,8 +28,11 @@ export interface AddCampaign {
   systemPrompt: string;
 
 }
-
-export default function OutBoundCalls({ user_id }: { user_id: string }) {
+interface props {
+  user_id: string;
+  page?: string
+}
+export default function OutBoundCalls({ user_id ,page}: props) {
   const [campaigns, setCampaigns] = useState<Campaign[]>([
   ]);
   const [campaignLoading, setCampaignLoading] = useState(false);

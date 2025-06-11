@@ -7,6 +7,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     ...authConfig,
     session: {
         strategy: "jwt",
+        maxAge: 30 * 24 * 60 * 60, // session maxAge (30 days in seconds)
+        updateAge: 24 * 60 * 60, // how often the session is refreshed (every 24 hours)
+        
     },
     pages: {
         signIn: "/signin",
@@ -32,6 +35,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         },
 
         async session({ session}) {
+            console.log("session123", session);
             await connectToDatabase();
             if (session.user.email) {
                 const dbUser = await Profile.findOne({ email: session.user.email });

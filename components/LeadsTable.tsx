@@ -5,6 +5,7 @@ import { MdDeleteOutline, MdOutlineRemoveRedEye } from 'react-icons/md';
 import { FiEdit3 } from 'react-icons/fi';
 import { useTeamRole } from '@/context/TeamRoleContext';
 import { useRouter } from 'next/navigation';
+import Loading from './Loading';
 
 interface LeadsTableProps {
   leads: Lead[];
@@ -17,7 +18,7 @@ interface LeadsTableProps {
 const LeadsTable: React.FC<LeadsTableProps> = ({ leads, onEdit, onDelete, onPreview, error }) => {
   const { role, loading } = useTeamRole();
   const router = useRouter()
-  if (loading) return <p>Loading ...</p>;
+  if (loading) return <Loading />;
   console.log(leads, 'leads');
   
   return (

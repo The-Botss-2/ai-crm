@@ -17,7 +17,7 @@ export default function LoginForm() {
       toast.error(state.message || 'Login failed.', { id: 'login' });
     } else if (state?.status === 'success') {
       toast.success('Login successful!', { id: 'login' });
-      router.push('/teams');
+      router.push('/');
     }
   }, [state,isPending]);
 

@@ -6,6 +6,7 @@ import SignOutBtn from './SignOutBtn';
 import SidebarNav from './SidebarNav';
 import Link from 'next/link';
 import { useTeamRole } from '@/context/TeamRoleContext';
+import { useRouter } from 'next/navigation';
 interface Props {
   team_id: string;
   pathname: string;
@@ -15,7 +16,7 @@ interface Props {
 }
 export default function Sidebar({ team_id, pathname ,session, isOpen, setIsOpen}: Props) {
     const { teamName} = useTeamRole();
-
+    const rouer = useRouter()
 
   // Persist sidebar state in localStorage (optional)
   useEffect(() => {
@@ -37,7 +38,7 @@ export default function Sidebar({ team_id, pathname ,session, isOpen, setIsOpen}
         <button onClick={() => setIsOpen(!isOpen)} className="text-gray-600 hover:text-blue-600">
           <IoMdMenu size={24} />
         </button>
-        {isOpen && <span className=" font-bold text-blue-600" style={{fontSize: '22px'}}>{teamName ? teamName : '...'}</span>}
+        {isOpen && <span onClick={() => rouer.push(`/teams/${localStorage.getItem('organization_id')}`)} className=" font-bold text-blue-600" style={{fontSize: '22px'}}>{teamName ? teamName : '...'}</span>}
       </div>
 
       {/* Sidebar Navigation */}

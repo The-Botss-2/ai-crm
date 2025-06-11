@@ -3,10 +3,10 @@
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import useSWR from 'swr';
 import { useEffect, useState } from 'react';
-import TaskPanel from '@/components/TaskPanel';
 import classNames from 'classnames';
 import { fetcher } from '@/lib/fetcher';
 import { useTeamRole } from '@/context/TeamRoleContext';
+import LeadTaskPanel from './LeadTaskPanel';
 
 const STATUS_TABS = ['all', 'pending', 'in_progress', 'completed', 'blocked'];
 interface props {
@@ -162,7 +162,7 @@ export default function LeadTasks({ user_id,lead_id,team_id }: props) {
         </table>
       </div>
 
-      <TaskPanel isOpen={drawerOpen} onClose={() => setDrawerOpen(false)} task={editingTask} teamId={teamId} mutate={mutate} />
+      <LeadTaskPanel isOpen={drawerOpen} onClose={() => setDrawerOpen(false)} task={editingTask} teamId={teamId} mutate={mutate} lead_id={lead_id} />
     </div>
   );
 }

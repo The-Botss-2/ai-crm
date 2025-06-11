@@ -6,11 +6,16 @@ import { format, isAfter, isBefore, parseISO } from 'date-fns';
 import MeetingPanel from './MeetingPanel';
 import { fetcher } from '@/lib/fetcher';
 import { useParams } from 'next/navigation';
+import MeetingLeadsPanel from './MeetingLeadsPanel';
+interface props {
+  lead_id: string;
+  meetings: any;
+  mutate: () => void;
+}
 
-const MeetingsLeadListView = ({lead_id}: any) => {
+const MeetingsLeadListView = ({lead_id, meetings,mutate}: props) => {
   const { id: teamId } = useParams<{ id: string }>();
 
-  const { data: meetings, mutate } = useSWR(`/api/meetingDetail?id=${lead_id}`, fetcher);
   const [activeTab, setActiveTab] = useState<'upcoming' | 'past'>('upcoming');
   const [selectedMeeting, setSelectedMeeting] = useState<any | null>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -93,7 +98,7 @@ const MeetingsLeadListView = ({lead_id}: any) => {
         ))}
       </div>
 
-      <MeetingPanel
+      <MeetingLeadsPanel
         meeting={selectedMeeting}
         isOpen={isOpen}
         mode="edit"
@@ -101,6 +106,7 @@ const MeetingsLeadListView = ({lead_id}: any) => {
         teamId={selectedMeeting?.teamId ?? ''}
         userId={selectedMeeting?.createdBy ?? ''}
         mutate={mutate}
+        lead_id={lead_id}
       />
     </>
   );

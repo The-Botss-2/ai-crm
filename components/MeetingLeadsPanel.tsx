@@ -13,6 +13,7 @@ interface MeetingPanelProps {
   teamId: string;
   userId: string;
   mutate: () => void;
+  lead_id: string
 }
 
 const MeetingLeadsPanel: React.FC<MeetingPanelProps> = ({
@@ -23,6 +24,7 @@ const MeetingLeadsPanel: React.FC<MeetingPanelProps> = ({
   teamId,
   userId,
   mutate,
+  lead_id
 }) => {
   const isPreview = mode === 'preview';
   const isEdit = mode === 'edit' && !!meeting;
@@ -62,7 +64,7 @@ const MeetingLeadsPanel: React.FC<MeetingPanelProps> = ({
                 attendees: meeting?.attendees || [],
                 teamId,
                 createdBy: meeting?.createdBy || userId,
-                leadId: meeting?.leadId || null,
+                leadId: meeting?.leadId || lead_id || null,
               }}
               isEdit={isEdit}
               isPreview={isPreview}

@@ -9,7 +9,7 @@ import { MdDeleteOutline } from 'react-icons/md';
 import { FaArrowRight } from 'react-icons/fa6';
 import Link from 'next/link';
 
-export default function TeamCard({ teams, userId }: { teams: any[]; userId: string }) {
+export default function TeamCard({ teams, userId ,organization_id}: { teams: any[]; userId: string ; organization_id: string}) {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState<any>(null);
   const [deleting, setDeleting] = useState(false);
@@ -24,7 +24,7 @@ export default function TeamCard({ teams, userId }: { teams: any[]; userId: stri
         data: { requesterId: userId },
       });
       toast.success('Team deleted', { id: toastId });
-      mutate(`/api/team/user?id=${userId}`);
+      mutate(`/api/team/user?id=${organization_id}&userId=${userId}`);
     } catch (err: any) {
       const msg = err?.response?.data?.error || 'Failed to delete';
       toast.error(msg, { id: toastId });

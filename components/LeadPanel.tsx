@@ -49,7 +49,7 @@ const LeadPanel: React.FC<LeadPanelProps> = ({
                 status: lead?.status || 'new',
                 source: lead?.source || '',
                 notes: lead?.notes || '',
-                team: teamId,
+                team: teamId || '',
                 createdBy : lead?.createdBy || userId
               }}
               submittedBy={userId}

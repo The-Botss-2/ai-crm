@@ -34,7 +34,7 @@ export default function LeadForm({ initialValues, onClose, isEdit, isPreview, re
         url,
         method,
         params: {
-          team: values.teamId,
+          team: values.team,
           user: submittedBy,
         },
         data: values,

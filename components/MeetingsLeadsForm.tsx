@@ -7,7 +7,7 @@ import { axiosInstance, fetcher } from '@/lib/fetcher';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import "./Meeting.css"
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
 interface MeetingFormProps {
   initialValues: any;
   isEdit: boolean;
@@ -70,13 +70,11 @@ const MeetingsLeadsForm: React.FC<MeetingFormProps> = ({
       });
 
       toast.success(isEdit ? 'Meeting updated' : 'Meeting added', { id: toastId });
-      window.location.reload();
+      reload();
       onClose();
     } catch (err: any) {
       toast.error('Something went wrong', { id: toastId });
-    } finally {
-      setSubmitting(false);
-    }
+    } 
   };
 
   return (
@@ -106,7 +104,6 @@ const MeetingsLeadsForm: React.FC<MeetingFormProps> = ({
         if (!values.date) errors.date = 'Required';
         if (!values.fromTime) errors.fromTime = 'Required';
         if (!values.toTime) errors.toTime = 'Required';
-        if (!values.leadId) errors.leadId = 'Required';
         if (values.fromTime && values.toTime && values.fromTime >= values.toTime)
           errors.toTime = 'End time must be after start time';
         if (!values.link) errors.link = 'Required';
@@ -235,18 +232,6 @@ const MeetingsLeadsForm: React.FC<MeetingFormProps> = ({
               <ErrorMessage name="toTime" component="div" className="text-red-500 text-xs mt-1" />
             </div>
   
-             <div>
-            <Field name="leadId" as="select" className="w-full border border-gray-300 text-xs p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-            <option value="">Link to Lead</option>
-            {leads.map((lead: any) => (
-              <option key={lead._id} value={lead._id}>
-                {lead.name || lead.email}
-              </option>
-            ))}
-          </Field>
-              <ErrorMessage name="description" component="div" className="text-red-500 text-xs mt-1" />
-            </div>
-
             {/* Platform */}
             <Field
               as="select"

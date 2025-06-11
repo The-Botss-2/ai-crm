@@ -8,7 +8,12 @@ export async function GET(req: NextRequest) {
 
   try {
     const id = req.nextUrl.searchParams.get('id')
-    const teams = await Team.find({ 'members.id': id });
+    const userId = req.nextUrl.searchParams.get('userId')
+
+    if (!id || !userId) {
+        return NextResponse.json({ success: false, error: 'Missing required fields.' }, { status: 400 });
+    }
+    const teams = await Team.find({ 'organization_id': id, $and : [{ members: { $elemMatch: { id: userId } } }] });
     return NextResponse.json({ success: true, teams });
   } catch (err) {
     return NextResponse.json({ success: false, error: 'Failed to fetch teams.' }, { status: 500 });

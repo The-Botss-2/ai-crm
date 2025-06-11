@@ -21,6 +21,11 @@ const teamSchema = new Schema({
     ref: 'Profile',
     required: true,
   },
+  organization_id: {
+    type: Schema.Types.ObjectId,
+    ref: 'Organization',
+    required: true,
+  },
   logo: { type: String, default: "https://cdn-icons-png.flaticon.com/512/10872/10872139.png" },
   agent: { type: String },
   members: [memberSchema],

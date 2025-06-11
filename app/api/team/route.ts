@@ -51,14 +51,20 @@ export async function POST(req: Request) {
     if (!session || !session.user) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+  
 
     const body = await req.json();
-    const { name } = body;
-
+    const { name,organization_id } = body;
+    
+    if (!organization_id) {
+        return NextResponse.json({ success: false, error: 'Missing organization_id' }, { status: 400 });
+    }
+    
     try {
         const team = await Team.create({
             name,
             createdBy: session.user.id,
+            organization_id,
             members: [
                 { id: session.user.id, role: 'admin' }
             ]

@@ -2,15 +2,17 @@
 
 import { Dialog, Transition } from "@headlessui/react";
 import { useState, Fragment } from "react";
-import { mutate } from "swr";
+import useSWR, { mutate } from "swr";
 import toast from "react-hot-toast";
-import { axiosInstance } from "@/lib/fetcher";
+import { axiosInstance, fetcher } from "@/lib/fetcher";
+import { useParams } from "next/navigation";
 
 export default function AddTeamDialog({ userId }: { userId: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const [teamName, setTeamName] = useState("");
   const [loading, setLoading] = useState(false);
-
+     const params = useParams<{ id: string }>()
+      const organization_id = params.id;
   const handleCreate = async () => {
     if (!teamName.trim()) {
       toast.error("Team name is required");
@@ -24,12 +26,14 @@ export default function AddTeamDialog({ userId }: { userId: string }) {
       await axiosInstance.post("/api/team", {
         name: teamName,
         adminId: userId,
+        organization_id
       });
 
       toast.success("Team created successfully", { id: toastId });
 
       mutate(`/api/team/user?id=${userId}`); // update teams list
       setTeamName("");
+      mutate(`/api/team/user?id=${organization_id}&userId=${userId}`);
       setIsOpen(false);
     } catch (err: any) {
       const msg = err?.response?.data?.error || "Something went wrong";

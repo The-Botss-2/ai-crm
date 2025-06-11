@@ -8,6 +8,8 @@ import MeetingsPage from '@/components/Meetingspage';
 import TasksPage from '@/app/team/[id]/tasks/page';
 import MeetingLeads from './MeetingLeads';
 import LeadTasks from './LeadTasks';
+import OutBoundCalls from './OutBoundCalls';
+import Loading from './Loading';
 
 interface LeadsTableProps {
   leads: Lead | null;
@@ -19,7 +21,7 @@ const LeadsDetailsTable: React.FC<LeadsTableProps> = ({ leads, error, userID }) 
   const { role, loading } = useTeamRole();
   const [activeTab, setActiveTab] = useState<'tasks' | 'meetings' | 'emails' | 'outbound'>('tasks');
 
-  if (loading) return <p>Loading ...</p>;
+  if (loading) return <Loading />;
 
   if (error || !leads) {
     return (
@@ -69,8 +71,8 @@ const LeadsDetailsTable: React.FC<LeadsTableProps> = ({ leads, error, userID }) 
         {[
           { key: 'tasks', label: 'Tasks' },
           { key: 'meetings', label: 'Meetings' },
-          { key: 'emails', label: 'Emails' },
           { key: 'outbound', label: 'Outbound Campaign' },
+          { key: 'emails', label: 'Emails' },
         ].map((tab) => (
           <button
             key={tab.key}
@@ -99,7 +101,7 @@ const LeadsDetailsTable: React.FC<LeadsTableProps> = ({ leads, error, userID }) 
           <p className="text-gray-500 italic">Emails content goes here...</p> // Replace with real component
         )}
         {activeTab === 'outbound' && (
-          <p className="text-gray-500 italic">Outbound campaign content goes here...</p> // Replace with real component
+        <OutBoundCalls user_id={userID} page="lead"/> 
         )}
       </div>
 

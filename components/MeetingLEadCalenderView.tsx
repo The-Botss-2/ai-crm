@@ -9,6 +9,7 @@ import MeetingPanel from './MeetingPanel';
 import useSWR from 'swr';
 import { fetcher } from '@/lib/fetcher';
 import { useParams } from 'next/navigation';
+import MeetingLeadsPanel from './MeetingLeadsPanel';
 
 // Use moment localizer for broader compatibility
 const localizer = momentLocalizer(moment);
@@ -22,11 +23,15 @@ interface MeetingEvent {
   teamId: string;
   createdBy: string;
 }
+interface props {
+  lead_id: string;
+  meetings: any;
+  mutate: () => void;
+}
 
-const MeetingLEadCalenderView = ({lead_id}: any) => {
+const MeetingLEadCalenderView = ({lead_id, meetings,mutate}: props) => {
   const { id: teamId } = useParams<{ id: string }>();
 
-  const { data: meetings, mutate } = useSWR(`/api/meetingDetail?id=${lead_id}`, fetcher);
   const [selectedMeeting, setSelectedMeeting] = useState<MeetingEvent | null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -56,7 +61,7 @@ const MeetingLEadCalenderView = ({lead_id}: any) => {
         onSelectEvent={handleSelectEvent}
       />
 
-      <MeetingPanel
+      <MeetingLeadsPanel
         meeting={selectedMeeting}
         isOpen={isOpen}
         mode="edit"
@@ -64,6 +69,7 @@ const MeetingLEadCalenderView = ({lead_id}: any) => {
         teamId={selectedMeeting?.teamId ?? ''}
         userId={selectedMeeting?.createdBy ?? ''}
         mutate={mutate}
+        lead_id={lead_id}
       />
     </div>
   );

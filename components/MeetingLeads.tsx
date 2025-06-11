@@ -6,6 +6,8 @@ import { FaRegCalendarAlt, FaRegListAlt } from 'react-icons/fa';
 import MeetingLeadsPanel from './MeetingLeadsPanel';
 import MeetingLEadCalenderView from './MeetingLEadCalenderView';
 import MeetingsLeadListView from './MeetingsLeadListView';
+import useSWR from 'swr';
+import { fetcher } from '@/lib/fetcher';
 interface props {
     user_id: string;
     lead_id: string
@@ -13,6 +15,7 @@ interface props {
 }
 export default function MeetingLeads({ user_id,lead_id,team_id }: props) {
   const params = useParams<{ id: string }>();
+  const { data: meetings, mutate } = useSWR(`/api/meetingDetail?id=${lead_id}`, fetcher);
 
   const [view, setView] = useState<'calendar' | 'list'>('calendar');
   const [isOpen, setIsOpen] = useState(false);
@@ -52,7 +55,7 @@ export default function MeetingLeads({ user_id,lead_id,team_id }: props) {
         </button>
       </div>
 
-      {view === 'calendar' ? <MeetingLEadCalenderView lead_id={lead_id} /> : <MeetingsLeadListView lead_id={lead_id}/>}
+      {view === 'calendar' ? <MeetingLEadCalenderView lead_id={lead_id}  meetings={meetings} mutate={mutate}/> : <MeetingsLeadListView lead_id={lead_id} meetings={meetings} mutate={mutate}/>}
 
       {/* MeetingPanel in Add Mode */}
       <MeetingLeadsPanel
@@ -62,7 +65,8 @@ export default function MeetingLeads({ user_id,lead_id,team_id }: props) {
         onClose={() => setIsOpen(false)}
         teamId={team_id}
         userId={user_id}
-        mutate={() => {}}
+        mutate={mutate}
+        lead_id={lead_id}
       />
     </div>
   );
