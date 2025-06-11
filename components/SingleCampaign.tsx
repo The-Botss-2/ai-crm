@@ -116,7 +116,7 @@ const SingleCampaign = ({ teamId, out_id, userID }: Props) => {
   if (!campaign || !lead) return <p className="text-gray-500">Campaign or lead not found.</p>;
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6 p-4">
       {/* Campaign Info */}
       <div className="bg-white rounded-xl shadow-lg p-6">
         <h2 className="flex items-center text-xl font-semibold mb-4 gap-2">
