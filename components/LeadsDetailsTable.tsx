@@ -101,7 +101,7 @@ const LeadsDetailsTable: React.FC<LeadsTableProps> = ({ leads, error, userID }) 
           <p className="text-gray-500 italic">Emails content goes here...</p> // Replace with real component
         )}
         {activeTab === 'outbound' && (
-        <OutBoundCalls user_id={userID} page="lead"/> 
+        <OutBoundCalls user_id={userID} page="lead"  lead_id={leads._id} team_id={leads.teamId} /> 
         )}
       </div>
 

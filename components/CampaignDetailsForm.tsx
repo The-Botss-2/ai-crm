@@ -7,12 +7,17 @@ import DatePicker from 'react-datepicker';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import 'react-datepicker/dist/react-datepicker.css';
+import useSWR from 'swr';
+import { fetcher } from '@/lib/fetcher';
 
 interface CampaignDetailsFormProps {
   agentId: string;
   user_id: string;
   onSuccess: () => void;
   fetchCampaigns: () => void
+  page?: string;
+  lead_id?: string
+  team_id?: string
 }
 type Payload = {
   agent_id: string;
@@ -24,8 +29,9 @@ type Payload = {
   start_immediately?: boolean;
 };
 
-const CampaignDetailsForm: React.FC<CampaignDetailsFormProps> = ({ agentId, user_id, onSuccess,fetchCampaigns }) => {
+const CampaignDetailsForm: React.FC<CampaignDetailsFormProps> = ({ agentId, user_id, onSuccess,fetchCampaigns ,team_id, page, lead_id}) => {
   const [file, setFile] = useState<File | null>(null);
+  const { data: leads = [] } = useSWR(`/api/leads?team=${team_id}`, fetcher);
 
   const [phoneNumbers, setPhoneNumbers] = useState<string[]>([]);
   const Api_BASE_URL = 'https://callingagent.thebotss.com/api'
@@ -53,6 +59,7 @@ const CampaignDetailsForm: React.FC<CampaignDetailsFormProps> = ({ agentId, user
         phoneNumber: '',
         contactsFile: '',
         campaignName: '',
+        leadId: page === 'lead' ? lead_id : '',
         scheduledAt: null as Date | null,
         statusAction: 'startNow' as 'startNow' | 'schedule',
       }}
@@ -60,6 +67,7 @@ const CampaignDetailsForm: React.FC<CampaignDetailsFormProps> = ({ agentId, user
         const errors: any = {};
         if (!values.campaignName) errors.campaignName = 'Required';
         if (!values.phoneNumber) errors.phoneNumber = 'Required';
+        if (!values.leadId) errors.leadId = 'Required';
         if (values.statusAction === 'schedule' && !values.scheduledAt) errors.scheduledAt = 'Pick a date';
         return errors;
       }}
@@ -76,6 +84,7 @@ const CampaignDetailsForm: React.FC<CampaignDetailsFormProps> = ({ agentId, user
         url.searchParams.append('agent_id', agentId);
         url.searchParams.append('agent_name', values.campaignName);
         url.searchParams.append('source_number', values.phoneNumber);
+        url.searchParams.append('lead_id', values.leadId || '');
         url.searchParams.append('start_immediately', values.statusAction === 'startNow' ? 'true' : 'false');
 
         if (values.statusAction === 'schedule' && values.scheduledAt instanceof Date) {
@@ -139,6 +148,19 @@ const CampaignDetailsForm: React.FC<CampaignDetailsFormProps> = ({ agentId, user
               <p className="text-red-600 text-sm">{errors.phoneNumber}</p>
             )}
           </div>
+         {page === 'lead' ?'' : <div>
+           <Field name="leadId" as="select" className="w-full border border-gray-300 text-xs p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                      <option value="">Link to Lead</option>
+                      {leads.map((lead: any) => (
+                        <option key={lead._id} value={lead._id}>
+                          {lead.name || lead.email}
+                        </option>
+                      ))}
+                    </Field>
+            {errors.leadId && touched.leadId && (
+              <p className="text-red-600 text-sm">{errors.leadId}</p>
+            )}
+          </div>}
 
           <div>
             <label className="block text-sm font-medium mb-1">Upload Contacts</label>

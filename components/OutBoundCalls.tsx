@@ -10,6 +10,7 @@ import axios, { Axios } from 'axios';
 import toast from 'react-hot-toast';
 import CampaignDetailsForm from './CampaignDetailsForm';
 import CampaignEditForm from './CampaignEditForm';
+import { useParams } from 'next/navigation';
 
 export interface Campaign {
   id: string;
@@ -27,14 +28,18 @@ export interface AddCampaign {
   firstMessage: string;
   systemPrompt: string;
 
+
 }
 interface props {
   user_id: string;
-  page?: string
+  page?: string;
+  lead_id?: string;
+  team_id?: string;
 }
-export default function OutBoundCalls({ user_id ,page}: props) {
+export default function OutBoundCalls({ user_id ,page, lead_id, team_id}: props) {
   const [campaigns, setCampaigns] = useState<Campaign[]>([
   ]);
+    const { id: teamId } = useParams<{ id: string }>();
   const [campaignLoading, setCampaignLoading] = useState(false);
   const [agendId, setAgendId] = useState<string | null>('');
   const [editingCampaign, setEditingCampaign] = useState<Campaign | null>(null);
@@ -64,8 +69,9 @@ export default function OutBoundCalls({ user_id ,page}: props) {
   };
   const fetchCampaigns = async () => {
     setCampaignLoading(true);
+    const path = page === 'lead' ? `/campaign-by-lead?lead_id=${lead_id}` : `/outbound-campaigns?crm_user_id=${user_id}`;
       try {
-        const res = await axios.get(`${Api_BASE_URL}/outbound-campaigns?crm_user_id=${user_id}`);
+        const res = await axios.get(`${Api_BASE_URL}${path}`);
         console.log(res, 'campaigns');
       setCampaignLoading(false);
         setCampaigns(res?.data || []);
@@ -263,6 +269,9 @@ export default function OutBoundCalls({ user_id ,page}: props) {
                     setAgendId(null);
                   }}
                   fetchCampaigns={fetchCampaigns}
+                  page={page}
+                  lead_id={lead_id}
+                  team_id={team_id || teamId}
                 />
               )
 
