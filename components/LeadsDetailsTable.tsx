@@ -209,7 +209,7 @@ console.log(status, 'status');
           <MeetingLeads user_id={userID} lead_id={leads._id} team_id={leads.teamId} />
         )}
         {activeTab === 'emails' && (
-          <LeadEmail userid={userID} page={"lead"} source_email={status?.email?.email}/>
+          <LeadEmail userid={userID} page={"lead"} source_email={leads?.email}/>
         )}
         {activeTab === 'outbound' && (
           <OutBoundCalls user_id={userID} page="lead" lead_id={leads._id} team_id={leads.teamId} />
