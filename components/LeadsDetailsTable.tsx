@@ -4,7 +4,7 @@ import { Lead } from '@/types/lead';
 import { useTeamRole } from '@/context/TeamRoleContext';
 import MeetingLeads from './MeetingLeads';
 import LeadTasks from './LeadTasks';
-import OutBoundCalls from './OutBoundCalls';
+// import OutBoundCalls from './OutBoundCalls';
 import Loading from './Loading';
 import { PhoneCall, UserIcon } from 'lucide-react';
 import ConversationCom from './Conversation';
