@@ -18,6 +18,7 @@ export interface CustomFormDocument extends Document {
     isTemplate?: boolean;
     createdAt: Date;
     updatedAt: Date;
+    code_snippet: string;
 }
 
 const FieldSchema = new Schema<Field>(
@@ -43,6 +44,7 @@ const CustomFormSchema = new Schema<CustomFormDocument>(
         category: { type: String, enum: ['lead', 'meeting', 'task', 'event', 'custom'], default: 'custom' },
         createdBy: { type: Schema.Types.ObjectId, ref: 'Profile', required: true },
         teamId: { type: Schema.Types.ObjectId, ref: 'Team', required: true },
+        code_snippet: {type: String},
         isTemplate: { type: Boolean, default: false },
     },
     { timestamps: true }

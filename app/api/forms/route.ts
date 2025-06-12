@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
     await connectToDatabase();
     const userId = session.user.id;
 
-    const { title, description, fields, category, teamId, isTemplate } = await req.json();
+    const { title, description, fields, category, teamId, isTemplate,code_snippet } = await req.json();
 
     if (!title || typeof title !== 'string' || title.trim() === '') {
         return NextResponse.json({ error: 'Form title is required' }, { status: 400 });
@@ -38,6 +38,7 @@ export async function POST(req: NextRequest) {
             category,
             teamId,
             isTemplate,
+            code_snippet,
             createdBy: userId,
         });
 
@@ -53,14 +54,11 @@ export async function GET(req: NextRequest) {
     if (!session || !session.user?.id) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-
-
     const teamId = req.nextUrl.searchParams.get('teamId');
 
     if (!teamId) {
         return NextResponse.json({ error: 'teamId is required' }, { status: 400 });
     }
-
     try {
         await connectToDatabase();
         const forms = await CustomForm.find({ teamId });

@@ -7,10 +7,10 @@ import { Tab, Menu } from '@headlessui/react';
 import { FiPlus } from 'react-icons/fi';
 import { CgFileDocument } from 'react-icons/cg';
 import { BsThreeDotsVertical } from 'react-icons/bs';
-import ResponsesPanel from './ResponsesPanel';
 import { fetcher } from '@/lib/fetcher';
 import toast from 'react-hot-toast';
 import FormPanel from './FormPanel';
+import InlineResponses from './InlineResponses';
 
 type Field = {
   label: string;
@@ -28,10 +28,11 @@ type Form = {
   category: string;
   isTemplate: boolean;
   createdAt: string;
+  code_snippet: string;
   fields: Field[];
 };
 
-const categories = ['all', 'lead', 'meeting', 'task', 'event', 'custom'];
+const categories = ['all', 'lead', 'custom'];
 
 export default function FormGrid() {
   const [isOpen, setIsOpen] = useState(false);
@@ -194,7 +195,22 @@ export default function FormGrid() {
                             </button>
                           )}
                         </Menu.Item>
-
+                      <Menu.Item>
+                          {({ active }) => (
+                            <button
+                              onClick={() => {
+                               
+                                navigator.clipboard.writeText(form?.code_snippet);
+                                toast.success('Link copied to clipboard');
+                              }}
+                              className={`${
+                                active ? 'bg-gray-100 text-gray-900' : 'text-gray-800'
+                              } group flex w-full items-center rounded px-2 py-2 text-xs`}
+                            >
+                              Code Snippet
+                            </button>
+                          )}
+                        </Menu.Item>
                         <Menu.Item>
                           {({ active }) => (
                             <button
@@ -233,11 +249,7 @@ export default function FormGrid() {
 
       {/* Responses Panel */}
       {showResponses && (
-        <ResponsesPanel
-          isOpen={!!showResponses}
-          onClose={() => setShowResponses(null)}
-          formId={showResponses}
-        />
+       <InlineResponses formId={showResponses} />
       )}
     </>
   );

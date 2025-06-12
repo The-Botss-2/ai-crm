@@ -23,6 +23,8 @@ const FieldResponseSchema = new Schema<FieldResponse>(
 
 const FormResponseSchema = new Schema<FormResponseDocument>(
     {
+        email: { type: String, required: true },
+        username: { type: String, required: true },
         form: { type: Schema.Types.ObjectId, ref: 'CustomForm', required: true },
         responses: { type: [FieldResponseSchema], required: true },
         submittedAt: { type: Date, default: Date.now },

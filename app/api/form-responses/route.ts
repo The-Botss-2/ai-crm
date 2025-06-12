@@ -8,10 +8,10 @@ export async function POST(req: NextRequest) {
     await connectToDatabase();
 
     try {
-        const { form, responses } = await req.json();
+        const { email, username, form, responses } = await req.json();
 
         // ✅ Required fields check
-        if ( !form || !Array.isArray(responses)) {
+        if ( !email || !username || !form || !Array.isArray(responses)) {
             return NextResponse.json(
                 { error: 'Missing required fields: email, username, form, or responses' },
                 { status: 400 }
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
         }
 
         const saved = await FormResponse.create({
-           
+           email, username,
             form,
             responses,
         });

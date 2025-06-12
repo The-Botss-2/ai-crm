@@ -111,17 +111,128 @@ export default function FormPanel({ isOpen, onClose, mutate, form }: Props) {
       toast.error('Error deleting form', { id: toastId });
     }
   };
+function generateFormHTML(form: { title: string; fields: Field[] }): string {
+  const formFields = form.fields.map((field) => {
+    const required = field.isRequired ? 'required' : '';
+    const nameAttr = `name="${field.label.replace(/\s+/g, '_').toLowerCase()}"`;
+
+    switch (field.type) {
+      case 'text':
+      case 'email':
+      case 'tel':
+      case 'date':
+      case 'number':
+        return `
+          <label class="form-label">
+            ${field.label}${field.isRequired ? ' *' : ''}
+            <input type="${field.type}" class="form-input" placeholder="${field.placeholder || ''}" ${nameAttr} ${required} />
+          </label>`;
+      case 'textarea':
+        return `
+          <label class="form-label">
+            ${field.label}
+            <textarea class="form-input" placeholder="${field.placeholder || ''}" ${nameAttr} ${required}></textarea>
+          </label>`;
+      case 'select':
+        return `
+          <label class="form-label">
+            ${field.label}
+            <select class="form-input" ${nameAttr} ${required}>
+              ${(field.options || []).map(opt => `<option>${opt}</option>`).join('')}
+            </select>
+          </label>`;
+      case 'radio':
+      case 'checkbox':
+        return `
+          <fieldset class="form-fieldset">
+            <legend>${field.label}</legend>
+            ${(field.options || []).map(opt => `
+              <label class="form-check">
+                <input type="${field.type}" name="${field.label}" value="${opt}" ${required} />
+                ${opt}
+              </label>`).join('')}
+          </fieldset>`;
+      default:
+        return '';
+    }
+  }).join('\n');
+
+  const html = `
+<style>
+  form.custom-form {
+    max-width: 600px;
+    margin: 0 auto;
+    font-family: sans-serif;
+    padding: 1.5rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #f9f9f9;
+  }
+  .form-label {
+    display: block;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: #333;
+  }
+  .form-label input,
+  .form-label select,
+  .form-label textarea {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.25rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  .form-input {
+    font-size: 0.9rem;
+  }
+  .form-fieldset {
+    margin-bottom: 1rem;
+    border: none;
+  }
+  .form-check {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+  }
+  button {
+    padding: 0.6rem 1rem;
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  button:hover {
+    background-color: #1e40af;
+  }
+</style>
+
+<form class="custom-form" action="#" method="POST">
+  <h2>${form.title}</h2>
+  ${formFields}
+  <button type="submit">Submit</button>
+</form>`;
+
+  return html.trim();
+}
+
 
   const handleSubmitForm = async (values: FormValues, { setSubmitting, resetForm }: any) => {
     if (fields.length === 0) {
       toast.error('Please provide at least one field.');
       return;
     }
-
+ const code_snippet = generateFormHTML({
+    title: values.title,
+    fields,
+  });
     const payload = {
       ...values,
       teamId,
       fields,
+      code_snippet,
     };
 
     const toastId = toast.loading(form ? 'Updating form...' : 'Saving form...');
@@ -199,9 +310,7 @@ export default function FormPanel({ isOpen, onClose, mutate, form }: Props) {
                   >
                     <option value="custom">Custom</option>
                     <option value="lead">Lead</option>
-                    <option value="meeting">Meeting</option>
-                    <option value="task">Task</option>
-                    <option value="event">Event</option>
+                
                   </FormikField>
                 </div>
 
@@ -260,14 +369,6 @@ export default function FormPanel({ isOpen, onClose, mutate, form }: Props) {
                     <span>Add Field</span>
                   </button>
                 </div>
-
-                <div className="flex items-center gap-2">
-                  <FormikField type="checkbox" name="isTemplate" id="isTemplate" className="cursor-pointer" />
-                  <label htmlFor="isTemplate" className="text-xs text-gray-900 select-none">
-                    Save as Template
-                  </label>
-                </div>
-
                 <div className="pt-4 flex gap-2">
                   <button
                     type="submit"
