@@ -183,7 +183,7 @@ console.log(status, 'status');
         {[
           { key: 'tasks', label: 'Tasks' },
           { key: 'meetings', label: 'Meetings' },
-          { key: 'outbound', label: 'Outbound Campaign' },
+          // { key: 'outbound', label: 'Outbound Campaign' },
           ...(status && status?.email?.connected ? [{ key: 'emails', label: 'Emails' }] : []),
           ...(Conversation && Conversation?.conversations?.length > 0 ? [{ key: 'conversation', label: 'Conversation' }] : [])
         ].map((tab) => (
@@ -211,9 +211,9 @@ console.log(status, 'status');
         {activeTab === 'emails' && (
           <LeadEmail userid={userID} page={"lead"} source_email={leads?.email}/>
         )}
-        {activeTab === 'outbound' && (
+        {/* {activeTab === 'outbound' && (
           <OutBoundCalls user_id={userID} page="lead" lead_id={leads._id} team_id={leads.teamId} />
-        )}
+        )} */}
         {activeTab === 'conversation' && (
           <ConversationCom conversations={Conversation?.conversations} />
         )}
