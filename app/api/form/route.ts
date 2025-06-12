@@ -7,11 +7,11 @@ export async function GET(req: NextRequest) {
 
     const formId = req.nextUrl.searchParams.get('id');
 
+    console.log("FORMFORMFORM", formId);
     if (!formId) {
         return NextResponse.json({ error: 'Form ID is required' }, { status: 400 });
     }
 
-    console.log("FORMFORMFORM", formId);
     try {
         const form = await CustomForm.findById(formId);
 
