@@ -60,7 +60,7 @@ console.log(status, 'status');
       from_number: number,
     };
 
-    const toastId = toast.loading('Initiating call...', { duration: Infinity }); // Infinite loading toast
+    const toastId = toast.loading('Initiating call...', { duration: 2000 }); // Infinite loading toast
     setIsSubmitting(true);
 
     try {
