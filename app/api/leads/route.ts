@@ -37,7 +37,7 @@ export const POST = async (req: NextRequest) => {
 
   try {
     await checkTeamWritePermission(teamId, userId);
-    const { name, email, phone, company, notes, source, status } = await req.json();
+    const { name, email, phone, company, notes, source, status ,source_number} = await req.json();
 
 
 
@@ -49,6 +49,7 @@ export const POST = async (req: NextRequest) => {
       company,
       assignedUserId: userId,
       createdBy: userId,
+      source_number,
       notes,
       source,
       status

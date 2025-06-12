@@ -4,6 +4,8 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { Lead } from '@/types/lead';
 import toast from 'react-hot-toast';
 import { axiosInstance } from '@/lib/fetcher';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 interface Props {
   initialValues: Partial<Lead>;
@@ -12,17 +14,33 @@ interface Props {
   isPreview?: boolean;
   reload: () => void;
   submittedBy: string;
+  userId?: string;
 }
 
-export default function LeadForm({ initialValues, onClose, isEdit, isPreview, reload, submittedBy }: Props) {
+export default function LeadForm({ userId, initialValues, onClose, isEdit, isPreview, reload, submittedBy }: Props) {
   const validate = (values: Partial<Lead>) => {
     const errors: Partial<Record<keyof Lead, string>> = {};
     if (!values.name) errors.name = 'Required';
     if (!values.email) errors.email = 'Required';
     if (!values.phone) errors.phone = 'Required';
+    if (!values.source_number) errors.source_number = 'Required';
+
     return errors;
   };
+  const [phoneNumbers, setPhoneNumbers] = useState<string[]>([]);
+  const API_BASE_URL = 'https://callingagent.thebotss.com/api';
 
+  useEffect(() => {
+    const loadPhoneNumbers = async () => {
+      try {
+        const response = await axios.get(`${API_BASE_URL}/elevenlabs/free-numbers?crm_user_id=${userId}`);
+        setPhoneNumbers(response.data.map((p: any) => p.phone_number));
+      } catch (error) {
+        toast.error('Failed to load phone numbers.');
+      }
+    };
+    loadPhoneNumbers();
+  }, [userId]);
   const handleSubmit = async (values: Partial<Lead>, { setSubmitting, resetForm }: any) => {
     const toastId = toast.loading(isEdit ? 'Updating lead...' : 'Adding lead...');
 
@@ -53,6 +71,7 @@ export default function LeadForm({ initialValues, onClose, isEdit, isPreview, re
       setSubmitting(false);
     }
   };
+console.log(initialValues, 'initialValues');
 
   return (
     <Formik initialValues={initialValues} validate={validate} onSubmit={handleSubmit} enableReinitialize>
@@ -116,7 +135,18 @@ export default function LeadForm({ initialValues, onClose, isEdit, isPreview, re
               className="text-red-600 text-xs mt-1 font-semibold select-none"
             />
           </div>
-
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Source Number</label>
+            <Field as="select" name="source_number" className="w-full p-3 border border-gray-300 rounded">
+              <option value=''>Select</option>
+              {phoneNumbers.map((num) => (
+                <option key={num} value={num}>
+                  {num}
+                </option>
+              ))}
+            </Field>
+            {errors.source_number && touched.source_number && <p className="text-red-600">{errors.source_number}</p>}
+          </div>
           <div>
             <label htmlFor="source" className="block mb-1 text-sm font-medium text-gray-700">
               Source

@@ -42,6 +42,10 @@ const leadSchema = new mongoose.Schema(
       type: String,
       default: 'not added yet',
     },
+    source_number: {
+      type: String,
+      required: true,
+    },
     notes: {
       type: String,
       default: 'not added yet',

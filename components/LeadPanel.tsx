@@ -49,6 +49,7 @@ const LeadPanel: React.FC<LeadPanelProps> = ({
                 status: lead?.status || 'new',
                 source: lead?.source || '',
                 notes: lead?.notes || '',
+                source_number: lead?.source_number || '',
                 team: teamId || '',
                 createdBy : lead?.createdBy || userId
               }}
@@ -57,6 +58,7 @@ const LeadPanel: React.FC<LeadPanelProps> = ({
               isPreview={isPreview}
               onClose={onClose}
               reload={mutate}
+              userId={userId}
             />
           )}
         </div>

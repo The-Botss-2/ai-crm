@@ -6,6 +6,7 @@ export interface Lead {
   teamId: string;
   company: string;
   status: string;
+  source_number: string;
   team: string;
   notes: string;
   source: string;

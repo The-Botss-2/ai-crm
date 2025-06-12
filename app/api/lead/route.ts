@@ -54,14 +54,14 @@ export const PATCH = async (req: NextRequest) => {
         return NextResponse.json({ error: (error instanceof Error ? error.message : 'An unknown error occurred') }, { status: 403 });
     }
     await connectToDatabase();
-    const { _id, name, email, phone, company, status, source, notes } = await req.json();
+    const { _id, name, email, phone, company, status, source, notes, source_number } = await req.json();
 
 
 
     if (!_id) return NextResponse.json({ error: 'Lead ID is required' }, { status: 400 });
 
     const updated = await Lead.findByIdAndUpdate(_id, {
-        _id, name, email, phone, company, status, source, notes
+        _id, name, email, phone, company, status, source, notes,source_number
     }, { new: true });
 
     return NextResponse.json(updated);

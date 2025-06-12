@@ -33,12 +33,14 @@ const LeadDrawer: React.FC<LeadDrawerProps> = ({ isOpen, onClose, editLead, team
               status: editLead?.status || 'new',
               source: editLead?.source || '',
               notes: editLead?.notes || '',
+              source_number: editLead?.source_number || '',
               team: teamId,
             }}
             isEdit={!!editLead}
             onClose={onClose}
             reload={mutate}
             submittedBy={userId}
+            userId={userId}
           />
         </div>
       </Dialog>

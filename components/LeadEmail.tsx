@@ -30,6 +30,8 @@ interface Email {
 
 interface EmailClientProps {
   userid: string;
+  page?:string;
+  source_email?:string
 }
 
 // Fetcher function for useSWR
@@ -44,8 +46,9 @@ const fetcher = (url: string) => axios.get(url).then(res =>
   }))
 );
 
-const LeadEmail: React.FC<EmailClientProps> = ({ userid }) => {
-  const emailsKey = `https://crm-emails.thebotss.com/emails/${userid}`;
+const LeadEmail: React.FC<EmailClientProps> = ({ userid ,page,source_email}) => {
+
+  const emailsKey = page == 'lead' ? `https://crm-emails.thebotss.com/emails/conversation/${userid}/${source_email}` : `https://crm-emails.thebotss.com/emails/${userid}`;
   const { data: emails, error, isLoading } = useSWR<Email[]>(emailsKey, fetcher);
 
   const [selectedEmailId, setSelectedEmailId] = useState<string | null>(null);

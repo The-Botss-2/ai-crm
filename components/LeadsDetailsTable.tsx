@@ -11,20 +11,33 @@ import ConversationCom from './Conversation';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import LeadEmail from './LeadEmail';
+import useSWR from 'swr';
+import { fetcher } from '@/lib/fetcher';
+import { X, Loader } from 'lucide-react'; // Import icons from lucide-react
+import { socialFetcher } from '@/lib/socialFetcher';
 
 interface LeadsTableProps {
   leads?: Lead;
   error?: boolean;
   userID: string;
   mutateConversation: any;
-  Conversation: any
+  Conversation: any;
 }
-
 
 const LeadsDetailsTable: React.FC<LeadsTableProps> = ({ leads, error, userID, mutateConversation, Conversation }) => {
   const { role, loading } = useTeamRole();
   const [activeTab, setActiveTab] = useState<'tasks' | 'meetings' | 'emails' | 'outbound' | 'conversation'>('tasks');
+  const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
+  const [selectedCampaign, setSelectedCampaign] = useState<string | null>(null); // Selected campaign state
+  const [isSubmitting, setIsSubmitting] = useState(false); // Track submission state
+  const { data: status, error: statusError, isLoading, mutate } = useSWR('/api/integrations', socialFetcher);
+console.log(status, 'status');
 
+  // Fetch campaigns
+  const { data: campaigns = [], isLoading: campaignsLoading, error: campaignsError } = useSWR<any[]>(
+    `https://callingagent.thebotss.com/api/outbound-campaigns?crm_user_id=${userID}`,
+    fetcher
+  );
 
   // Loading state for role
   if (loading) return <Loading />;
@@ -35,18 +48,21 @@ const LeadsDetailsTable: React.FC<LeadsTableProps> = ({ leads, error, userID, mu
       </div>
     );
   }
-  const handleCall = async () => {
+
+  const handleCall = async (agentId: string) => {
     if (!leads) return;
 
     const payload = {
       crm_user_id: userID,
-      agent_id: 'agent_01jxfjbbxvfhf9mng76nq6pe7n',
+      agent_id: agentId,
       lead_id: leads._id,
       to_number: leads.phone,
-      from_number: '+14348383256',
+      from_number: leads.source_number,
     };
 
-    const toastId = toast.loading('Calling agent...');
+    const toastId = toast.loading('Initiating call...', { duration: Infinity }); // Infinite loading toast
+    setIsSubmitting(true);
+
     try {
       const res = await axios.post('https://callingagent.thebotss.com/api/outbound-single-call', payload);
 
@@ -59,8 +75,18 @@ const LeadsDetailsTable: React.FC<LeadsTableProps> = ({ leads, error, userID, mu
     } catch (error) {
       toast.error('Call failed. Please try again.', { id: toastId });
       console.error('Call error:', error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
+  const handleCampaignSelection = (campaignId: string, agentId: string) => {
+    console.log(campaignId, agentId, 'agentId');
+    setSelectedCampaign(campaignId);
+    setIsModalOpen(false); // Close the modal
+    handleCall(agentId); // Call with the selected agent_id
+  };
+
   return (
     <div className="p-4 bg-gray-50 min-h-screen">
       {/* Lead Info */}
@@ -74,28 +100,91 @@ const LeadsDetailsTable: React.FC<LeadsTableProps> = ({ leads, error, userID, mu
           <div><strong>Phone:</strong> {leads?.phone}</div>
           <div><strong>Email:</strong> {leads?.email}</div>
           <div><strong>Status:</strong> {leads?.status}</div>
-          <div className="col-span-2">
-            <strong>Notes:</strong> {leads?.notes || 'No notes available'}
-          </div>
+          <div><strong>Notes:</strong> {leads?.notes || 'No notes available'}</div>
+          <div><strong>Source Number:</strong> {leads?.source_number}</div>
         </div>
       </div>
       {/* Call Button */}
       <div className="text-right">
         <button
-          onClick={handleCall}
+          onClick={() => setIsModalOpen(true)} // Open the modal when clicked
           className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow transition"
         >
           <PhoneCall className="w-5 h-5" />
           Call Agent
         </button>
       </div>
+
+      {/* Campaign Selection Modal */}
+
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg w-96 shadow-lg">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-semibold">Select a Campaign</h3>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="text-gray-600 hover:text-gray-900 focus:outline-none"
+              >
+                <X size={24} />
+              </button>
+            </div>
+            {campaignsLoading ? (
+              <div className="flex justify-center items-center">
+                <Loader size={24} className="animate-spin text-blue-600" />
+              </div>
+            ) : campaignsError || campaigns.length === 0 ? (
+              <div className="text-center text-gray-600">No campaigns available</div>
+            ) : (
+              <div className="space-y-4">
+                <select
+                  className="w-full p-2 border rounded-md "
+                  onChange={(e) => setSelectedCampaign(e.target.value)}
+                  value={selectedCampaign || ''}
+                >
+                  <option value="" disabled>Select an Agent</option>
+                  {campaigns.map((campaign) => (
+                    <option key={campaign.id} value={campaign.id}>
+                      {campaign.agent_name}
+                    </option>
+                  ))}
+                </select>
+
+                <div className="mt-4 text-right">
+                  <button
+                    onClick={() => {
+                      const selectedCampaignData = campaigns.find(campaign => campaign.id === Number(selectedCampaign));
+                      if (selectedCampaignData) {
+                        handleCampaignSelection(selectedCampaignData.id, selectedCampaignData.agent_id);
+                      }
+                    }}
+                    className={`bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    disabled={isSubmitting || !selectedCampaign}
+                  >
+                    {isSubmitting ? 'Calling...' : 'Select and Call'}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="mt-4 w-full bg-gray-500 text-white py-2 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+
       {/* Tab Buttons */}
       <div className="flex flex-wrap gap-2 mb-4">
         {[
           { key: 'tasks', label: 'Tasks' },
           { key: 'meetings', label: 'Meetings' },
           { key: 'outbound', label: 'Outbound Campaign' },
-          { key: 'emails', label: 'Emails' },
+          ...(status && status?.email?.connected ? [{ key: 'emails', label: 'Emails' }] : []),
           ...(Conversation && Conversation?.conversations?.length > 0 ? [{ key: 'conversation', label: 'Conversation' }] : [])
         ].map((tab) => (
           <button
@@ -120,7 +209,7 @@ const LeadsDetailsTable: React.FC<LeadsTableProps> = ({ leads, error, userID, mu
           <MeetingLeads user_id={userID} lead_id={leads._id} team_id={leads.teamId} />
         )}
         {activeTab === 'emails' && (
-          <LeadEmail userid={userID} />
+          <LeadEmail userid={userID} page={"lead"} source_email={status?.email?.email}/>
         )}
         {activeTab === 'outbound' && (
           <OutBoundCalls user_id={userID} page="lead" lead_id={leads._id} team_id={leads.teamId} />

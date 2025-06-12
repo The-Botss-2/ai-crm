@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import { connectToDatabase } from '@/lib/db';
 import Organization from '@/model/Organization';
+import Loading from '@/components/Loading';
 
 export default async function TeamsPage({params}:{params:Promise<{id:string}>}) {
   const {id} = await params
@@ -24,7 +25,7 @@ export default async function TeamsPage({params}:{params:Promise<{id:string}>}) 
   return (
     <div className="h-screen">
       <Navbar id={session.user.id} />
-      <Suspense fallback={<div className="text-gray-500">Loading teams...</div>}>
+      <Suspense fallback={<Loading />}>
         <TeamList id={id} userId={session.user.id} organizations={organizations}/>
       </Suspense>
     </div>
