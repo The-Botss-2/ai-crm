@@ -48,7 +48,7 @@ const fetcher = (url: string) => axios.get(url).then(res =>
 
 const LeadEmail: React.FC<EmailClientProps> = ({ userid ,page,source_email}) => {
 
-  const emailsKey = page != 'lead' ? `https://crm-emails.thebotss.com/emails/conversation/${userid}/${source_email}` : `https://crm-emails.thebotss.com/emails/${userid}`;
+  const emailsKey = page === 'lead' ? `https://crm-emails.thebotss.com/emails/conversation/${userid}/${source_email}` : `https://crm-emails.thebotss.com/emails/${userid}`;
   const { data: emails, error, isLoading } = useSWR<Email[]>(emailsKey, fetcher);
 
   const [selectedEmailId, setSelectedEmailId] = useState<string | null>(null);
