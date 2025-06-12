@@ -101,12 +101,12 @@ const CampaignTable: React.FC<TableProps> = ({ campaigns, onEdit, onDelete, onSt
                 </td>
                 <td className="px-4 py-2 text-gray-800"> {c.contacts_file ? c.contacts_file.split('/').pop() : '—'}</td>
                 <td className="px-4 py-2 space-x-2">
-                   <button
+                   {/* <button
                     onClick={() => router.push(`/team/${teamId}/outboundcalls/${c?.id}`)}
                     className="bg-blue-100 text-blue-800 p-1 rounded hover:bg-blue-200"
                   >
                     <FaEye size={16} />
-                  </button>
+                  </button> */}
                   <button
                     onClick={() => onEdit(c)}
                     className="bg-blue-100 text-blue-800 p-1 rounded hover:bg-blue-200"
