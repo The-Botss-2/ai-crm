@@ -49,7 +49,7 @@ console.log(status, 'status');
     );
   }
 
-  const handleCall = async (agentId: string) => {
+  const handleCall = async (agentId: string, number: string) => {
     if (!leads) return;
 
     const payload = {
@@ -57,7 +57,7 @@ console.log(status, 'status');
       agent_id: agentId,
       lead_id: leads._id,
       to_number: leads.phone,
-      from_number: leads.source_number,
+      from_number: number,
     };
 
     const toastId = toast.loading('Initiating call...', { duration: Infinity }); // Infinite loading toast
@@ -80,11 +80,11 @@ console.log(status, 'status');
     }
   };
 
-  const handleCampaignSelection = (campaignId: string, agentId: string) => {
+  const handleCampaignSelection = (campaignId: string, agentId: string, number: string) => {
     console.log(campaignId, agentId, 'agentId');
     setSelectedCampaign(campaignId);
     setIsModalOpen(false); // Close the modal
-    handleCall(agentId); // Call with the selected agent_id
+    handleCall(agentId,number); // Call with the selected agent_id
   };
 
   return (
@@ -101,7 +101,7 @@ console.log(status, 'status');
           <div><strong>Email:</strong> {leads?.email}</div>
           <div><strong>Status:</strong> {leads?.status}</div>
           <div><strong>Notes:</strong> {leads?.notes || 'No notes available'}</div>
-          <div><strong>Source Number:</strong> {leads?.source_number}</div>
+          <div><strong>Source:</strong> {leads?.source || 'No source available'}</div>
         </div>
       </div>
       {/* Call Button */}
@@ -155,7 +155,7 @@ console.log(status, 'status');
                     onClick={() => {
                       const selectedCampaignData = campaigns.find(campaign => campaign.id === Number(selectedCampaign));
                       if (selectedCampaignData) {
-                        handleCampaignSelection(selectedCampaignData.id, selectedCampaignData.agent_id);
+                        handleCampaignSelection(selectedCampaignData.id, selectedCampaignData.agent_id, selectedCampaignData?.source_number);
                       }
                     }}
                     className={`bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}

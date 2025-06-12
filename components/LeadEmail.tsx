@@ -48,7 +48,7 @@ const fetcher = (url: string) => axios.get(url).then(res =>
 
 const LeadEmail: React.FC<EmailClientProps> = ({ userid ,page,source_email}) => {
 
-  const emailsKey = page == 'lead' ? `https://crm-emails.thebotss.com/emails/conversation/${userid}/${source_email}` : `https://crm-emails.thebotss.com/emails/${userid}`;
+  const emailsKey = page != 'lead' ? `https://crm-emails.thebotss.com/emails/conversation/${userid}/${source_email}` : `https://crm-emails.thebotss.com/emails/${userid}`;
   const { data: emails, error, isLoading } = useSWR<Email[]>(emailsKey, fetcher);
 
   const [selectedEmailId, setSelectedEmailId] = useState<string | null>(null);
@@ -233,9 +233,9 @@ const LeadEmail: React.FC<EmailClientProps> = ({ userid ,page,source_email}) => 
           <div className="flex items-start gap-3">
             <img src={email.sender.avatar} alt={email.sender.name} className="w-10 h-10 rounded-full" />
             <div className="flex-1">
-              <h3 className="text-sm font-semibold truncate">{email.sender.name}</h3>
-              <p className="text-xs text-gray-500 truncate">{email.subject}</p>
-              <p className="text-xs text-gray-500 truncate">{email.body}</p>
+              <h3 className="text-sm w-64 font-semibold truncate">{email.sender.name}</h3>
+              <p className="text-xs w-64 text-gray-500 truncate">{email.subject}</p>
+              <p className="text-xs w-64 text-gray-500 truncate">{email.body}</p>
             </div>
           </div>
         </div>

@@ -23,7 +23,6 @@ export default function LeadForm({ userId, initialValues, onClose, isEdit, isPre
     if (!values.name) errors.name = 'Required';
     if (!values.email) errors.email = 'Required';
     if (!values.phone) errors.phone = 'Required';
-    if (!values.source_number) errors.source_number = 'Required';
 
     return errors;
   };
@@ -135,18 +134,7 @@ console.log(initialValues, 'initialValues');
               className="text-red-600 text-xs mt-1 font-semibold select-none"
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Source Number</label>
-            <Field as="select" name="source_number" className="w-full p-3 border border-gray-300 rounded">
-              <option value=''>Select</option>
-              {phoneNumbers.map((num) => (
-                <option key={num} value={num}>
-                  {num}
-                </option>
-              ))}
-            </Field>
-            {errors.source_number && touched.source_number && <p className="text-red-600">{errors.source_number}</p>}
-          </div>
+         
           <div>
             <label htmlFor="source" className="block mb-1 text-sm font-medium text-gray-700">
               Source

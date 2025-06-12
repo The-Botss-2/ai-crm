@@ -29,6 +29,7 @@ const LeadsTable: React.FC<LeadsTableProps> = ({ leads, onEdit, onDelete, onPrev
             <th className="px-4 py-2 text-left">Name</th>
             <th className="px-4 py-2 text-left">Email</th>
             <th className="px-4 py-2 text-left">Phone</th>
+            <th className="px-4 py-2 text-left">Source</th>
             <th className="px-4 py-2 text-left">Status</th>
             <th className="px-4 py-2 text-left">Created Date</th>
             <th className="px-4 py-2 text-left">Time</th>
@@ -45,6 +46,11 @@ const LeadsTable: React.FC<LeadsTableProps> = ({ leads, onEdit, onDelete, onPrev
                 <td className="px-4 py-2 rounded-l-md bg-blue-50 font-medium text-blue-700 cursor-pointer" onClick={() => router.push(`/team/${lead?.teamId}/leadsdetails/${lead._id}`)}>{lead.name}</td>
                 <td className="px-4 py-2 text-gray-800">{lead.email}</td>
                 <td className="px-4 py-2 text-gray-800">{lead.phone}</td>
+                   <td className="px-4 py-2">
+                  <span className={`px-4 py-2 text-gray-800`}>
+                    {lead.source || '_'}
+                  </span>
+                </td>
                 <td className="px-4 py-2">
                   <span className={`px-2 capitalize py-1 rounded-full text-xs font-semibold ${getStatusColor(lead.status)}`}>
                     {lead.status.replace('_', ' ')}
