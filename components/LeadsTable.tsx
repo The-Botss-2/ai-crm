@@ -45,7 +45,7 @@ const LeadsTable: React.FC<LeadsTableProps> = ({ leads, onEdit, onDelete, onPrev
               >
                 <td className="px-4 py-2 rounded-l-md bg-blue-50 font-medium text-blue-700 cursor-pointer" onClick={() => router.push(`/team/${lead?.teamId}/leadsdetails/${lead._id}`)}>{lead.name}</td>
                 <td className="px-4 py-2 text-gray-800">{lead.email}</td>
-                <td className="px-4 py-2 text-gray-800">{lead.phone}</td>
+                <td className="px-4 py-2 text-gray-800">{lead.phone || '_'}</td>
                    <td className="px-4 py-2">
                   <span className={`px-4 py-2 text-gray-800`}>
                     {lead.source || '_'}

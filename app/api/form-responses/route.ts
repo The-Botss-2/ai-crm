@@ -3,12 +3,13 @@ import { connectToDatabase } from '@/lib/db';
 import { FormResponse } from '@/model/FormResponse';
 import { CustomForm } from '@/model/Forms';
 import { auth } from '@/auth';
+import Lead from '@/model/Lead';
 
 export async function POST(req: NextRequest) {
     await connectToDatabase();
 
     try {
-        const { email, username, form, responses } = await req.json();
+        const { email, username, form, category,team_id:teamId,responses } = await req.json();
 
         // ✅ Required fields check
         if ( !email || !username || !form || !Array.isArray(responses)) {
@@ -16,6 +17,12 @@ export async function POST(req: NextRequest) {
                 { error: 'Missing required fields: email, username, form, or responses' },
                 { status: 400 }
             );
+        }
+        if (category == 'lead') {
+            const isLead = await Lead.findOne({ email });
+            if (!isLead) {
+                await Lead.create({ email, name:username,teamId });
+            }
         }
         const existingForm = await CustomForm.findById(form);
         if (!existingForm) {
@@ -25,6 +32,7 @@ export async function POST(req: NextRequest) {
         const saved = await FormResponse.create({
            email, username,
             form,
+            category,
             responses,
         });
 

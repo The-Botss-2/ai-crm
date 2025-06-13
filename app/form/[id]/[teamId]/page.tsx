@@ -8,7 +8,7 @@ import { useParams } from 'next/navigation';
 
 
 export default function Page() {
-  const { id } = useParams()
+  const { id, teamId } = useParams()
 
   const [form, setForm] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
@@ -57,6 +57,6 @@ export default function Page() {
   }
 
   return (
-      <FormRenderer form={form} />
+      <FormRenderer form={form} teamId={teamId} />
   );
 }

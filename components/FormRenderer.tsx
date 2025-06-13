@@ -21,7 +21,7 @@ type FormData = {
   fields: Field[];
 };
 
-export default function FormRenderer({ form }: { form: FormData }) {
+export default function FormRenderer({ form,teamId }: { form: FormData ,teamId:any}) {
   const initialValues: Record<string, any> = {
     email: '',
     username: '',
@@ -54,6 +54,8 @@ export default function FormRenderer({ form }: { form: FormData }) {
       const responsePayload = {
         email: values.email,
         username: values.username,
+        category: form.category,
+        team_id:teamId,
         form: form._id,
         responses: Object.entries(values)
           .filter(([key]) => key !== 'email' && key !== 'username')

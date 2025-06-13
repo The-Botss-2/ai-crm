@@ -21,7 +21,7 @@ export default function LeadForm({ userId, initialValues, onClose, isEdit, isPre
   const validate = (values: Partial<Lead>) => {
     const errors: Partial<Record<keyof Lead, string>> = {};
     if (!values.name) errors.name = 'Required';
-    if (!values.email) errors.email = 'Required';
+    if (!values.email && !isEdit) errors.email = 'Required';
     if (!values.phone) errors.phone = 'Required';
 
     return errors;
@@ -46,7 +46,9 @@ export default function LeadForm({ userId, initialValues, onClose, isEdit, isPre
     try {
       const url = isEdit ? '/api/lead' : '/api/leads';
       const method = isEdit ? 'patch' : 'post';
-
+      if (isEdit) {
+        delete values.email;
+      }
       await axiosInstance.request({
         url,
         method,
@@ -64,8 +66,8 @@ export default function LeadForm({ userId, initialValues, onClose, isEdit, isPre
       reload();
       onClose();
       resetForm();
-    } catch (err) {
-      toast.error('Something went wrong', { id: toastId });
+    } catch (err:any) {
+      toast.error(err?.response?.data?.error || 'Something went wrong', { id: toastId });
     } finally {
       setSubmitting(false);
     }
@@ -78,7 +80,7 @@ console.log(initialValues, 'initialValues');
         <Form className="space-y-6">
           {[
             { label: 'Name', name: 'name', type: 'text' },
-            { label: 'Email', name: 'email', type: 'email' },
+            ...(!isEdit ? [{ label: 'Email', name: 'email', type: 'email' }] : []),
             { label: 'Phone', name: 'phone', type: 'tel' },
             { label: 'Company', name: 'company', type: 'text' },
           ].map(({ label, name, type }) => {

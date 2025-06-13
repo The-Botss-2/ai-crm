@@ -15,6 +15,7 @@ import useSWR from 'swr';
 import { fetcher } from '@/lib/fetcher';
 import { X, Loader } from 'lucide-react'; // Import icons from lucide-react
 import { socialFetcher } from '@/lib/socialFetcher';
+import InlineResponses from './InlineResponses';
 
 interface LeadsTableProps {
   leads?: Lead;
@@ -26,7 +27,7 @@ interface LeadsTableProps {
 
 const LeadsDetailsTable: React.FC<LeadsTableProps> = ({ leads, error, userID, mutateConversation, Conversation }) => {
   const { role, loading } = useTeamRole();
-  const [activeTab, setActiveTab] = useState<'tasks' | 'meetings' | 'emails' | 'outbound' | 'conversation'>('tasks');
+  const [activeTab, setActiveTab] = useState<'tasks' | 'meetings' | 'emails' | 'outbound' | 'conversation' | 'form'>('tasks');
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
   const [selectedCampaign, setSelectedCampaign] = useState<string | null>(null); // Selected campaign state
   const [isSubmitting, setIsSubmitting] = useState(false); // Track submission state
@@ -97,7 +98,7 @@ console.log(status, 'status');
         </h2>
         <div className="grid grid-cols-2 gap-4 text-sm text-gray-700">
           <div><strong>Name:</strong> {leads?.name}</div>
-          <div><strong>Phone:</strong> {leads?.phone}</div>
+          <div><strong>Phone:</strong> {leads?.phone || 'No phone number available'}</div>
           <div><strong>Email:</strong> {leads?.email}</div>
           <div><strong>Status:</strong> {leads?.status}</div>
           <div><strong>Notes:</strong> {leads?.notes || 'No notes available'}</div>
@@ -185,7 +186,8 @@ console.log(status, 'status');
           { key: 'meetings', label: 'Meetings' },
           // { key: 'outbound', label: 'Outbound Campaign' },
           ...(status && status?.email?.connected ? [{ key: 'emails', label: 'Emails' }] : []),
-          ...(Conversation && Conversation?.conversations?.length > 0 ? [{ key: 'conversation', label: 'Conversation' }] : [])
+          ...(Conversation && Conversation?.conversations?.length > 0 ? [{ key: 'conversation', label: 'Conversation' }] : []),
+          { key: 'form', label: 'Form Responses' },
         ].map((tab) => (
           <button
             key={tab.key}
@@ -216,6 +218,9 @@ console.log(status, 'status');
         )} */}
         {activeTab === 'conversation' && (
           <ConversationCom conversations={Conversation?.conversations} />
+        )}
+        {activeTab === 'form' && (
+          <InlineResponses email = {leads?.email}/>
         )}
       </div>
     </div>

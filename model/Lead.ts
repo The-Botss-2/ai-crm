@@ -27,7 +27,6 @@ const leadSchema = new mongoose.Schema(
     },
     phone: {
       type: String,
-      required: true,
     },
     company: {
       type: String,

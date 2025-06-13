@@ -39,7 +39,10 @@ export const POST = async (req: NextRequest) => {
     await checkTeamWritePermission(teamId, userId);
     const { name, email, phone, company, notes, source, status } = await req.json();
 
-
+    const isAlreadyExist = await Lead.findOne({ email });
+    if (isAlreadyExist) {
+      return NextResponse.json({ error: 'Lead already exists with this email' }, { status: 400 });
+    }
 
     const payload = {
       teamId,
