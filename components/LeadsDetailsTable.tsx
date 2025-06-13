@@ -82,9 +82,7 @@ console.log(status, 'status');
   };
 
   const handleCampaignSelection = (campaignId: string, agentId: string, number: string) => {
-    if(!leads?.phone){
-      toast.error('Lead phone number is not available.');
-    }
+ 
     console.log(campaignId, agentId, 'agentId');
     setSelectedCampaign(campaignId);
     setIsModalOpen(false); // Close the modal
@@ -111,7 +109,13 @@ console.log(status, 'status');
       {/* Call Button */}
       <div className="text-right">
         <button
-          onClick={() => setIsModalOpen(true)} // Open the modal when clicked
+          onClick={() =>{
+            if(!leads?.phone){
+      toast.error('Lead phone number is n ot available.');
+    }else{
+      setIsModalOpen(true)
+    }}
+          } // Open the modal when clicked
           className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow transition"
         >
           <PhoneCall className="w-5 h-5" />
