@@ -82,6 +82,9 @@ console.log(status, 'status');
   };
 
   const handleCampaignSelection = (campaignId: string, agentId: string, number: string) => {
+    if(!leads?.phone){
+      toast.error('Lead phone number is not available.');
+    }
     console.log(campaignId, agentId, 'agentId');
     setSelectedCampaign(campaignId);
     setIsModalOpen(false); // Close the modal
