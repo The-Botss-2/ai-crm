@@ -111,7 +111,7 @@ console.log(status, 'status');
         <button
           onClick={() =>{
             if(!leads?.phone){
-      toast.error('Lead phone number is n ot available.');
+      toast.error('Lead phone number is not available.');
     }else{
       setIsModalOpen(true)
     }}
