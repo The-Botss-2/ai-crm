@@ -16,12 +16,14 @@ import {
     PiUsersDuotone,
     PiLinkSimpleDuotone,
 } from 'react-icons/pi';
-
-import { FaWpforms } from 'react-icons/fa';
+import { RiProductHuntLine } from "react-icons/ri";
+import { TbCategory } from "react-icons/tb";
+import { FaProductHunt, FaWpforms } from 'react-icons/fa';
 import { GiClassicalKnowledge } from 'react-icons/gi';
 import { MdOutlineOutbound } from 'react-icons/md';
 
 import ElevenLabsWidget from './ElevenLabsConvAI';
+import { Fa42Group } from 'react-icons/fa6';
 
 interface Props {
     teamId: string;
@@ -53,6 +55,9 @@ export default function SidebarNav({ teamId, pathname, userId, session, isOpen }
                 { name: 'Meetings', href: `/team/${teamId}/meetings`, icon: <AiTwotoneCalendar size={22} /> },
                 { name: 'Team', href: `/team/${teamId}/team-details`, icon: <PiUsersDuotone size={22} /> },
                 { name: 'Tasks', href: `/team/${teamId}/tasks`, icon: <AiTwotoneBuild size={22} /> },
+                { name: 'Category', href: `/team/${teamId}/category`, icon: <TbCategory size={22} /> },
+                { name: 'Products', href: `/team/${teamId}/product`, icon: <RiProductHuntLine size={22} /> },
+
             ],
         },
         {
