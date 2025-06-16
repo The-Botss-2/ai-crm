@@ -84,7 +84,7 @@ export default function FormGrid() {
   return (
     <>
       {showResponses ? (
-        <InlineResponses formId={showResponses}   onBack={() => setShowResponses(null)} />
+        <InlineResponses formId={showResponses} onBack={() => setShowResponses(null)} />
       ) : (
         <>
           <Tab.Group selectedIndex={categories.indexOf(selectedTab)} onChange={handleTabChange} className="p-3">
@@ -197,6 +197,22 @@ export default function FormGrid() {
                                 </button>
                               )}
                             </Menu.Item>
+                            <Menu.Item>
+                              {({ active }) => (
+                                <button
+                                  onClick={() => {
+                                    const formId = form._id;
+                                    navigator.clipboard.writeText(formId);
+                                    toast.success('Form ID copied to clipboard');
+                                  }}
+                                  className={`${active ? 'bg-gray-100 text-gray-900' : 'text-gray-800'}
+        group flex w-full items-center rounded px-2 py-2 text-xs`}
+                                >
+                                  Copy Form ID
+                                </button>
+                              )}
+                            </Menu.Item>
+
                             <Menu.Item>
                               {({ active }) => (
                                 <button

@@ -4,6 +4,7 @@ import { FormResponse } from '@/model/FormResponse';
 import { CustomForm } from '@/model/Forms';
 import { auth } from '@/auth';
 import Lead from '@/model/Lead';
+import { ObjectId } from 'mongodb';
 
 export async function POST(req: NextRequest) {
     await connectToDatabase();
@@ -42,6 +43,9 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: 'Failed to save form response' }, { status: 500 });
     }
 }
+interface Query {
+    form?: ObjectId; // form should be of type ObjectId
+}
 
 export async function GET(req: NextRequest) {
 
@@ -55,11 +59,20 @@ export async function GET(req: NextRequest) {
     if (!formId) {
         return NextResponse.json({ error: 'Form ID is required in query' }, { status: 400 });
     }
+   const query: Query = { };
 
+    if (formId) {
+        // Ensure that searchFormId is converted to ObjectId if valid
+        if (ObjectId.isValid(formId)) {
+            query.form = new ObjectId(formId);  // Force form to be an ObjectId
+        } else {
+            return NextResponse.json([], { status: 200 });
+        }
+    }
     await connectToDatabase();
 
     try {
-        const responses = await FormResponse.find({ form: formId }).sort({ createdAt: -1 });
+        const responses = await FormResponse.find(query).sort({ createdAt: -1 });
 
         return NextResponse.json(responses, { status: 200 });
     } catch (error) {

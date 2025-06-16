@@ -112,7 +112,16 @@ export default function FormPanel({ isOpen, onClose, mutate, form }: Props) {
     }
   };
 function generateFormHTML(form: { title: string; fields: Field[] }): string {
-  const formFields = form.fields.map((field) => {
+  // Prepend the default name and email fields
+  const defaultFields: Field[] = [
+    { label: 'Name', type: 'text', isRequired: true, placeholder: 'Enter your name', id: -1 },
+    { label: 'Email', type: 'email', isRequired: true, placeholder: 'Enter your email', id: -2 },
+  ];
+
+  // Merge the default fields with the dynamic fields
+  const allFields = [...defaultFields, ...form.fields];
+
+  const formFields = allFields.map((field:any) => {
     const required = field.isRequired ? 'required' : '';
     const nameAttr = `name="${field.label.replace(/\s+/g, '_').toLowerCase()}"`;
 
@@ -138,7 +147,7 @@ function generateFormHTML(form: { title: string; fields: Field[] }): string {
           <label class="form-label">
             ${field.label}
             <select class="form-input" ${nameAttr} ${required}>
-              ${(field.options || []).map(opt => `<option>${opt}</option>`).join('')}
+              ${(field.options || []).map((opt:any) => `<option>${opt}</option>`).join('')}
             </select>
           </label>`;
       case 'radio':
@@ -146,7 +155,7 @@ function generateFormHTML(form: { title: string; fields: Field[] }): string {
         return `
           <fieldset class="form-fieldset">
             <legend>${field.label}</legend>
-            ${(field.options || []).map(opt => `
+            ${(field.options || []).map((opt:any) => `
               <label class="form-check">
                 <input type="${field.type}" name="${field.label}" value="${opt}" ${required} />
                 ${opt}
@@ -219,15 +228,16 @@ function generateFormHTML(form: { title: string; fields: Field[] }): string {
 }
 
 
+
   const handleSubmitForm = async (values: FormValues, { setSubmitting, resetForm }: any) => {
     if (fields.length === 0) {
       toast.error('Please provide at least one field.');
       return;
     }
- const code_snippet = generateFormHTML({
-    title: values.title,
-    fields,
-  });
+    const code_snippet = generateFormHTML({
+      title: values.title,
+      fields,
+    });
     const payload = {
       ...values,
       teamId,
@@ -310,14 +320,41 @@ function generateFormHTML(form: { title: string; fields: Field[] }): string {
                   >
                     <option value="custom">Custom</option>
                     <option value="lead">Lead</option>
-                
+
                   </FormikField>
                 </div>
 
                 {/* Field Builder */}
                 <div className="border border-dotted border-gray-300 p-4 flex flex-col gap-2 rounded-lg">
                   <h2 className="font-semibold text-sm text-gray-900">Form Fields</h2>
-
+                  <li
+                    key={``}
+                    className="border border-gray-300 p-3 rounded flex justify-between items-center hover:shadow-sm transition-shadow"
+                  >
+                    <div>
+                      <p className="font-medium text-sm text-gray-900">
+                        Name <span className="text-red-600">*</span>
+                      </p>
+                      <p className="text-xs text-gray-500">text</p>
+                    </div>
+                    <div className="text-red-600 text-sm flex gap-2">
+                      Default
+                    </div>
+                  </li>
+                  <li
+                    key={``}
+                    className="border border-gray-300 p-3 rounded flex justify-between items-center hover:shadow-sm transition-shadow"
+                  >
+                    <div>
+                      <p className="font-medium text-sm text-gray-900">
+                        Email <span className="text-red-600">*</span>
+                      </p>
+                      email                         
+                       </div>
+                    <div className="text-red-600 text-sm flex gap-2">
+                      Default
+                    </div>
+                  </li>
                   {fields.length === 0 ? (
                     <p className="text-xs text-gray-500">No fields added.</p>
                   ) : (
