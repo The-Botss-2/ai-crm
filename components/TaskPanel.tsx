@@ -48,7 +48,7 @@ const TaskPanel: React.FC<TaskPanelProps> = ({
               status: task?.status || 'pending',
               priority: task?.priority || 'medium',
               dueDate: task?.dueDate ? new Date(task.dueDate).toISOString().slice(0, 16) : '',
-              assignedTo: task?.assignedTo || '',
+              assignedTo: task?.assignedTo?._id || '',
               leadId: task?.leadId || '',
               meetingId: task?.meetingId || '',
               teamId,
