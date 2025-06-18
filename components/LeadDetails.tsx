@@ -32,6 +32,7 @@ const LeadDetails = ({ leadId, teamId, userID }: LeadProps) => {
                 userID={userID}
                 Conversation={Conversation}
                 mutateConversation={mutateConversation}
+                teamId={teamId}
             /></div>) : (
             <Loading />
         )

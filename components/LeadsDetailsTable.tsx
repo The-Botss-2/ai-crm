@@ -16,6 +16,7 @@ import { fetcher } from '@/lib/fetcher';
 import { X, Loader } from 'lucide-react'; // Import icons from lucide-react
 import { socialFetcher } from '@/lib/socialFetcher';
 import InlineResponses from './InlineResponses';
+import LeadAssignModal from './LeadAssignModal';
 
 interface LeadsTableProps {
   leads?: Lead;
@@ -23,24 +24,25 @@ interface LeadsTableProps {
   userID: string;
   mutateConversation: any;
   Conversation: any;
+  teamId: any
 }
 
-const LeadsDetailsTable: React.FC<LeadsTableProps> = ({ leads, error, userID, mutateConversation, Conversation }) => {
+const LeadsDetailsTable: React.FC<LeadsTableProps> = ({ leads, error, teamId, userID, mutateConversation, Conversation }) => {
   const { role, loading } = useTeamRole();
   const [activeTab, setActiveTab] = useState<'tasks' | 'meetings' | 'emails' | 'outbound' | 'conversation' | 'form'>('tasks');
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
+  const [isLeadAssignModalOpen, setIsLeadAssignModalOpen] = useState(false); // Modal state
   const [selectedCampaign, setSelectedCampaign] = useState<string | null>(null); // Selected campaign state
   const [isSubmitting, setIsSubmitting] = useState(false); // Track submission state
   const { data: status, error: statusError, isLoading, mutate } = useSWR('/api/integrations', socialFetcher);
-console.log(status, 'status');
 
   // Fetch campaigns
   const { data: campaigns = [], isLoading: campaignsLoading, error: campaignsError } = useSWR<any[]>(
     `https://callingagent.thebotss.com/api/outbound-campaigns?crm_user_id=${userID}`,
     fetcher
   );
+  const { data: teamData } = useSWR(`/api/team?id=${teamId}`, fetcher);
 
-  // Loading state for role
   if (loading) return <Loading />;
   if (error || !leads) {
     return (
@@ -49,6 +51,8 @@ console.log(status, 'status');
       </div>
     );
   }
+
+
 
   const handleCall = async (agentId: string, number: string) => {
     if (!leads) return;
@@ -82,11 +86,10 @@ console.log(status, 'status');
   };
 
   const handleCampaignSelection = (campaignId: string, agentId: string, number: string) => {
- 
     console.log(campaignId, agentId, 'agentId');
     setSelectedCampaign(campaignId);
     setIsModalOpen(false); // Close the modal
-    handleCall(agentId,number); // Call with the selected agent_id
+    handleCall(agentId, number); // Call with the selected agent_id
   };
 
   return (
@@ -107,23 +110,41 @@ console.log(status, 'status');
         </div>
       </div>
       {/* Call Button */}
-      <div className="text-right">
+      <div className="flex gap-4 justify-end">
+        {leads?.createdBy === userID ? (
         <button
-          onClick={() =>{
-            if(!leads?.phone){
-      toast.error('Lead phone number is not available.');
-    }else{
-      setIsModalOpen(true)
-    }}
-          } // Open the modal when clicked
-          className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow transition"
+          onClick={() => {
+            setIsLeadAssignModalOpen(true);
+          }} // Open the modal when clicked
+          className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow-lg transition duration-300"
+        >
+          Assign Lead
+        </button>):(<></>)}
+        <button
+          onClick={() => {
+            if (!leads?.phone) {
+              toast.error('Lead phone number is not available.');
+            } else {
+              setIsModalOpen(true);
+            }
+          }} // Open the modal when clicked
+          className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow-lg transition duration-300"
         >
           <PhoneCall className="w-5 h-5" />
           Call Agent
         </button>
       </div>
 
-      {/* Campaign Selection Modal */}
+
+      {isLeadAssignModalOpen ? (
+        <LeadAssignModal
+          isLeadAssignModalOpen={isLeadAssignModalOpen}
+          setIsLeadAssignModalOpen={setIsLeadAssignModalOpen}
+          teamData={teamData}
+          leads={leads}
+        />
+      ) : null}
+
 
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
@@ -218,7 +239,7 @@ console.log(status, 'status');
           <MeetingLeads user_id={userID} lead_id={leads._id} team_id={leads.teamId} />
         )}
         {activeTab === 'emails' && (
-          <LeadEmail userid={userID} page={"lead"} source_email={leads?.email}/>
+          <LeadEmail userid={userID} page={"lead"} source_email={leads?.email} />
         )}
         {/* {activeTab === 'outbound' && (
           <OutBoundCalls user_id={userID} page="lead" lead_id={leads._id} team_id={leads.teamId} />
@@ -227,7 +248,7 @@ console.log(status, 'status');
           <ConversationCom conversations={Conversation?.conversations} />
         )}
         {activeTab === 'form' && (
-          <InlineResponses email = {leads?.email}/>
+          <InlineResponses email={leads?.email} />
         )}
       </div>
     </div>

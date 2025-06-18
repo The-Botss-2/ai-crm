@@ -10,20 +10,29 @@ export async function GET(req: NextRequest) {
   const search = searchParams.get('search') || '';
   const sortBy = searchParams.get('sortBy') || 'createdAt';
   const order = searchParams.get('order') === 'asc' ? 1 : -1;
+try {
+  
 
   if (!teamId) {
     return NextResponse.json({ error: 'Team ID is required' }, { status: 400 });
   }
 
   const leads = await Lead.find({
-    teamId: teamId,
     $or: [
-      { name: { $regex: search, $options: 'i' } },
-      { email: { $regex: search, $options: 'i' } },
+      { teamId: teamId },
+      { assignedToTeamId: teamId },
+      // { name: { $regex: search, $options: 'i' } },
+      // { email: { $regex: search, $options: 'i' } },
     ],
-  }).sort({ [sortBy]: order });
+  
+    
+  }).sort({ [sortBy]: order }).populate('assignedTo', '_id name email')
 
   return NextResponse.json(leads);
+} catch (error) {
+  return NextResponse.json({ error: (error as Error).message }, { status: 403 });
+  
+}
 }
 
 export const POST = async (req: NextRequest) => {

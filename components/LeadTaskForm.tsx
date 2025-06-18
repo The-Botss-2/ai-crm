@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Formik, Form, Field } from 'formik';
+import React, { useEffect, useState } from 'react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { toast } from 'react-hot-toast';
@@ -14,6 +14,8 @@ interface TaskFormProps {
   isEdit: boolean;
   onClose: () => void;
   reload: () => void;
+  userID: string;
+  task: any | null;
 }
 
 const LeadTaskForm: React.FC<TaskFormProps> = ({
@@ -21,12 +23,15 @@ const LeadTaskForm: React.FC<TaskFormProps> = ({
   isEdit,
   onClose,
   reload,
+  userID,
+  task
 }) => {
   const [loading, setLoading] = useState(false);
   const { data: meetings = [] } = useSWR(`/api/meetings?team=${initialValues.teamId}`, fetcher);
   const { data: teamData } = useSWR(`/api/team?id=${initialValues.teamId}`, fetcher);
   const { data: leads = [] } = useSWR(`/api/leads?team=${initialValues.teamId}`, fetcher);
-
+  const [userTeams, setUserTeams] = useState<any[]>([]);
+  const [fetchingTeams, setFetchingTeams] = useState(false);
   const handleDelete = async () => {
     setLoading(true);
     const toastId = toast.loading('Deleting task...');
@@ -49,10 +54,14 @@ const LeadTaskForm: React.FC<TaskFormProps> = ({
       initialValues={{
         ...initialValues,
         dueDate: initialValues.dueDate ? new Date(initialValues.dueDate) : null,
+        assignedToTeamId: initialValues.assignedToTeamId || '',
       }}
       validate={(values) => {
         const errors: any = {};
         if (!values.title) errors.title = 'Title is required';
+        if (values.assignedTo && !values.assignedToTeamId) {
+          errors.assignedToTeamId = 'Assign to Team is required';
+        }
         return errors;
       }}
       onSubmit={async (values, { setSubmitting }) => {
@@ -60,7 +69,14 @@ const LeadTaskForm: React.FC<TaskFormProps> = ({
         try {
           const payload = { ...values };
           if (!isEdit) delete payload._id;
-          if (!payload.assignedTo) delete payload.assignedTo;
+          if (!payload.leadId) delete payload.leadId;
+          if (!payload.assignedTo && isEdit) {
+            values.assignedTo = null;
+            values.assignedToTeamId = null;
+          }else if(!payload.assignedTo){
+            delete payload.assignedTo;
+            delete payload.assignedToTeamId;
+          }
           if (!payload.leadId) delete payload.leadId;
           if (!payload.meetingId) delete payload.meetingId;
 
@@ -90,7 +106,33 @@ const LeadTaskForm: React.FC<TaskFormProps> = ({
         }
       }}
     >
-      {({ isSubmitting, setFieldValue, values }) => (
+      {({ isSubmitting, setFieldValue, values }) => {
+              useEffect(() => {
+                const fetchUserTeams = async () => {
+                  if (values.assignedTo) {
+                    setFetchingTeams(true);
+                    values.assignedToTeamId = '';
+                    try {
+                      const response = await axiosInstance.get(`/api/team/userId`, {
+                        params: { userId: values.assignedTo },
+                      });
+                      setUserTeams(response.data?.teams || []);
+                    } catch (error) {
+                      console.error('Failed to fetch user teams', error);
+                      setUserTeams([]);
+                    } finally {
+                      setFetchingTeams(false);
+                    }
+                  } else {
+                    setUserTeams([]);
+                    setFieldValue('assignToTeam', '');
+                  }
+                };
+      
+                fetchUserTeams();
+              }, [values.assignedTo, setFieldValue]);
+      
+              return (
         <Form className="space-y-4">
           <Field name="title">
             {({ field }: any) => (
@@ -162,7 +204,31 @@ const LeadTaskForm: React.FC<TaskFormProps> = ({
             ))}
           </Field>
 
+         {/* Conditionally Render Assign to Team */}
+                    {values.assignedTo && (
+                      <div>
+                        <Field
+                          name="assignedToTeamId"
+                          as="select"
+                          className="w-full border border-gray-300 text-xs p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        >
+                          <option value="">Select Team</option>
+                          {fetchingTeams ? (
+                            <option disabled>Fetching teams...</option>
+                          ) : userTeams.length === 0 ? (
+                            <option disabled>No teams found</option>
+                          ) : (
+                            userTeams.map((team: any) => (
+                              <option key={team._id} value={team._id}>
+                                {team.name}
+                              </option>
+                            ))
+                          )}
+                        </Field>
+                        <ErrorMessage name="assignedToTeamId" component="div" className="text-red-500 text-xs mt-1" />
         
+                      </div>
+                    )}
           <Field name="meetingId" as="select" className="w-full border border-gray-300 text-xs p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
             <option value="">Link to Meeting</option>
             {meetings.map((m: any) => (
@@ -171,29 +237,31 @@ const LeadTaskForm: React.FC<TaskFormProps> = ({
               </option>
             ))}
           </Field>
+          {task && isEdit && task.createdBy !== userID ? null : (
+              <div className="flex gap-2 mt-4">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-700 font-semibold text-xs transition disabled:opacity-50"
+                >
+                  {isEdit ? 'Update Task' : 'Create Task'}
+                </button>
 
-          <div className="flex gap-2 mt-4">
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-700 font-semibold text-xs transition disabled:opacity-50"
-            >
-              {isEdit ? 'Update Task' : 'Create Task'}
-            </button>
-
-            {isEdit && (
-              <button
-                type="button"
-                onClick={handleDelete}
-                disabled={loading}
-                className="bg-red-100 text-red-800 px-3 py-2 rounded hover:bg-red-200 font-semibold text-xs transition disabled:opacity-50"
-              >
-                Delete Task
-              </button>
+                {isEdit && (
+                  <button
+                    type="button"
+                    onClick={handleDelete}
+                    disabled={loading}
+                    className="bg-red-100 text-red-800 px-3 py-2 rounded hover:bg-red-200 font-semibold text-xs transition disabled:opacity-50"
+                  >
+                    Delete Task
+                  </button>
+                )}
+              </div>
             )}
-          </div>
         </Form>
-      )}
+    );
+  }}
     </Formik>
   );
 };

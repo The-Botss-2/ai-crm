@@ -70,6 +70,8 @@ const MeetingLeadsPanel: React.FC<MeetingPanelProps> = ({
               isPreview={isPreview}
               onClose={onClose}
               reload={mutate}
+              userId={userId}
+              meeting={meeting}
             />
           )}
         </div>

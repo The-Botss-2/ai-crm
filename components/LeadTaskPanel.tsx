@@ -12,7 +12,8 @@ interface TaskPanelProps {
   task: any | null;
   teamId: string;
   mutate: () => void;
-  lead_id: string
+  lead_id: string;
+  user_id: string
 }
 
 const LeadTaskPanel: React.FC<TaskPanelProps> = ({
@@ -21,7 +22,8 @@ const LeadTaskPanel: React.FC<TaskPanelProps> = ({
   task,
   teamId,
   mutate,
-  lead_id
+  lead_id,
+  user_id
 }) => {
   const isEdit = !!task;
 
@@ -51,14 +53,17 @@ const LeadTaskPanel: React.FC<TaskPanelProps> = ({
               status: task?.status || 'pending',
               priority: task?.priority || 'medium',
               dueDate: task?.dueDate ? new Date(task.dueDate).toISOString().slice(0, 16) : '',
-              assignedTo: task?.assignedTo || '',
+              assignedTo: task?.assignedTo?._id || '',
               leadId: task?.leadId || lead_id ||'',
               meetingId: task?.meetingId || '',
+              assignedToTeamId: task?.assignedToTeamId || '',
               teamId,
             }}
             isEdit={isEdit}
             onClose={onClose}
             reload={mutate}
+            userID={user_id}
+            task={task}
           />
         </div>
       </Dialog>

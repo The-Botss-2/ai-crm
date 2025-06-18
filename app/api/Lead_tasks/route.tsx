@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
 
   const task = await Task.find({
     leadId: id
-  });
+  }).populate('assignedTo', '_id name email');
   if(!task) return NextResponse.json({ error: 'Task not found' }, { status: 404 });
   return NextResponse.json(task);
 }

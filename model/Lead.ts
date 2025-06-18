@@ -54,6 +54,14 @@ const leadSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Profile',
     },
+    assignedTo: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Profile',
+  },
+    assignedToTeamId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Team',
+  },
   },
   {
     timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' },

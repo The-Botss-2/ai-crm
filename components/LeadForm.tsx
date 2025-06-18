@@ -26,20 +26,8 @@ export default function LeadForm({ userId, initialValues, onClose, isEdit, isPre
 
     return errors;
   };
-  const [phoneNumbers, setPhoneNumbers] = useState<string[]>([]);
-  const API_BASE_URL = 'https://callingagent.thebotss.com/api';
 
-  useEffect(() => {
-    const loadPhoneNumbers = async () => {
-      try {
-        const response = await axios.get(`${API_BASE_URL}/elevenlabs/free-numbers?crm_user_id=${userId}`);
-        setPhoneNumbers(response.data.map((p: any) => p.phone_number));
-      } catch (error) {
-        toast.error('Failed to load phone numbers.');
-      }
-    };
-    loadPhoneNumbers();
-  }, [userId]);
+ 
   const handleSubmit = async (values: Partial<Lead>, { setSubmitting, resetForm }: any) => {
     const toastId = toast.loading(isEdit ? 'Updating lead...' : 'Adding lead...');
 

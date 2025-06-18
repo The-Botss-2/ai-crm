@@ -10,7 +10,8 @@ interface TaskPanelProps {
   onClose: () => void;
   task: any | null;
   teamId: string;
-  mutate: () => void;
+  mutate: () => void; 
+  userID:any
 }
 
 const TaskPanel: React.FC<TaskPanelProps> = ({
@@ -19,6 +20,7 @@ const TaskPanel: React.FC<TaskPanelProps> = ({
   task,
   teamId,
   mutate,
+  userID
 }) => {
   const isEdit = !!task;
 
@@ -51,11 +53,14 @@ const TaskPanel: React.FC<TaskPanelProps> = ({
               assignedTo: task?.assignedTo?._id || '',
               leadId: task?.leadId || '',
               meetingId: task?.meetingId || '',
+              assignedToTeamId: task?.assignedToTeamId || '',
               teamId,
             }}
             isEdit={isEdit}
             onClose={onClose}
             reload={mutate}
+            userID={userID}
+            task={task}
           />
         </div>
       </Dialog>

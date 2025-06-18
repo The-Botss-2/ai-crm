@@ -11,9 +11,10 @@ interface props {
   lead_id: string;
   meetings: any;
   mutate: () => void;
+  userId: string
 }
 
-const MeetingsLeadListView = ({lead_id, meetings,mutate}: props) => {
+const MeetingsLeadListView = ({lead_id, meetings,mutate,userId}: props) => {
   const { id: teamId } = useParams<{ id: string }>();
 
   const [activeTab, setActiveTab] = useState<'upcoming' | 'past'>('upcoming');
@@ -104,7 +105,7 @@ const MeetingsLeadListView = ({lead_id, meetings,mutate}: props) => {
         mode="edit"
         onClose={() => setIsOpen(false)}
         teamId={selectedMeeting?.teamId ?? ''}
-        userId={selectedMeeting?.createdBy ?? ''}
+        userId={userId}
         mutate={mutate}
         lead_id={lead_id}
       />

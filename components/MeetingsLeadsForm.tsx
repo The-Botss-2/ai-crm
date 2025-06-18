@@ -14,6 +14,8 @@ interface MeetingFormProps {
   isPreview: boolean;
   onClose: () => void;
   reload: () => void;
+  userId: string;
+  meeting: any
 }
 
 const MeetingsLeadsForm: React.FC<MeetingFormProps> = ({
@@ -22,6 +24,8 @@ const MeetingsLeadsForm: React.FC<MeetingFormProps> = ({
   isPreview,
   onClose,
   reload,
+  userId,
+  meeting
 }) => {
   const [attendeeInput, setAttendeeInput] = useState('');
   const { data: leads = [] } = useSWR(`/api/leads?team=${initialValues.teamId}`, fetcher);
@@ -76,6 +80,7 @@ const MeetingsLeadsForm: React.FC<MeetingFormProps> = ({
       toast.error('Something went wrong', { id: toastId });
     } 
   };
+console.log(meeting , isEdit , meeting?.createdBy ,userId ,'createdBy');
 
   return (
     <Formik
@@ -352,8 +357,8 @@ const MeetingsLeadsForm: React.FC<MeetingFormProps> = ({
                 />
               </>
             )}
-
-            {!isPreview && (
+              {meeting && isEdit && meeting.createdBy !== userId ? null : (
+            !isPreview && (
               <div className="flex gap-2 mt-4">
                 <button
                   type="submit"
@@ -388,6 +393,7 @@ const MeetingsLeadsForm: React.FC<MeetingFormProps> = ({
                   </button>
                 )}
               </div>
+            )
             )}
           </Form>
         );

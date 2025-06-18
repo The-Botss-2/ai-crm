@@ -3,24 +3,21 @@
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import useSWR from 'swr';
 import { useEffect, useState } from 'react';
+import TaskPanel from '@/components/TaskPanel';
 import classNames from 'classnames';
 import { fetcher } from '@/lib/fetcher';
 import { useTeamRole } from '@/context/TeamRoleContext';
-import LeadTaskPanel from './LeadTaskPanel';
 
 const STATUS_TABS = ['all', 'pending', 'in_progress', 'completed', 'blocked'];
-interface props {
-    user_id: string;
-    lead_id: string
-    team_id: string
-}
-export default function LeadTasks({ user_id,lead_id,team_id }: props) {
+
+export default function TaskPageClient({userID}:any) {
+ 
   const { id: teamId } = useParams<{ id: string }>();
   const router = useRouter();
   const searchParams = useSearchParams();
   const { role, loading } = useTeamRole();
 
-  const { data: tasks = [], mutate } = useSWR(`/api/Lead_tasks?id=${lead_id}`, fetcher);
+  const { data: tasks = [], mutate } = useSWR(`/api/tasks?teamId=${teamId}`, fetcher);
 
   const initialTab = searchParams.get('tab') || 'all';
   const [activeTab, setActiveTab] = useState(initialTab);
@@ -162,7 +159,7 @@ export default function LeadTasks({ user_id,lead_id,team_id }: props) {
         </table>
       </div>
 
-      <LeadTaskPanel user_id={user_id} isOpen={drawerOpen} onClose={() => setDrawerOpen(false)} task={editingTask} teamId={teamId} mutate={mutate} lead_id={lead_id} />
+      <TaskPanel userID={userID} isOpen={drawerOpen} onClose={() => setDrawerOpen(false)} task={editingTask} teamId={teamId} mutate={mutate} />
     </div>
   );
 }

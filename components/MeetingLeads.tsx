@@ -55,7 +55,7 @@ export default function MeetingLeads({ user_id,lead_id,team_id }: props) {
         </button>
       </div>
 
-      {view === 'calendar' ? <MeetingLEadCalenderView lead_id={lead_id}  meetings={meetings} mutate={mutate}/> : <MeetingsLeadListView lead_id={lead_id} meetings={meetings} mutate={mutate}/>}
+      {view === 'calendar' ? <MeetingLEadCalenderView lead_id={lead_id}  userId={user_id} meetings={meetings} mutate={mutate}/> : <MeetingsLeadListView userId={user_id} lead_id={lead_id} meetings={meetings} mutate={mutate}/>}
 
       {/* MeetingPanel in Add Mode */}
       <MeetingLeadsPanel
