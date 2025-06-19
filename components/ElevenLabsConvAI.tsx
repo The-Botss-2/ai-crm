@@ -108,7 +108,7 @@ const ElevenLabsWidget = ({ agent_id }: { agent_id: string }) => {
                 window.open(fullUrl, '_blank', 'noopener,noreferrer');
               },
               redirectToExternalURL: ({ url }: { url: string }) => {
-                window.open(url, '_blank', 'noopener,noreferrer');
+                window.location.href = url;
               },
             };
           });
