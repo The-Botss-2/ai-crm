@@ -112,8 +112,7 @@ console.log(meeting , isEdit , meeting?.createdBy ,userId ,'createdBy');
         if (values.fromTime && values.toTime && values.fromTime >= values.toTime)
           errors.toTime = 'End time must be after start time';
         if (!values.link) errors.link = 'Required';
-        if (!values.attendees || values.attendees.length === 0)
-          errors.attendees = 'At least one attendee is required';
+      
         return errors;
       }}
       onSubmit={handleSubmit}
@@ -357,8 +356,7 @@ console.log(meeting , isEdit , meeting?.createdBy ,userId ,'createdBy');
                 />
               </>
             )}
-              {meeting && isEdit && meeting.createdBy !== userId ? null : (
-            !isPreview && (
+           { !isPreview && (
               <div className="flex gap-2 mt-4">
                 <button
                   type="submit"
@@ -393,7 +391,6 @@ console.log(meeting , isEdit , meeting?.createdBy ,userId ,'createdBy');
                   </button>
                 )}
               </div>
-            )
             )}
           </Form>
         );

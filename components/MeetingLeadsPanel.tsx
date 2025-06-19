@@ -63,7 +63,7 @@ const MeetingLeadsPanel: React.FC<MeetingPanelProps> = ({
                 aiSummary: meeting?.aiSummary || '',
                 attendees: meeting?.attendees || [],
                 teamId,
-                createdBy: meeting?.createdBy || userId,
+                createdBy: meeting?.createdBy || '',
                 leadId: meeting?.leadId || lead_id || null,
               }}
               isEdit={isEdit}

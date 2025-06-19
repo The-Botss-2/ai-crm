@@ -17,7 +17,7 @@ const HomePage = async () => {
   if (organizations.length > 0) {
     // Assuming the first organization is the one you want to redirect to
     const teamId = organizations[0]._id;
-    return redirect(`/teams/${teamId}`);
+    return redirect(`/teams`);
   } else {
     return redirect('/organization'); // Redirect to organization creation page if no organization found
   }

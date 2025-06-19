@@ -31,10 +31,6 @@ const TaskSchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: 'Profile',
         },
-        assignedToTeamId: {
-            type: Schema.Types.ObjectId,
-            ref: 'Team',
-        },
         leadId: {
             type: Schema.Types.ObjectId,
             ref: 'Lead',

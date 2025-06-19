@@ -11,7 +11,7 @@ interface props {
     organizations:any
 }
 export default function TeamList({ id,userId,organizations }: props) {
-    const { data, error, isLoading, mutate } = useSWR(`/api/team/user?id=${id}&userId=${userId}`, fetcher);
+    const { data, error, isLoading, mutate } = useSWR(`/api/team/user?id=${userId}`, fetcher);
     localStorage.setItem('organization_id', organizations[0]._id);
     if (isLoading) return <TeamSkeleton />;
     if (error) return <p className="text-red-500">Failed to load teams.</p>;

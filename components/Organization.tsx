@@ -62,7 +62,7 @@ const Organization = ({ user_id }: Props) => {
                     contactEmail: '',
                     contactPhone: '',
                 })
-                router.push(`/teams/${data._id}`)
+                router.push(`/teams`)
             } else {
                 setError(data.error || 'Something went wrong.')
                 toast.error(data.error || 'Something went wrong.')

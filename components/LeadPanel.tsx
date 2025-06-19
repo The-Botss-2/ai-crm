@@ -51,7 +51,7 @@ const LeadPanel: React.FC<LeadPanelProps> = ({
                 notes: lead?.notes || '',
                 source_number: lead?.source_number || '',
                 team: teamId || '',
-                createdBy : lead?.createdBy || userId
+                createdBy : lead?.createdBy || ''
               }}
               submittedBy={userId}
               isEdit={isEdit}

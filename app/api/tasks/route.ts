@@ -12,12 +12,7 @@ export async function GET(req: NextRequest) {
   const teamId = req.nextUrl.searchParams.get('teamId');
   if (!teamId) return NextResponse.json({ error: 'teamId is required' }, { status: 400 });
 
-  const tasks = await Task.find({
-    $or: [
-      { teamId: teamId },
-      { assignedToTeamId: teamId }
-    ]
-  })
+  const tasks = await Task.find( {teamId })
   .populate('assignedTo', '_id name email')
   .sort({ createdAt: -1 });
   return NextResponse.json(tasks);

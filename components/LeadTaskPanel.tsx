@@ -56,7 +56,6 @@ const LeadTaskPanel: React.FC<TaskPanelProps> = ({
               assignedTo: task?.assignedTo?._id || '',
               leadId: task?.leadId || lead_id ||'',
               meetingId: task?.meetingId || '',
-              assignedToTeamId: task?.assignedToTeamId || '',
               teamId,
             }}
             isEdit={isEdit}

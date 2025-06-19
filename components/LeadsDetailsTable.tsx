@@ -111,7 +111,7 @@ const LeadsDetailsTable: React.FC<LeadsTableProps> = ({ leads, error, teamId, us
       </div>
       {/* Call Button */}
       <div className="flex gap-4 justify-end">
-        {leads?.createdBy === userID ? (
+        {role === 'admin' ? (
         <button
           onClick={() => {
             setIsLeadAssignModalOpen(true);

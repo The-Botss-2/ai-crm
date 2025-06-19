@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
 
     const meetings = await Meeting.find({
       teamId,
-      createdBy: session.user.id,
+      // createdBy: session.user.id,
     }).sort({ createdAt: -1 });
 
     return NextResponse.json(meetings);

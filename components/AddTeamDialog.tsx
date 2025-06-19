@@ -12,7 +12,6 @@ export default function AddTeamDialog({ userId }: { userId: string }) {
   const [teamName, setTeamName] = useState("");
   const [loading, setLoading] = useState(false);
      const params = useParams<{ id: string }>()
-      const organization_id = params.id;
   const handleCreate = async () => {
     if (!teamName.trim()) {
       toast.error("Team name is required");
@@ -25,15 +24,13 @@ export default function AddTeamDialog({ userId }: { userId: string }) {
     try {
       await axiosInstance.post("/api/team", {
         name: teamName,
-        adminId: userId,
-        organization_id
       });
 
       toast.success("Team created successfully", { id: toastId });
 
       mutate(`/api/team/user?id=${userId}`); // update teams list
       setTeamName("");
-      mutate(`/api/team/user?id=${organization_id}&userId=${userId}`);
+      // mutate(`/api/team/user?id=${organization_id}&userId=${userId}`);
       setIsOpen(false);
     } catch (err: any) {
       const msg = err?.response?.data?.error || "Something went wrong";

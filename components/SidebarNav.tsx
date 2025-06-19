@@ -73,7 +73,7 @@ export default function SidebarNav({ teamId, pathname, userId, session, isOpen }
         {
             title: 'Integrations',
             items: [
-                { name: 'Integrations', href: `/team/${teamId}/integrations`, icon: <PiLinkSimpleDuotone size={22} /> },
+   ...(role === 'admin' ? [{ name: 'Integrations', href: `/team/${teamId}/integrations`, icon: <PiLinkSimpleDuotone size={22} /> }] : []),
                 { name: 'Forms', href: `/team/${teamId}/forms`, icon: <FaWpforms size={22} /> },
             ],
         },
@@ -142,12 +142,12 @@ export default function SidebarNav({ teamId, pathname, userId, session, isOpen }
                                     </h4>
                                 )}
                                 <ul className="space-y-1 px-1">
-                                    {section.items.map((item) => {
+                                    {section.items.map((item:any) => {
                                         const isActive = pathname.startsWith(item.href);
                                         return (
-                                            <li key={item.name}>
+                                            <li key={item?.name}>
                                                 <Link
-                                                    href={item.href}
+                                                    href={item?.href}
                                                     className={`group flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-all duration-150 relative ${
                                                         isActive
                                                             ? 'bg-blue-100 text-blue-700 font-semibold shadow-inner'
@@ -156,13 +156,13 @@ export default function SidebarNav({ teamId, pathname, userId, session, isOpen }
                                                 >
                                                     <div
                                                         className="p-1 rounded-md bg-white shadow-md text-gray-600 flex items-center justify-center" 
-                                                        title={!isOpen ? item.name : ''}
+                                                        title={!isOpen ? item?.name : ''}
                                                     >
                                                         {item.icon}
                                                         
                                                     </div>
                                                     {isOpen && (
-                                                        <span className="ml-3 text-md">{item.name}</span>
+                                                        <span className="ml-3 text-md">{item?.name}</span>
                                                     )}
                                                 </Link>
                                             </li>

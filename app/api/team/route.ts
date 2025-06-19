@@ -54,17 +54,13 @@ export async function POST(req: Request) {
   
 
     const body = await req.json();
-    const { name,organization_id } = body;
+    const { name } = body;
     
-    if (!organization_id) {
-        return NextResponse.json({ success: false, error: 'Missing organization_id' }, { status: 400 });
-    }
-    
+
     try {
         const team = await Team.create({
             name,
             createdBy: session.user.id,
-            organization_id,
             members: [
                 { id: session.user.id, role: 'admin' }
             ]
@@ -89,9 +85,9 @@ export async function POST(req: Request) {
             await team.save();
         }
         return NextResponse.json({ team }, { status: 201 });
-    } catch (err) {
+    } catch (err:any) {
         console.error(err);
-        return NextResponse.json({ success: false, error: 'Failed to create team.' }, { status: 500 });
+        return NextResponse.json({ success: false, error: err.message }, { status: 500 });
     }
 }
 

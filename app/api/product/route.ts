@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     price,
     currency,
     teamId,
-    createdBy,
+    createdBy :session.user?.id,
     categoryId,
     description,
     quantity,

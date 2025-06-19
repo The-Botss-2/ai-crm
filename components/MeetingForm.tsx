@@ -56,6 +56,8 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
       delete payload.fromTime;
       delete payload.toTime;
 
+      if(!payload?.leadId) delete payload.leadId
+
       const url = isEdit ? '/api/meeting' : '/api/meetings';
       const method = isEdit ? 'patch' : 'post';
 
@@ -106,12 +108,10 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
         if (!values.date) errors.date = 'Required';
         if (!values.fromTime) errors.fromTime = 'Required';
         if (!values.toTime) errors.toTime = 'Required';
-        if (!values.leadId) errors.leadId = 'Required';
         if (values.fromTime && values.toTime && values.fromTime >= values.toTime)
           errors.toTime = 'End time must be after start time';
         if (!values.link) errors.link = 'Required';
-        if (!values.attendees || values.attendees.length === 0)
-          errors.attendees = 'At least one attendee is required';
+      
         return errors;
       }}
       onSubmit={handleSubmit}

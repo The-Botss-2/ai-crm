@@ -1,4 +1,3 @@
-// app/teams/[id]/page.tsx (server component)
 import { auth } from '@/auth';
 import TeamPageClient from '@/components/TeamPageClient';
 
