@@ -24,6 +24,7 @@ import { MdOutlineOutbound } from 'react-icons/md';
 
 import ElevenLabsWidget from './ElevenLabsConvAI';
 import { Fa42Group } from 'react-icons/fa6';
+import { IoAnalytics } from 'react-icons/io5';
 
 interface Props {
     teamId: string;
@@ -46,7 +47,13 @@ export default function SidebarNav({ teamId, pathname, userId, session, isOpen }
                     href: `/team/${teamId}/dashboard`,
                     icon: <AiTwotoneAppstore size={22} />,
                 },
+                  {
+                    name: 'Analytics',
+                    href: `/team/${teamId}/Analytics`,
+                    icon: <IoAnalytics size={22} />,
+                },
             ],
+            
         },
         {
             title: 'Management',

@@ -38,7 +38,7 @@ export default function Sidebar({ team_id, pathname ,session, isOpen, setIsOpen}
         <button onClick={() => setIsOpen(!isOpen)} className="text-gray-600 hover:text-blue-600">
           <IoMdMenu size={24} />
         </button>
-        {isOpen && <span onClick={() => rouer.push(`/teams`)} className=" font-bold text-blue-600" style={{fontSize: '22px'}}>{teamName ? teamName : '...'}</span>}
+        {isOpen && <span onClick={() => rouer.push(`/teams`)} className=" font-bold text-blue-600 cursor-pointer" style={{fontSize: '22px'}}>{teamName ? teamName : '...'}</span>}
       </div>
 
       {/* Sidebar Navigation */}

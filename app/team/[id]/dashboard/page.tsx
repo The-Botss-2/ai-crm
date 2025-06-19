@@ -105,13 +105,13 @@ export default function Page() {
           }
         />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 my-10">
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 my-10">
       <DashboardChart title="Task Distribution" type="pie" data={taskChartData} />
 <DashboardChart title="Lead Trends" type="bar" data={leadsChartData} />
 <DashboardChart title="Meetings by Day" type="line" data={meetingChartData} />
 
 
-      </div>
+      </div> */}
 
       {/* Upcoming Meetings */}
       <div className="bg-white rounded-lg shadow-lg p-6">
