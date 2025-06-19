@@ -29,7 +29,7 @@ jobs:
             git pull origin master
 
             # Install dependencies
-            npm install
+            npm install --force
 
             # Build the application
             npm run build
