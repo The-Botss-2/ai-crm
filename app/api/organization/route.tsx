@@ -54,4 +54,44 @@ export async function POST(req: NextRequest) {
   }
 }
 
+// PATCH: Update an existing organization
+export async function PATCH(req: NextRequest) {
+  try {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get('id');
+    
+    const body = await req.json();
+    const {  name, description, address, contactPhone } = body;
+
+    if (!id) {
+      return NextResponse.json({ error: 'Organization ID is required' }, { status: 400 });
+    }
+
+    await connectToDatabase();
+
+    // Find the organization and ensure it belongs to the user
+    const organization = await Organization.findOne({ _id: id, userId: session.user.id });
+    if (!organization) {
+      return NextResponse.json({ error: 'Organization not found or unauthorized' }, { status: 404 });
+    }
+
+    // Update fields if they are provided
+    if (name !== undefined) organization.name = name;
+    if (description !== undefined) organization.description = description;
+    if (address !== undefined) organization.address = address;
+    if (contactPhone !== undefined) organization.contactPhone = contactPhone;
+
+    await organization.save();
+
+    return NextResponse.json(organization);
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 });
+  }
+}
+
 

@@ -112,6 +112,8 @@ export default function SidebarNav({ teamId, pathname, userId, session, isOpen }
                     href: `/team/${teamId}/settings`,
                     icon: <AiTwotoneSetting size={22} />,
                 },
+                   ...(role === 'admin' ? [{ name: 'Organization Setting', href: `/team/${teamId}/organization-setting`, icon: <PiLinkSimpleDuotone size={22} /> }] : []),
+
             ],
         },
     ];
