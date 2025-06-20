@@ -17,6 +17,7 @@ import { X, Loader } from 'lucide-react'; // Import icons from lucide-react
 import { socialFetcher } from '@/lib/socialFetcher';
 import InlineResponses from './InlineResponses';
 import LeadAssignModal from './LeadAssignModal';
+import Overview from './Overview';
 
 interface LeadsTableProps {
   leads?: Lead;
@@ -29,7 +30,7 @@ interface LeadsTableProps {
 
 const LeadsDetailsTable: React.FC<LeadsTableProps> = ({ leads, error, teamId, userID, mutateConversation, Conversation }) => {
   const { role, loading } = useTeamRole();
-  const [activeTab, setActiveTab] = useState<'tasks' | 'meetings' | 'emails' | 'outbound' | 'conversation' | 'form'>('tasks');
+  const [activeTab, setActiveTab] = useState<'tasks' | 'meetings' | 'emails' | 'outbound' | 'conversation' | 'form' | 'overview'>('overview');
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
   const [isLeadAssignModalOpen, setIsLeadAssignModalOpen] = useState(false); // Modal state
   const [selectedCampaign, setSelectedCampaign] = useState<string | null>(null); // Selected campaign state
@@ -210,6 +211,7 @@ const LeadsDetailsTable: React.FC<LeadsTableProps> = ({ leads, error, teamId, us
       {/* Tab Buttons */}
       <div className="flex flex-wrap gap-2 mb-4">
         {[
+          { key: 'overview', label: 'Overview' },
           { key: 'tasks', label: 'Tasks' },
           { key: 'meetings', label: 'Meetings' },
           // { key: 'outbound', label: 'Outbound Campaign' },
@@ -249,6 +251,9 @@ const LeadsDetailsTable: React.FC<LeadsTableProps> = ({ leads, error, teamId, us
         )}
         {activeTab === 'form' && (
           <InlineResponses email={leads?.email} />
+        )}
+        {activeTab === 'overview' && (
+          <Overview userid={userID} lead_id={leads?._id} team_id={leads?.teamId} email = {leads?.email}/>
         )}
       </div>
     </div>
