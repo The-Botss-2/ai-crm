@@ -155,7 +155,7 @@ const Overview = ({ lead_id, userid, team_id, email }: any) => {
                 <div className="mb-6">
                     <div className="flex justify-between items-center mb-4">
                         <h3 className="text-xl font-semibold">Filter by Date Range</h3>
-                        {selectionRange.startDate && (
+                        {selectionRange?.startDate && (
                             <button
                                 onClick={() => setSelectionRange({ startDate: null, endDate: null, key: 'selection' })}
                                 className="text-sm text-red-500 hover:underline"
@@ -181,25 +181,25 @@ const Overview = ({ lead_id, userid, team_id, email }: any) => {
                     <h2 className="text-2xl font-bold mb-4">Linked Tasks</h2>
                     <div className="space-y-4">
                         {filteredTasks.map((task: any) => (
-                            <div key={task._id} className="border border-gray-300 p-4 rounded-lg shadow-sm">
+                            <div key={task?._id} className="border border-gray-300 p-4 rounded-lg shadow-sm">
                                 <div className="flex justify-between items-center">
-                                    <h4 className="font-semibold">{task.title}</h4>
+                                    <h4 className="font-semibold">{task?.title}</h4>
                                     <button
-                                        onClick={() => toggleDetails(task._id)}
+                                        onClick={() => toggleDetails(task?._id)}
                                         className="text-blue-500 hover:underline text-sm"
                                     >
-                                        {openDetails[task._id] ? 'Hide Details' : 'View Details'}
+                                        {openDetails[task?._id] ? 'Hide Details' : 'View Details'}
                                     </button>
                                 </div>
-                                <p className="text-sm text-gray-500">Status: {task.status}</p>
-                                <p className="text-sm text-gray-500">Due Date: {new Date(task.dueDate).toLocaleDateString()}</p>
-                                <p className="text-sm text-gray-500">Priority: {task.priority}</p>
-                                <p className="text-sm text-gray-500">Assigned To: {task.assignedTo?.name}</p>
+                                <p className="text-sm text-gray-500">Status: {task?.status}</p>
+                                <p className="text-sm text-gray-500">Due Date: {new Date(task?.dueDate).toLocaleDateString()}</p>
+                                <p className="text-sm text-gray-500">Priority: {task?.priority}</p>
+                                <p className="text-sm text-gray-500">Assigned To: {task?.assignedTo?.name}</p>
 
-                                {openDetails[task._id] && (
+                                {openDetails[task?._id] && (
                                     <div className="mt-4 text-sm text-gray-600">
-                                        <p>Description: {task.description}</p>
-                                        <p>Created At: {new Date(task.createdAt).toLocaleString()}</p>
+                                        <p>Description: {task?.description}</p>
+                                        <p>Created At: {new Date(task?.createdAt).toLocaleString()}</p>
                                     </div>
                                 )}
                             </div>
@@ -215,24 +215,24 @@ const Overview = ({ lead_id, userid, team_id, email }: any) => {
                     <h2 className="text-2xl font-bold mb-4">Emails</h2>
                     <div className="space-y-4">
                         {filteredEmails.map((email: any) => (
-                            <div key={email.id} className="border border-gray-300 p-4 rounded-lg shadow-sm">
+                            <div key={email?.id} className="border border-gray-300 p-4 rounded-lg shadow-sm">
                                 <div className="flex justify-between items-center">
-                                    <h4 className="font-semibold">{email.subject}</h4>
+                                    <h4 className="font-semibold">{email?.subject}</h4>
                                     <button
-                                        onClick={() => toggleDetails(email.id)}
+                                        onClick={() => toggleDetails(email?.id)}
                                         className="text-blue-500 hover:underline text-sm"
                                     >
-                                        {openDetails[email.id] ? 'Hide Details' : 'View Details'}
+                                        {openDetails[email?.id] ? 'Hide Details' : 'View Details'}
                                     </button>
                                 </div>
-                                <p className="text-sm text-gray-500">Sender: {email.sender?.name}</p>
-                                <p className="text-sm text-gray-500">Date: {new Date(email.date).toLocaleString()}</p>
+                                <p className="text-sm text-gray-500">Sender: {email?.sender?.name}</p>
+                                <p className="text-sm text-gray-500">Date: {new Date(email?.date).toLocaleString()}</p>
 
-                                {openDetails[email.id] && (
+                                {openDetails[email?.id] && (
                                     <div className="mt-4 text-sm text-gray-600">
                                         <p>Body: {email.body}</p>
                                         <a
-                                            href={`mailto:${email.sender.email}`}
+                                            href={`mailto:${email?.sender?.email}`}
                                             className="text-blue-500 hover:underline"
                                         >
                                             Send Reply
@@ -252,20 +252,20 @@ const Overview = ({ lead_id, userid, team_id, email }: any) => {
                     <h2 className="text-2xl font-bold mb-4">Linked Meetings</h2>
                     <div className="space-y-4">
                         {filteredMeetings.map((meeting: any) => (
-                            <div key={meeting._id} className="border border-gray-300 p-4 rounded-lg shadow-sm">
+                            <div key={meeting?._id} className="border border-gray-300 p-4 rounded-lg shadow-sm">
                                 <div className="flex justify-between items-center">
-                                    <h4 className="font-semibold">{meeting.title}</h4>
+                                    <h4 className="font-semibold">{meeting?.title}</h4>
                                     <button
-                                        onClick={() => toggleDetails(meeting._id)}
+                                        onClick={() => toggleDetails(meeting?._id)}
                                         className="text-blue-500 hover:underline text-sm"
                                     >
-                                        {openDetails[meeting._id] ? 'Hide Details' : 'View Details'}
+                                        {openDetails[meeting?._id] ? 'Hide Details' : 'View Details'}
                                     </button>
                                 </div>
-                                <p className="text-sm text-gray-500">Time: {new Date(meeting.startTime).toLocaleString()}</p>
-                                <p className="text-sm text-gray-500">Platform: {meeting.platform}</p>
+                                <p className="text-sm text-gray-500">Time: {new Date(meeting?.startTime).toLocaleString()}</p>
+                                <p className="text-sm text-gray-500">Platform: {meeting?.platform}</p>
                                 <a
-                                    href={meeting.link}
+                                    href={meeting?.link}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="text-blue-500 hover:underline"
@@ -273,9 +273,9 @@ const Overview = ({ lead_id, userid, team_id, email }: any) => {
                                     Join Meeting
                                 </a>
 
-                                {openDetails[meeting._id] && (
+                                {openDetails[meeting?._id] && (
                                     <div className="mt-4 text-sm text-gray-600">
-                                        <p>Created At: {new Date(meeting.createdAt).toLocaleString()}</p>
+                                        <p>Created At: {new Date(meeting?.createdAt).toLocaleString()}</p>
                                     </div>
                                 )}
                             </div>
@@ -291,23 +291,23 @@ const Overview = ({ lead_id, userid, team_id, email }: any) => {
                     <h2 className="text-2xl font-bold mb-4">Linked Conversations</h2>
                     <div className="space-y-4">
                         {filteredConversations.map((conversation: any) => (
-                            <div key={conversation._id} className="border border-gray-300 p-4 rounded-lg shadow-sm">
+                            <div key={conversation?._id} className="border border-gray-300 p-4 rounded-lg shadow-sm">
                                 <div className="flex justify-between items-center">
-                                    <h4 className="font-semibold">Conversation {conversation.conversation_id}</h4>
+                                    <h4 className="font-semibold">Conversation {conversation?.conversation_id}</h4>
                                     <button
-                                        onClick={() => toggleDetails(conversation._id)}
+                                        onClick={() => toggleDetails(conversation?._id)}
                                         className="text-blue-500 hover:underline text-sm"
                                     >
-                                        {openDetails[conversation._id] ? 'Hide Details' : 'View Details'}
+                                        {openDetails[conversation?._id] ? 'Hide Details' : 'View Details'}
                                     </button>
                                 </div>
-                                <p className="text-sm text-gray-500">Summary: {conversation.summary}</p>
-                                <p className="text-sm text-gray-500">Duration: {conversation.duration_seconds}s</p>
-                                <p className="text-sm text-gray-500">Created At: {new Date(conversation.created_at).toLocaleString()}</p>
+                                <p className="text-sm text-gray-500">Summary: {conversation?.summary}</p>
+                                <p className="text-sm text-gray-500">Duration: {conversation?.duration_seconds}s</p>
+                                <p className="text-sm text-gray-500">Created At: {new Date(conversation?.created_at).toLocaleString()}</p>
 
                                 {openDetails[conversation._id] && (
                                     <div className="mt-4 text-sm text-gray-600">
-                                        <p>Full Summary: {conversation.summary}</p>
+                                        <p>Full Summary: {conversation?.summary}</p>
                                     </div>
                                 )}
                             </div>
@@ -327,14 +327,14 @@ const Overview = ({ lead_id, userid, team_id, email }: any) => {
                                 <div className="flex justify-between items-center">
                                     <h4 className="font-semibold">Response from {response.username}</h4>
                                     <button
-                                        onClick={() => toggleDetails(response._id)}
+                                        onClick={() => toggleDetails(response?._id)}
                                         className="text-blue-500 hover:underline text-sm"
                                     >
-                                        {openDetails[response._id] ? 'Hide Details' : 'View Details'}
+                                        {openDetails[response?._id] ? 'Hide Details' : 'View Details'}
                                     </button>
                                 </div>
-                                <p className="text-sm text-gray-500">Category: {response.category}</p>
-                                <p className="text-sm text-gray-500">Submitted At: {new Date(response.submittedAt).toLocaleString()}</p>
+                                <p className="text-sm text-gray-500">Category: {response?.category}</p>
+                                <p className="text-sm text-gray-500">Submitted At: {new Date(response?.submittedAt).toLocaleString()}</p>
 
                                 {openDetails[response._id] && (
                                     <div className="mt-4 text-sm text-gray-600">
@@ -342,7 +342,7 @@ const Overview = ({ lead_id, userid, team_id, email }: any) => {
                                         <div className="space-y-2">
                                             {response.responses.map((resp: any, index: number) => (
                                                 <div key={index}>
-                                                    <strong>{resp.label}:</strong> {resp.value}
+                                                    <strong>{resp?.label}:</strong> {resp?.value}
                                                 </div>
                                             ))}
                                         </div>
