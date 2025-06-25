@@ -51,7 +51,8 @@ export default function AddMemberDialog({ teamId, requesterId, mutate }: any) {
         role,
         access,
       });
-      toast.success('Member added', { id: toastId });
+      
+      toast.success(response?.data?.message || 'Member added', { id: toastId });
       setEmail('');
       setAccess({
         dashboard: [],

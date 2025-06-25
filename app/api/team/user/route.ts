@@ -2,6 +2,7 @@ import { NextResponse, NextRequest } from 'next/server';
 import { connectToDatabase } from '@/lib/db';
 import Team from '@/model/Team';
 import Profile from '@/model/Profile';
+import { SendEmail } from '@/lib/SendEmail';
 
 export async function GET(req: NextRequest) {
   await connectToDatabase();
@@ -51,7 +52,7 @@ export async function POST(req: NextRequest) {
     if (alreadyMember) {
       return NextResponse.json({ success: false, error: 'User already a member of this team.' }, { status: 400 });
     }
-    
+
     // 4. Add new member
     team.members.push({
       id: profile._id, role
@@ -128,8 +129,180 @@ export async function PUT(req: NextRequest) {
     }
 
     const profile = await Profile.findOne({ email });
+
+    const invitationLink = `${process.env.domain}`;
+
+    const htmlTemplate = `
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Team Invitation | AI-CRM</title>
+  <style type="text/css">
+    /* Client-specific styles */
+    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+    
+    /* Reset styles */
+    body { margin: 0 !important; padding: 0 !important; width: 100% !important; }
+    
+    /* iOS BLUE LINKS */
+    a[x-apple-data-detectors] {
+      color: inherit !important;
+      text-decoration: none !important;
+      font-size: inherit !important;
+      font-family: inherit !important;
+      font-weight: inherit !important;
+      line-height: inherit !important;
+    }
+    
+    /* Main styles */
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      color: #333333;
+      background-color: #f7f7f7;
+    }
+    
+    .email-container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .header {
+      background-color:;
+      padding: 30px 20px;
+      text-align: center;
+    }
+    
+    .header-logo {
+      color: black;
+      font-size: 24px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    
+    .content {
+      padding: 40px 30px;
+      background-color: #ffffff;
+    }
+    
+    .footer {
+      padding: 20px;
+      text-align: center;
+      font-size: 12px;
+      color: #666666;
+      background-color: #f3f4f6;
+    }
+    
+    .button {
+      display: inline-block;
+      padding: 14px 28px;
+      background-color: #2563eb;
+      color: #ffffff !important;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 600;
+      margin: 20px 0;
+    }
+    
+    h1 {
+      color: #111827;
+      font-size: 24px;
+      font-weight: 600;
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+    
+    p {
+      font-size: 16px;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+    
+    .code-block {
+      background-color: #f3f4f6;
+      padding: 12px;
+      border-radius: 4px;
+      word-break: break-all;
+    }
+    
+    @media screen and (max-width: 600px) {
+      .email-container {
+        width: 100% !important;
+      }
+      .content {
+        padding: 20px 15px !important;
+      }
+    }
+  </style>
+</head>
+<body style="margin: 0; padding: 0;">
+ 
+  
+  <!-- Email body -->
+  <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+    <tr>
+      <td align="center" style="background-color: #f7f7f7;">
+        <table class="email-container" width="600" cellspacing="0" cellpadding="0" border="0">
+          <tr>
+            <td class="content">
+              <h1>You've Been Invited to Join Our Team</h1>
+              
+              <p>Hello,</p>
+              
+              <p>You've been invited to join <strong>${team.name}</strong> on AI-CRM platform. This will give you access to collaborate with your team on projects, leads, and more.</p>
+              
+              <p style="text-align: center;">
+                <a href="${invitationLink}" class="button">Accept Invitation</a>
+              </p>
+              
+              <p>If the button doesn't work, copy and paste this link into your browser:</p>
+              
+              <p class="code-block">${invitationLink}</p>
+              
+              <p>Best regards,<br/>The AI-CRM Team</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+  
+  <!-- Email footer -->
+  <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+    <tr>
+      <td align="center" style="background-color: #f3f4f6;">
+        <table class="email-container" width="600" cellspacing="0" cellpadding="0" border="0">
+          <tr>
+            <td class="footer">
+              <p>© ${new Date().getFullYear()} AI-CRM. All rights reserved.</p>
+              <p>
+                <a href=${process.env.domain} style="color: #2563eb; text-decoration: none;">Visit our website</a> | 
+              </p>
+              <p>If you didn't request this invitation, please ignore this email.</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+`;
+
     if (!profile) {
-      return NextResponse.json({ success: false, error: 'User not found.' }, { status: 404 });
+      const emailOptions = {
+        email: email,
+        subject: `You've been invited to join ${team?.name} on TheBots CRM`,
+        html: htmlTemplate,
+        text: `You've been invited to join a team on TheBots CRM. Click here to accept: ${invitationLink}`
+      };
+
+      await SendEmail(emailOptions);
+      return NextResponse.json({ success: false, message: 'Invitation sent successfully' }, { status: 200 });
     }
 
     const already = team.members.some((m: any) => m.id.toString() === profile._id.toString());
@@ -137,12 +310,12 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ success: false, error: 'Already a member.' }, { status: 400 });
     }
 
-    team.members.push({ id: profile._id, role,access});
+    team.members.push({ id: profile._id, role, access });
     await team.save();
 
     return NextResponse.json({ success: true, message: 'Member added.' });
   } catch (err) {
-    console.error(err);
+    console.error(err, 'err ==== > err');
     return NextResponse.json({ success: false, error: 'Add failed.' }, { status: 500 });
   }
 }
