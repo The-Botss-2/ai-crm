@@ -9,11 +9,12 @@ import ProductPanel from '@/components/ProductPanel';
 import { FiEdit3 } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import { MdDeleteOutline } from 'react-icons/md';
+import { useTeamRole } from '@/context/TeamRoleContext';
 
 const ProductPage = ({ teamId }: any) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-
+  const {role , access} = useTeamRole()
   const { data: products = [], mutate } = useSWR(`/api/product?team-id=${teamId}`, fetcher);
   const [searchTerm, setSearchTerm] = useState('');
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -23,7 +24,7 @@ const ProductPage = ({ teamId }: any) => {
     <div className="p-6 bg-white min-h-screen">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-xl font-bold text-gray-900">Products</h1>
-        <button
+      {role === 'admin' || access?.products?.includes('write') ? (  <button
           className="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-xs hover:bg-blue-200 transition"
           onClick={() => {
             setEditingProduct(null);
@@ -31,7 +32,7 @@ const ProductPage = ({ teamId }: any) => {
           }}
         >
           + Add Product
-        </button>
+        </button>):null}
       </div>
 
       <div className="flex justify-between items-center mb-4 py-4 border-b border-gray-300">
@@ -74,7 +75,7 @@ const ProductPage = ({ teamId }: any) => {
                     {product.categoryId?.name || 'Uncategorized'}
                   </td>
                   <td className="px-4 py-2 text-gray-700 flex gap-2 items-center">
-                    <button
+                  {role === 'admin' || access?.products?.includes('update') ?   <button
                       onClick={() => {
                         setEditingProduct(product);
                         setDrawerOpen(true);
@@ -82,8 +83,8 @@ const ProductPage = ({ teamId }: any) => {
                       className="bg-blue-100 text-blue-800 p-1 rounded hover:bg-blue-200 transition"
                     >
                       <FiEdit3 size={16} />
-                    </button>
-                    <button
+                    </button>:null}
+                   {role === 'admin' || access?.products?.includes('delete') ?   <button
                       onClick={async () => {
                         const toastId = toast.loading('Deleting product...');
                         try {
@@ -97,7 +98,7 @@ const ProductPage = ({ teamId }: any) => {
                       className="bg-red-100 text-red-800 p-1 rounded hover:bg-red-200 transition"
                     >
                       <MdDeleteOutline size={16} />
-                    </button>
+                    </button>:null}
                   </td>
                 </tr>
 

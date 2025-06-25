@@ -8,6 +8,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import "./Meeting.css"
 import useSWR, { mutate } from 'swr';
+import { useTeamRole } from '@/context/TeamRoleContext';
 interface MeetingFormProps {
   initialValues: any;
   isEdit: boolean;
@@ -29,6 +30,7 @@ const MeetingsLeadsForm: React.FC<MeetingFormProps> = ({
 }) => {
   const [attendeeInput, setAttendeeInput] = useState('');
   const { data: leads = [] } = useSWR(`/api/leads?team=${initialValues.teamId}`, fetcher);
+  const { role,access } = useTeamRole();
 
   const handleSubmit = async (values: any, { setSubmitting }: any) => {
     const toastId = toast.loading(isEdit ? 'Updating meeting...' : 'Adding meeting...');
@@ -356,42 +358,48 @@ console.log(meeting , isEdit , meeting?.createdBy ,userId ,'createdBy');
                 />
               </>
             )}
-           { !isPreview && (
-              <div className="flex gap-2 mt-4">
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md font-semibold text-sm transition disabled:opacity-50"
-                >
-                  {isEdit ? 'Update Meeting' : 'Create Meeting'}
-                </button>
-
-                {isEdit && (
-                  <button
-                    type="button"
-                    onClick={async () => {
-                      const toastId = toast.loading('Deleting meeting...');
-                      try {
-                        await axiosInstance.delete('/api/meeting', {
-                          params: {
-                            id: initialValues._id,
-                          },
-                        });
-
-                        toast.success('Meeting deleted', { id: toastId });
-                        reload();
-                        onClose();
-                      } catch (err: any) {
-                        toast.error('Failed to delete meeting', { id: toastId });
-                      }
-                    }}
-                    className="bg-red-100 text-red-800 px-3 py-2 rounded hover:font-semibold text-xs"
-                  >
-                    Delete Meeting
-                  </button>
-                )}
-              </div>
-            )}
+           {!isPreview && (
+                      <div className="flex gap-2 mt-4">
+                     {role === 'admin' || access?.meetings?.includes('update') ? ( <button
+                          type="submit"
+                          disabled={isSubmitting}
+                          className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md font-semibold text-sm transition disabled:opacity-50"
+                        >
+                          {isEdit ? 'Update Meeting' : 'Create Meeting'}
+                        </button>): !isEdit && (role === 'admin' || access?.meetings?.includes('write')) ? <button
+                          type="submit"
+                          disabled={isSubmitting}
+                          className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md font-semibold text-sm transition disabled:opacity-50"
+                        >
+                          {'Create Meeting'}
+                        </button>: null}  
+        
+                        {isEdit && (
+                            role === 'admin'|| access?.meetings?.includes('delete') ? (  <button
+                            type="button"
+                            onClick={async () => {
+                              const toastId = toast.loading('Deleting meeting...');
+                              try {
+                                await axiosInstance.delete('/api/meeting', {
+                                  params: {
+                                    id: initialValues._id,
+                                  },
+                                });
+        
+                                toast.success('Meeting deleted', { id: toastId });
+                                reload();
+                                onClose();
+                              } catch (err: any) {
+                                toast.error('Failed to delete meeting', { id: toastId });
+                              }
+                            }}
+                            className="bg-red-100 text-red-800 px-3 py-2 rounded hover:font-semibold text-xs"
+                          >
+                            Delete Meeting
+                          </button>):null
+                        )}
+                      </div>
+                    )}
           </Form>
         );
       }}

@@ -23,6 +23,7 @@ export async function GET(req: NextRequest) {
         const populatedMembers = team.members.map((m: any) => ({
             profile: m.id,
             role: m.role,
+            access: m.access
         }));
 
         return NextResponse.json({

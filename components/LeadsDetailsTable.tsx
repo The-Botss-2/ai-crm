@@ -29,7 +29,7 @@ interface LeadsTableProps {
 }
 
 const LeadsDetailsTable: React.FC<LeadsTableProps> = ({ leads, error, teamId, userID, mutateConversation, Conversation }) => {
-  const { role, loading } = useTeamRole();
+  const { role,access, loading } = useTeamRole();
   const [activeTab, setActiveTab] = useState<'tasks' | 'meetings' | 'emails' | 'outbound' | 'conversation' | 'form' | 'overview'>('overview');
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
   const [isLeadAssignModalOpen, setIsLeadAssignModalOpen] = useState(false); // Modal state
@@ -235,10 +235,10 @@ const LeadsDetailsTable: React.FC<LeadsTableProps> = ({ leads, error, teamId, us
       {/* Tab Content */}
       <div className="bg-white shadow p-4 rounded-md mt-2">
         {activeTab === 'tasks' && (
-          <LeadTasks user_id={userID} lead_id={leads._id} team_id={leads.teamId} />
+          <LeadTasks user_id={userID} lead_id={leads._id} team_id={leads.teamId} role={role} access={access}/>
         )}
         {activeTab === 'meetings' && (
-          <MeetingLeads user_id={userID} lead_id={leads._id} team_id={leads.teamId} />
+          <MeetingLeads user_id={userID} lead_id={leads._id} team_id={leads.teamId} role={role} access={access}/>
         )}
         {activeTab === 'emails' && (
           <LeadEmail userid={userID} page={"lead"} source_email={leads?.email} />

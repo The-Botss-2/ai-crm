@@ -8,12 +8,14 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import "./Meeting.css"
 import useSWR from 'swr';
+import { useTeamRole } from '@/context/TeamRoleContext';
 interface MeetingFormProps {
   initialValues: any;
   isEdit: boolean;
   isPreview: boolean;
   onClose: () => void;
   reload: () => void;
+
 }
 
 const MeetingForm: React.FC<MeetingFormProps> = ({
@@ -22,9 +24,11 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
   isPreview,
   onClose,
   reload,
+
 }) => {
   const [attendeeInput, setAttendeeInput] = useState('');
   const { data: leads = [] } = useSWR(`/api/leads?team=${initialValues.teamId}`, fetcher);
+  const {role , access} = useTeamRole();
 
   const handleSubmit = async (values: any, { setSubmitting }: any) => {
     const toastId = toast.loading(isEdit ? 'Updating meeting...' : 'Adding meeting...');
@@ -80,6 +84,7 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
       setSubmitting(false);
     }
   };
+console.log(role, access, 'role');
 
   return (
     <Formik
@@ -370,16 +375,22 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
 
             {!isPreview && (
               <div className="flex gap-2 mt-4">
-                <button
+             {role === 'admin' || access?.meetings?.includes('update') ? ( <button
                   type="submit"
                   disabled={isSubmitting}
                   className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md font-semibold text-sm transition disabled:opacity-50"
                 >
                   {isEdit ? 'Update Meeting' : 'Create Meeting'}
-                </button>
+                </button>): !isEdit && (role === 'admin' || access?.meetings?.includes('write')) ? <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md font-semibold text-sm transition disabled:opacity-50"
+                >
+                  {'Create Meeting'}
+                </button>: null}  
 
                 {isEdit && (
-                  <button
+                    role === 'admin'|| access?.meetings?.includes('delete') ? (  <button
                     type="button"
                     onClick={async () => {
                       const toastId = toast.loading('Deleting meeting...');
@@ -400,7 +411,7 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
                     className="bg-red-100 text-red-800 px-3 py-2 rounded hover:font-semibold text-xs"
                   >
                     Delete Meeting
-                  </button>
+                  </button>):null
                 )}
               </div>
             )}

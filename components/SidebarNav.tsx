@@ -35,52 +35,46 @@ interface Props {
 }
 
 export default function SidebarNav({ teamId, pathname, userId, session, isOpen }: Props) {
-    const { role, agent, teamName, logo } = useTeamRole();
+    const { role, access, agent, teamName, logo } = useTeamRole();
     const { isCardConnected } = useCardConnection();
 
     const groupedNavigation = [
         {
             title: 'Dashboard',
             items: [
-                {
-                    name: 'Dashboard',
-                    href: `/team/${teamId}/dashboard`,
-                    icon: <AiTwotoneAppstore size={22} />,
-                },
-                  {
-                    name: 'Analytics',
-                    href: `/team/${teamId}/Analytics`,
-                    icon: <IoAnalytics size={22} />,
-                },
+                ...(role === 'admin' || access?.dashboard?.includes('read')
+                    ? [{ name: 'Dashboard', href: `/team/${teamId}/dashboard`, icon: <AiTwotoneAppstore size={22} /> }]
+                    : []),
+                ...(role === 'admin' || access?.analytics?.includes('read') ? [{ name: 'Analytics', href: `/team/${teamId}/Analytics`, icon: <IoAnalytics size={22} /> }] : []),
             ],
-            
+
         },
         {
             title: 'Management',
             items: [
-                { name: 'Leads', href: `/team/${teamId}/leads`, icon: <PiUsersThreeDuotone size={22} /> },
-                { name: 'Meetings', href: `/team/${teamId}/meetings`, icon: <AiTwotoneCalendar size={22} /> },
-                { name: 'Team', href: `/team/${teamId}/team-details`, icon: <PiUsersDuotone size={22} /> },
-                { name: 'Tasks', href: `/team/${teamId}/tasks`, icon: <AiTwotoneBuild size={22} /> },
-                { name: 'Category', href: `/team/${teamId}/category`, icon: <TbCategory size={22} /> },
-                { name: 'Products', href: `/team/${teamId}/product`, icon: <RiProductHuntLine size={22} /> },
+               ...(role === 'admin' || access?.leads?.includes('read') ? [{ name: 'Leads', href: `/team/${teamId}/leads`, icon: <PiUsersThreeDuotone size={22} /> }] : []),
+                ...(role === 'admin' || access?.meetings?.includes('read') ? [{ name: 'Meetings', href: `/team/${teamId}/meetings`, icon: <AiTwotoneCalendar size={22} /> }] : []),,
+               ...(role === 'admin' || access?.teams?.includes('read') ? [{ name: 'Team', href: `/team/${teamId}/team-details`, icon: <PiUsersDuotone size={22} /> }] : []),
+                ...(role === 'admin' || access?.tasks?.includes('read') ? [{ name: 'Tasks', href: `/team/${teamId}/tasks`, icon: <AiTwotoneBuild size={22} /> }] : []),
+                ...(role === 'admin' || access?.categories?.includes('read') ? [{ name: 'Categories', href: `/team/${teamId}/category`, icon: <TbCategory size={22} /> }] : []),
+                ...(role === 'admin' || access?.products?.includes('read') ? [{ name: 'Products', href: `/team/${teamId}/product`, icon: <RiProductHuntLine size={22} /> }] : []),
 
             ],
         },
         {
             title: 'Campaigns',
             items: [
-                {
+             {
                     name: 'Outbound Campaigns',
                     href: `/team/${teamId}/outbound-calls`,
                     icon: <MdOutlineOutbound size={22} />,
-                },
+                }
             ],
         },
         {
             title: 'Integrations',
             items: [
-                { name: 'Forms', href: `/team/${teamId}/forms`, icon: <FaWpforms size={22} /> },
+            { name: 'Forms', href: `/team/${teamId}/forms`, icon: <FaWpforms size={22} /> }
             ],
         },
         {
@@ -106,12 +100,12 @@ export default function SidebarNav({ teamId, pathname, userId, session, isOpen }
         {
             title: 'Settings',
             items: [
-                {
+             {
                     name: 'Settings',
                     href: `/team/${teamId}/settings`,
                     icon: <AiTwotoneSetting size={22} />,
                 },
-                   ...(role === 'admin' ? [{ name: 'Organization Setting', href: `/team/${teamId}/organization-setting`, icon: <PiLinkSimpleDuotone size={22} /> }] : []),
+               { name: 'Organization Setting', href: `/team/${teamId}/organization-setting`, icon: <PiLinkSimpleDuotone size={22} /> }
 
             ],
         },
@@ -150,24 +144,23 @@ export default function SidebarNav({ teamId, pathname, userId, session, isOpen }
                                     </h4>
                                 )}
                                 <ul className="space-y-1 px-1">
-                                    {section.items.map((item:any) => {
+                                    {section.items.map((item: any) => {
                                         const isActive = pathname.startsWith(item.href);
                                         return (
                                             <li key={item?.name}>
                                                 <Link
                                                     href={item?.href}
-                                                    className={`group flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-all duration-150 relative ${
-                                                        isActive
-                                                            ? 'bg-blue-100 text-blue-700 font-semibold shadow-inner'
-                                                            : 'text-gray-700 hover:bg-gray-100'
-                                                    }`}
+                                                    className={`group flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-all duration-150 relative ${isActive
+                                                        ? 'bg-blue-100 text-blue-700 font-semibold shadow-inner'
+                                                        : 'text-gray-700 hover:bg-gray-100'
+                                                        }`}
                                                 >
                                                     <div
-                                                        className="p-1 rounded-md bg-white shadow-md text-gray-600 flex items-center justify-center" 
+                                                        className="p-1 rounded-md bg-white shadow-md text-gray-600 flex items-center justify-center"
                                                         title={!isOpen ? item?.name : ''}
                                                     >
                                                         {item.icon}
-                                                        
+
                                                     </div>
                                                     {isOpen && (
                                                         <span className="ml-3 text-md">{item?.name}</span>

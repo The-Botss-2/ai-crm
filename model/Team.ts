@@ -1,18 +1,27 @@
 import mongoose from 'mongoose';
 const { Schema, model, models } = mongoose;
-
-const memberSchema = new Schema({
-  id: {
-    type: Schema.Types.ObjectId,
-    ref: 'Profile',
-    required: true,
-  },
+const memberSchema = new mongoose.Schema({
+  id: { type: mongoose.Schema.Types.ObjectId, ref: 'Profile', required: true },
   role: {
     type: String,
-    enum: ['admin', 'manager', 'agent', 'readonly', 'bot'],
+    enum: ['admin', 'manager', 'agent', 'bot'],
     required: true,
-  }
-}, { _id: false });
+  },
+   access: {
+    dashboard: { type: [String], enum: ['none', 'read', 'write', 'update', 'delete'], default: [] },
+    leads: { type: [String], enum: ['none', 'read', 'write', 'update', 'delete'], default: [] },
+    meetings: { type: [String], enum: ['none', 'read', 'write', 'update', 'delete'], default: [] },
+    tasks: { type: [String], enum: ['none', 'read', 'write', 'update', 'delete'], default: [] },
+    categories: { type: [String], enum: ['none', 'read', 'write', 'update', 'delete'], default: [] },
+    products: { type: [String], enum: ['none', 'read', 'write', 'update', 'delete'], default: [] },
+    forms: { type: [String], enum: ['none', 'read', 'write', 'update', 'delete'], default: [] },
+    campaigns: { type: [String], enum: ['none', 'read', 'write', 'update', 'delete'], default: [] },
+    teams: { type: [String], enum: ['none', 'read', 'write', 'update', 'delete'], default: [] },
+    analytics: { type: [String], enum: ['none', 'read', 'write', 'update', 'delete'], default: [] },
+    setting: { type: [String], enum: ['none', 'read', 'write', 'update', 'delete'], default: [] },
+  },
+});
+
 
 const teamSchema = new Schema({
   name: { type: String, required: true },

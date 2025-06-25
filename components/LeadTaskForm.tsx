@@ -16,6 +16,8 @@ interface TaskFormProps {
   reload: () => void;
   userID: string;
   task: any | null;
+   role: any
+    access: any
 }
 
 const LeadTaskForm: React.FC<TaskFormProps> = ({
@@ -24,7 +26,9 @@ const LeadTaskForm: React.FC<TaskFormProps> = ({
   onClose,
   reload,
   userID,
-  task
+  task,
+  role,
+  access
 }) => {
   const [loading, setLoading] = useState(false);
   const { data: meetings = [] } = useSWR(`/api/meetings?team=${initialValues.teamId}`, fetcher);
@@ -179,26 +183,32 @@ const LeadTaskForm: React.FC<TaskFormProps> = ({
               </option>
             ))}
           </Field>
-              <div className="flex gap-2 mt-4">
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-700 font-semibold text-xs transition disabled:opacity-50"
-                >
-                  {isEdit ? 'Update Task' : 'Create Task'}
-                </button>
+            <div className="flex gap-2 mt-4">
+              {role == 'admin' || access?.tasks?.includes('update') ? <button
+                type="submit"
+                disabled={isSubmitting}
+                className="bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-700 font-semibold text-xs transition disabled:opacity-50"
+              >
+                {isEdit ? 'Update Task' : 'Add Task'}
+              </button> : !isEdit && (role == 'admin' || access?.tasks?.includes('write')) ?<button
+                type="submit"
+                disabled={isSubmitting}
+                className="bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-700 font-semibold text-xs transition disabled:opacity-50"
+              >
+                {'Add Task'}
+              </button>:null}
 
-                {isEdit && (
-                  <button
-                    type="button"
-                    onClick={handleDelete}
-                    disabled={loading}
-                    className="bg-red-100 text-red-800 px-3 py-2 rounded hover:bg-red-200 font-semibold text-xs transition disabled:opacity-50"
-                  >
-                    Delete Task
-                  </button>
-                )}
-              </div>
+              {isEdit && (
+                role == 'admin' || access?.tasks?.includes('delete') ? <button
+                  type="button"
+                  onClick={handleDelete}
+                  disabled={loading}
+                  className="bg-red-100 text-red-800 px-3 py-2 rounded hover:bg-red-200 font-semibold text-xs transition disabled:opacity-50"
+                >
+                  Delete Task
+                </button> : null
+              )}
+            </div>
         </Form>
     );
   }}

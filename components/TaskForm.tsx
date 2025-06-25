@@ -16,6 +16,8 @@ interface TaskFormProps {
   reload: () => void;
   userID: any;
   task: any | null;
+  role?: any;
+  access?: any;
 }
 
 const TaskForm: React.FC<TaskFormProps> = ({
@@ -24,10 +26,12 @@ const TaskForm: React.FC<TaskFormProps> = ({
   onClose,
   reload,
   userID,
-  task
+  task,
+  role,
+  access
 }) => {
   const [loading, setLoading] = useState(false);
- 
+
 
   const { data: meetings = [] } = useSWR(`/api/meetings?team=${initialValues.teamId}`, fetcher);
   const { data: teamData } = useSWR(`/api/team?id=${initialValues.teamId}`, fetcher);
@@ -66,7 +70,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
         try {
           const payload = { ...values };
           if (!isEdit) delete payload._id;
-          if(!payload.assignedTo){
+          if (!payload.assignedTo) {
             delete payload.assignedTo;
           }
           if (!payload.leadId) delete payload.leadId;
@@ -97,8 +101,8 @@ const TaskForm: React.FC<TaskFormProps> = ({
         }
       }}
     >
-      {({ isSubmitting, setFieldValue, values}) => {
-       
+      {({ isSubmitting, setFieldValue, values }) => {
+
 
         return (
           <Form className="space-y-4">
@@ -175,7 +179,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
               ))}
             </Field>
 
-     
+
 
             <Field name="leadId" as="select" className="w-full border border-gray-300 text-xs p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
               <option value="">Link to Lead</option>
@@ -194,26 +198,32 @@ const TaskForm: React.FC<TaskFormProps> = ({
                 </option>
               ))}
             </Field>
-              <div className="flex gap-2 mt-4">
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-700 font-semibold text-xs transition disabled:opacity-50"
-                >
-                  {isEdit ? 'Update Task' : 'Create Task'}
-                </button>
+            <div className="flex gap-2 mt-4">
+              {role == 'admin' || access?.tasks?.includes('update') ? <button
+                type="submit"
+                disabled={isSubmitting}
+                className="bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-700 font-semibold text-xs transition disabled:opacity-50"
+              >
+                {isEdit ? 'Update Task' : 'Add Task'}
+              </button> : !isEdit && (role == 'admin' || access?.tasks?.includes('write')) ?<button
+                type="submit"
+                disabled={isSubmitting}
+                className="bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-700 font-semibold text-xs transition disabled:opacity-50"
+              >
+                {'Add Task'}
+              </button>:null}
 
-                {isEdit && (
-                  <button
-                    type="button"
-                    onClick={handleDelete}
-                    disabled={loading}
-                    className="bg-red-100 text-red-800 px-3 py-2 rounded hover:bg-red-200 font-semibold text-xs transition disabled:opacity-50"
-                  >
-                    Delete Task
-                  </button>
-                )}
-              </div>
+              {isEdit && (
+                role == 'admin' || access?.tasks?.includes('delete') ? <button
+                  type="button"
+                  onClick={handleDelete}
+                  disabled={loading}
+                  className="bg-red-100 text-red-800 px-3 py-2 rounded hover:bg-red-200 font-semibold text-xs transition disabled:opacity-50"
+                >
+                  Delete Task
+                </button> : null
+              )}
+            </div>
 
           </Form>
         );

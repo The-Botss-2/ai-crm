@@ -13,10 +13,12 @@ interface LeadsTableProps {
   onDelete: (lead: Lead) => void;
   onPreview: (lead: Lead) => void;
   error?: boolean;
+  role?: any;
+  access?: any;
 }
 
-const LeadsTable: React.FC<LeadsTableProps> = ({ leads, onEdit, onDelete, onPreview, error }) => {
-  const { role, loading } = useTeamRole();
+const LeadsTable: React.FC<LeadsTableProps> = ({ leads, onEdit, onDelete, onPreview, error, role, access }) => {
+  const { loading } = useTeamRole();
   const router = useRouter()
   if (loading) return <Loading />;
   console.log(leads, 'leads');
@@ -63,22 +65,23 @@ const LeadsTable: React.FC<LeadsTableProps> = ({ leads, onEdit, onDelete, onPrev
                   {new Date(lead.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </td>
                 <td className="px-4 py-2 rounded-r-md space-x-2">
-                  {role !== 'readonly' && (
+                  {role === 'admin' ||  access?.leads?.includes('update') ? (
                     <button
                       onClick={() => onEdit(lead)}
                       className="bg-blue-100 cursor-pointer text-blue-800 p-1 rounded hover:underline"
                     >
                       <FiEdit3 size={16} />
                     </button>
-                  )}
-                  {role !== 'readonly' && (
+                  ):null}
+                    {role === 'admin' || access?.leads?.includes('delete') ? (
+
                     <button
                       onClick={() => onDelete(lead)}
                       className="bg-red-100 cursor-pointer text-red-800 p-1 rounded hover:underline"
                     >
                       <MdDeleteOutline size={16} />
                     </button>
-                  )}
+                   ):null}
                   <button
                     onClick={() => router.push(`/team/${lead?.teamId}/leadsdetails/${lead._id}`)}
                     className="bg-green-100 text-green-800 cursor-pointer p-1 rounded hover:underline"

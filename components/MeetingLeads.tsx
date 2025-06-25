@@ -12,8 +12,10 @@ interface props {
     user_id: string;
     lead_id: string
     team_id: string
+    role?: any
+    access?: any
 }
-export default function MeetingLeads({ user_id,lead_id,team_id }: props) {
+export default function MeetingLeads({ user_id,lead_id,team_id, role, access }: props) {
   const params = useParams<{ id: string }>();
   const { data: meetings, mutate } = useSWR(`/api/meetingDetail?id=${lead_id}`, fetcher);
 
@@ -24,12 +26,12 @@ export default function MeetingLeads({ user_id,lead_id,team_id }: props) {
     <div className="p-6 relative bg-gray-50 min-h-screen">
       <div className="flex justify-between items-center mb-4 pb-4 border-b border-gray-200">
         <h1 className="text-2xl font-bold text-gray-900">Meetings</h1>
-        <button
+     {role == 'admin' || access?.meetings?.includes('write') ?   <button
           onClick={() => setIsOpen(true)}
           className="bg-blue-100 text-blue-800 px-4 py-2 rounded hover:font-semibold text-xs cursor-pointer transition"
         >
           New Meeting
-        </button>
+        </button>:null}
       </div>
 
       <div className="flex gap-2 justify-end mb-5">

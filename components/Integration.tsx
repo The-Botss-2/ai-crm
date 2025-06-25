@@ -1,13 +1,13 @@
 'use client';
 
 import useSWR from 'swr';
-import { INTEGRATIONS } from '@/utils/integrations';
 import IntegrationCard from '@/components/IntegrationCard';
 import { socialFetcher } from '@/lib/socialFetcher';
 import { BiLogoZoom } from 'react-icons/bi';
 import { SiElevenlabs, SiTwilio } from 'react-icons/si';
 import { SocialCardSkeleton } from './SocialCard';
 import { MdOutlineEmail } from "react-icons/md";
+import { useTeamRole } from '@/context/TeamRoleContext';
 
 
 type Props = {
@@ -15,14 +15,43 @@ type Props = {
 };
 
 export default function Integration({ userId }: Props) {
+    const {role } = useTeamRole();
     const { data: status, error, isLoading, mutate } = useSWR('/api/integrations', socialFetcher);
-    const icons = {
+    const icons:any = {
         zoom: <BiLogoZoom color="white" size={20} />,
         elevenlabs: <SiElevenlabs color="white" size={20} />,
         twilio: <SiTwilio color="white" size={20} />,
         email: <MdOutlineEmail color="white" size={20} />,
     };
-
+const INTEGRATIONS:any = [
+  ...(role === 'admin' ? [
+    {
+      name: 'zoom',
+      displayName: 'Zoom',
+      oauthUrl: 'https://zoom.thebotss.com/zoom/oauth/start',
+      fetchUrl: 'https://zoom.thebotss.com/zoom/zoom_user',
+    },
+    {
+      name: 'elevenlabs',
+      displayName: 'ElevenLabs',
+      oauthUrl: 'https://callingagent.thebotss.com/api/elevenlabs/connect',
+      fetchUrl: 'https://callingagent.thebotss.com/api/elevenlabs/status',
+    },
+    {
+      name: 'twilio',
+      displayName: 'Twilio',
+      oauthUrl: 'https://callingagent.thebotss.com/api/twilio/connect',
+      fetchUrl: 'https://callingagent.thebotss.com/api/twilio/status',
+    }
+  ] : []),
+  {
+    name: 'email',
+    displayName: 'Email',
+    oauthUrl: 'https://callingagent.thebotss.com/api/email/connect', // Fixed URL (assuming)
+    fetchUrl: 'https://callingagent.thebotss.com/api/email/status', // Fixed URL (assuming)
+  }
+] as const;
+  
 
     if (error) return <div>Failed to load integration status.</div>;
     if (isLoading || !status) return (
@@ -32,7 +61,7 @@ export default function Integration({ userId }: Props) {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                {INTEGRATIONS.map((integration) => <SocialCardSkeleton key={integration.name} icon={icons[integration.name]} />)}
+                {INTEGRATIONS.map((integration:any) => <SocialCardSkeleton key={integration.name} icon={icons[integration.name]} />)}
             </div>
         </div>
     )
@@ -44,11 +73,11 @@ export default function Integration({ userId }: Props) {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                {INTEGRATIONS.map((integration, key) => (
+                {INTEGRATIONS.map((integration:any, key:any) => (
                     <IntegrationCard
                         key={integration.name}
                         userId={userId}
-                        name={integration.name}
+                        name={integration.name || ''}
                         displayName={integration.displayName}
                         oauthUrl={integration.oauthUrl}
                         statusData={status[integration.name] || { connected: false }}

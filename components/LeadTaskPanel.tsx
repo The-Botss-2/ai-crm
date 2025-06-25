@@ -14,6 +14,8 @@ interface TaskPanelProps {
   mutate: () => void;
   lead_id: string;
   user_id: string
+   role: any
+    access: any
 }
 
 const LeadTaskPanel: React.FC<TaskPanelProps> = ({
@@ -23,7 +25,9 @@ const LeadTaskPanel: React.FC<TaskPanelProps> = ({
   teamId,
   mutate,
   lead_id,
-  user_id
+  user_id,
+  role,
+  access
 }) => {
   const isEdit = !!task;
 
@@ -63,6 +67,8 @@ const LeadTaskPanel: React.FC<TaskPanelProps> = ({
             reload={mutate}
             userID={user_id}
             task={task}
+            role={role}
+            access={access}
           />
         </div>
       </Dialog>

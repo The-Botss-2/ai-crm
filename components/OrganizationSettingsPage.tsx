@@ -5,9 +5,11 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import Loading from "./Loading";
+import Integration from "./Integration";
 
 const OrganizationSettingsPage = ({ user_id, teamId }: any) => {
   const router = useRouter();
+  const [activeTab, setActiveTab] = useState<'settings' | 'integrations'>('settings');
 
   const [organization, setOrganization] = useState<any>(null);
   const [formData, setFormData] = useState({
@@ -82,7 +84,7 @@ const OrganizationSettingsPage = ({ user_id, teamId }: any) => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
+      <div className=" mx-auto">
         <div className="text-center mb-10">
           <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white sm:text-4xl">
             Organization Settings
@@ -93,140 +95,167 @@ const OrganizationSettingsPage = ({ user_id, teamId }: any) => {
         </div>
 
         <div className="bg-white dark:bg-gray-800 shadow-xl rounded-2xl overflow-hidden">
-          <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-            <h2 className="text-2xl font-semibold text-gray-800 dark:text-white">
-              General Information
-            </h2>
-            <p className="mt-1 text-gray-500 dark:text-gray-400">
-              Basic details about your organization
-            </p>
+          {/* Tab Navigation */}
+          <div className="border-b border-gray-200 dark:border-gray-700">
+            <nav className="flex -mb-px">
+              <button
+                onClick={() => setActiveTab('settings')}
+                className={`py-4 px-6 text-center border-b-2 font-medium text-sm ${activeTab === 'settings' 
+                  ? 'border-blue-500 text-blue-600 dark:text-blue-400 dark:border-blue-400' 
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}`}
+              >
+                Settings
+              </button>
+              <button
+                onClick={() => setActiveTab('integrations')}
+                className={`py-4 px-6 text-center border-b-2 font-medium text-sm ${activeTab === 'integrations' 
+                  ? 'border-blue-500 text-blue-600 dark:text-blue-400 dark:border-blue-400' 
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}`}
+              >
+                Integrations
+              </button>
+            </nav>
           </div>
 
-          <form onSubmit={handleSubmit} className="divide-y divide-gray-200 dark:divide-gray-700">
-            <div className="p-6 space-y-8">
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                <div className="space-y-2">
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Organization Name <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    value={formData.name}
-                    onChange={handleChange}
-                    className="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                    required
-                    placeholder="Acme Inc."
-                  />
-                </div>
-
-
-                <div className="space-y-2">
-                  <label htmlFor="address" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Address 
-                  </label>
-                  <input
-                    id="address"
-                    name="address"
-                    type="text"
-                    value={formData.address}
-                    onChange={handleChange}
-                    className="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                    placeholder="123 Main St, City, State ZIP"
-                  />
-                </div>
-                <div className="space-y-2 md:col-span-2">
-                  <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Description 
-                  </label>
-                  <textarea
-                    id="description"
-                    name="description"
-                    rows={3}
-                    value={formData.description}
-                    onChange={handleChange}
-                    className="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                    placeholder="Brief description of your organization"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="contactPhone" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Contact Phone <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    id="contactPhone"
-                    name="contactPhone"
-                    type="tel"
-                    value={formData.contactPhone}
-                    onChange={handleChange}
-                    className="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                    required
-                    placeholder="+1 (555) 123-4567"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="Number_of_Employees" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Number of Employees <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    id="Number_of_Employees"
-                    name="Number_of_Employees"
-                    value={formData.Number_of_Employees}
-                    onChange={handleChange}
-                    className="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                    required
-                  >
-                    <option value="" disabled>Select number of employees</option>
-                    <option value="1-10">1-10</option>
-                    <option value="11-50">11-50</option>
-                    <option value="51-200">51-200</option>
-                    <option value="201-500">201-500</option>
-                    <option value="501-1000">501-1000</option>
-                    <option value="1000+">1000+</option>
-                  </select>
-                </div>
-
-
-                <div className="space-y-2">
-                  <label htmlFor="website" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Website Url
-                  </label>
-                  <input
-                    id="website"
-                    name="website"
-                    type="url"
-                    value={formData.website}
-                    onChange={handleChange}
-                    className="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                    placeholder="https://www.organization.com"
-                  />
-                </div>
-
-
+          {/* Tab Content */}
+          {activeTab === 'settings' ? (
+            <div>
+              <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+                <h2 className="text-2xl font-semibold text-gray-800 dark:text-white">
+                  General Information
+                </h2>
+                <p className="mt-1 text-gray-500 dark:text-gray-400">
+                  Basic details about your organization
+                </p>
               </div>
-            </div>
 
-            <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700 text-right">
-              <button
-                type="submit"
-                disabled={loading}
-                className={`inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
-              >
-                {loading ? (
-                  <>
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Saving...
-                  </>
-                ) : 'Save Changes'}
-              </button>
+              <form onSubmit={handleSubmit} className="divide-y divide-gray-200 dark:divide-gray-700">
+                <div className="p-6 space-y-8">
+                  <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Organization Name <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="name"
+                        name="name"
+                        type="text"
+                        value={formData.name}
+                        onChange={handleChange}
+                        className="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                        required
+                        placeholder="Acme Inc."
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label htmlFor="address" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Address 
+                      </label>
+                      <input
+                        id="address"
+                        name="address"
+                        type="text"
+                        value={formData.address}
+                        onChange={handleChange}
+                        className="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                        placeholder="123 Main St, City, State ZIP"
+                      />
+                    </div>
+                    <div className="space-y-2 md:col-span-2">
+                      <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Description 
+                      </label>
+                      <textarea
+                        id="description"
+                        name="description"
+                        rows={3}
+                        value={formData.description}
+                        onChange={handleChange}
+                        className="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                        placeholder="Brief description of your organization"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label htmlFor="contactPhone" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Contact Phone <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="contactPhone"
+                        name="contactPhone"
+                        type="tel"
+                        value={formData.contactPhone}
+                        onChange={handleChange}
+                        className="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                        required
+                        placeholder="+1 (555) 123-4567"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label htmlFor="Number_of_Employees" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Number of Employees <span className="text-red-500">*</span>
+                      </label>
+                      <select
+                        id="Number_of_Employees"
+                        name="Number_of_Employees"
+                        value={formData.Number_of_Employees}
+                        onChange={handleChange}
+                        className="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                        required
+                      >
+                        <option value="" disabled>Select number of employees</option>
+                        <option value="1-10">1-10</option>
+                        <option value="11-50">11-50</option>
+                        <option value="51-200">51-200</option>
+                        <option value="201-500">201-500</option>
+                        <option value="501-1000">501-1000</option>
+                        <option value="1000+">1000+</option>
+                      </select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label htmlFor="website" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Website Url
+                      </label>
+                      <input
+                        id="website"
+                        name="website"
+                        type="url"
+                        value={formData.website}
+                        onChange={handleChange}
+                        className="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                        placeholder="https://www.organization.com"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700 text-right">
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className={`inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+                  >
+                    {loading ? (
+                      <>
+                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Saving...
+                      </>
+                    ) : 'Save Changes'}
+                  </button>
+                </div>
+              </form>
             </div>
-          </form>
+          ) : (
+            <div className="p-6">
+            <Integration userId={user_id} />
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -9,8 +9,10 @@ import ConfirmDeleteModal from './ConfirmDeleteModal';
 import LeadPanel from './LeadPanel';
 import LeadsTable from './LeadsTable';
 import LeadsToolbar from './LeadsToolbar';
+import { useTeamRole } from '@/context/TeamRoleContext';
 
 export default function LeadsPage({ user_id }: any) {
+    const { role, access } = useTeamRole();
     const searchParams = useSearchParams();
     const router = useRouter();
     const params = useParams<{ id: string }>()
@@ -68,7 +70,7 @@ export default function LeadsPage({ user_id }: any) {
         <div className="p-6 bg-gray-50 min-h-screen">
             <div className="flex justify-between items-center mb-4 pb-4 border-b border-gray-300">
                 <h1 className="text-2xl font-bold text-gray-900">Leads</h1>
-                <button
+             {role === 'admin' || access?.leads?.includes('write') ?     <button
                     onClick={() => {
                         setEditLead(null);
                         setDrawerOpen(true);
@@ -76,7 +78,7 @@ export default function LeadsPage({ user_id }: any) {
                     className="bg-blue-100 text-blue-800 px-4 py-2 rounded hover:font-semibold text-xs cursor-pointer"
                 >
                     Add Lead
-                </button>
+                </button> : null}
             </div>
 
             <LeadsToolbar
@@ -101,6 +103,8 @@ export default function LeadsPage({ user_id }: any) {
                 onDelete={(lead) => setConfirmDelete(lead)}
                 onPreview={(lead) => setPreviewLead(lead)}
                 error={!!error}
+                role={role}
+                access={access}
             />
 
             <LeadPanel

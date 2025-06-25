@@ -15,7 +15,7 @@ export default function TaskPageClient({userID}:any) {
   const { id: teamId } = useParams<{ id: string }>();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { role, loading } = useTeamRole();
+  const { role,access, loading } = useTeamRole();
 
   const { data: tasks = [], mutate } = useSWR(`/api/tasks?teamId=${teamId}`, fetcher);
 
@@ -41,7 +41,7 @@ export default function TaskPageClient({userID}:any) {
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-xl font-bold text-gray-900">Tasks</h1>
-        <button
+      {role === 'admin' || access?.tasks?.includes('write') ?   <button
           className="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-xs hover:bg-blue-200 transition"
           onClick={() => {
             setEditingTask(null);
@@ -49,7 +49,7 @@ export default function TaskPageClient({userID}:any) {
           }}
         >
           + Add Task
-        </button>
+        </button>: null}
       </div>
 
       {/* Tabs + Search */}
@@ -159,7 +159,7 @@ export default function TaskPageClient({userID}:any) {
         </table>
       </div>
 
-      <TaskPanel userID={userID} isOpen={drawerOpen} onClose={() => setDrawerOpen(false)} task={editingTask} teamId={teamId} mutate={mutate} />
+      <TaskPanel userID={userID} isOpen={drawerOpen} onClose={() => setDrawerOpen(false)} task={editingTask} teamId={teamId} mutate={mutate} role={role} access={access} />
     </div>
   );
 }

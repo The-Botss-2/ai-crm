@@ -9,10 +9,10 @@ export async function GET(req: NextRequest) {
   try {
     const id = req.nextUrl.searchParams.get('id')
 
-    if (!id ) {
-        return NextResponse.json({ success: false, error: 'Missing required fields.' }, { status: 400 });
+    if (!id) {
+      return NextResponse.json({ success: false, error: 'Missing required fields.' }, { status: 400 });
     }
-     const teams = await Team.find({ 'members.id': id });
+    const teams = await Team.find({ 'members.id': id });
     return NextResponse.json({ success: true, teams });
   } catch (err) {
     return NextResponse.json({ success: false, error: 'Failed to fetch teams.' }, { status: 500 });
@@ -51,9 +51,11 @@ export async function POST(req: NextRequest) {
     if (alreadyMember) {
       return NextResponse.json({ success: false, error: 'User already a member of this team.' }, { status: 400 });
     }
-
+    
     // 4. Add new member
-    team.members.push({ id: profile._id, role });
+    team.members.push({
+      id: profile._id, role
+    });
     await team.save();
 
     return NextResponse.json({ success: true, team });
@@ -63,12 +65,56 @@ export async function POST(req: NextRequest) {
   }
 }
 
+
+
+export async function PATCH(req: NextRequest) {
+  await connectToDatabase();
+  const teamId = req.nextUrl.searchParams.get('id')
+
+  try {
+    const { requesterId, memberId, role, access } = await req.json();
+
+    if (!requesterId || !memberId || !role) {
+      return NextResponse.json({ success: false, error: 'Missing fields.' }, { status: 400 });
+    }
+
+    const team = await Team.findById(teamId);
+    if (!team) return NextResponse.json({ success: false, error: 'Team not found.' }, { status: 404 });
+
+    if (team.createdBy.toString() !== requesterId) {
+      return NextResponse.json({ success: false, error: 'Only admin can update roles.' }, { status: 403 });
+    }
+
+    const member = team.members.find((m: any) => m.id.toString() === memberId);
+    if (!member) return NextResponse.json({ success: false, error: 'Member not found.' }, { status: 404 });
+    member.role = role;
+    member.access = {
+      dashboard: access.dashboard || member.access.dashboard || 'none',
+      leads: access.leads || member.access.leads || 'none',
+      meetings: access.meetings || member.access.meetings || 'none',
+      tasks: access.tasks || member.access.tasks || 'none',
+      categories: access.categories || member.access.categories || 'none',
+      products: access.products || member.access.products || 'none',
+      forms: access.forms || member.access.forms || 'none',
+      campaigns: access.campaigns || member.access.campaigns || 'none',
+      teams: access.teams || member.access.teams || 'none',
+      analytics: access.analytics || member.access.analytics || 'none',
+      setting: access.setting || member.access.setting || 'none',
+    };
+    await team.save();
+
+    return NextResponse.json({ success: true, message: 'Role updated.' });
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json({ success: false, error: 'Update failed.' }, { status: 500 });
+  }
+}
 export async function PUT(req: NextRequest) {
   await connectToDatabase();
   const teamId = req.nextUrl.searchParams.get('id')
 
   try {
-    const { requesterId, email, role } = await req.json();
+    const { requesterId, email, role, access } = await req.json();
 
     if (!requesterId || !email || !role) {
       return NextResponse.json({ success: false, error: 'Missing fields.' }, { status: 400 });
@@ -91,7 +137,7 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ success: false, error: 'Already a member.' }, { status: 400 });
     }
 
-    team.members.push({ id: profile._id, role });
+    team.members.push({ id: profile._id, role,access});
     await team.save();
 
     return NextResponse.json({ success: true, message: 'Member added.' });
@@ -100,38 +146,6 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ success: false, error: 'Add failed.' }, { status: 500 });
   }
 }
-
-export async function PATCH(req: NextRequest) {
-  await connectToDatabase();
-  const teamId = req.nextUrl.searchParams.get('id')
-
-  try {
-    const { requesterId, memberId, role } = await req.json();
-
-    if (!requesterId || !memberId || !role) {
-      return NextResponse.json({ success: false, error: 'Missing fields.' }, { status: 400 });
-    }
-
-    const team = await Team.findById(teamId);
-    if (!team) return NextResponse.json({ success: false, error: 'Team not found.' }, { status: 404 });
-
-    if (team.createdBy.toString() !== requesterId) {
-      return NextResponse.json({ success: false, error: 'Only admin can update roles.' }, { status: 403 });
-    }
-
-    const member = team.members.find((m: any) => m.id.toString() === memberId);
-    if (!member) return NextResponse.json({ success: false, error: 'Member not found.' }, { status: 404 });
-
-    member.role = role;
-    await team.save();
-
-    return NextResponse.json({ success: true, message: 'Role updated.' });
-  } catch (err) {
-    console.error(err);
-    return NextResponse.json({ success: false, error: 'Update failed.' }, { status: 500 });
-  }
-}
-
 export async function DELETE(req: NextRequest) {
   await connectToDatabase();
   const teamId = req.nextUrl.searchParams.get('id')

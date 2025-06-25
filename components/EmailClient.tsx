@@ -172,14 +172,22 @@ const EmailClient: React.FC<EmailClientProps> = ({ userid }) => {
     }
   };
 
-  const formatDate = (date: Date) => {
+const formatDate = (date: string | Date) => {
+  const parsedDate = new Date(date); // Parse the date string into a Date object
+  
+  // Check if it's a valid date
+  if (parsedDate instanceof Date && !isNaN(parsedDate.getTime())) {
     return new Intl.DateTimeFormat('en-US', {
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
-    }).format(date);
-  };
+      minute: '2-digit',
+    }).format(parsedDate);
+  } else {
+    return 'Invalid date'; // Return a fallback if the date is invalid
+  }
+};
+
 
   if (isLoading) {
     return (

@@ -8,12 +8,14 @@ import { FiEdit3 } from 'react-icons/fi';
 import { MdDeleteOutline } from 'react-icons/md';
 import { axiosInstance } from '@/lib/fetcher';
 import { toast } from 'react-hot-toast';
+import { useTeamRole } from '@/context/TeamRoleContext';
 
 const CategoryPage = ({ teamId }: { teamId: string }) => {
   const { data: categories = [], mutate } = useSWR(`/api/category?teamId=${teamId}`, fetcher);
   const [search, setSearch] = useState('');
   const [editingCategory, setEditingCategory] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const {role , access} = useTeamRole()
 
   const filtered = categories.filter((cat: any) =>
     cat.name.toLowerCase().includes(search.toLowerCase())
@@ -35,7 +37,7 @@ const CategoryPage = ({ teamId }: { teamId: string }) => {
     <div className="p-6 bg-white min-h-screen">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-xl font-bold text-gray-900">Categories</h1>
-        <button
+     {role === 'admin' || access?.categories?.includes('write')?  <button
           onClick={() => {
             setEditingCategory(null);
             setDrawerOpen(true);
@@ -43,7 +45,7 @@ const CategoryPage = ({ teamId }: { teamId: string }) => {
           className="bg-blue-100 text-blue-800 text-xs px-4 py-2 rounded hover:bg-blue-200"
         >
           + Add Category
-        </button>
+        </button>:null } 
       </div>
 
  <div className="flex justify-between items-center mb-4 py-4 border-b border-gray-300">
@@ -72,7 +74,7 @@ const CategoryPage = ({ teamId }: { teamId: string }) => {
               </td>
               <td className="px-4 py-2">{cat.description || '-'}</td>
               <td className="px-4 py-2 flex gap-2">
-                <button
+               {role === 'admin' || access?.categories?.includes('update')?   <button
                   onClick={() => {
                     setEditingCategory(cat);
                     setDrawerOpen(true);
@@ -80,13 +82,14 @@ const CategoryPage = ({ teamId }: { teamId: string }) => {
                   className="p-1 rounded bg-blue-100 text-blue-800 hover:bg-blue-200"
                 >
                   <FiEdit3 size={16} />
-                </button>
+                </button>:null}
+                 {role === 'admin' ||  access?.categories?.includes('delete')? 
                 <button
                   onClick={() => handleDelete(cat._id)}
                   className="p-1 rounded bg-red-100 text-red-800 hover:bg-red-200"
                 >
                   <MdDeleteOutline size={16} />
-                </button>
+                </button>:null}
               </td>
             </tr>
           ))}

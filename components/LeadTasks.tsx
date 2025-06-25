@@ -13,12 +13,13 @@ interface props {
     user_id: string;
     lead_id: string
     team_id: string
+    role: any
+    access: any
 }
-export default function LeadTasks({ user_id,lead_id,team_id }: props) {
+export default function LeadTasks({ user_id,lead_id,team_id, role, access }: props) {
   const { id: teamId } = useParams<{ id: string }>();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { role, loading } = useTeamRole();
 
   const { data: tasks = [], mutate } = useSWR(`/api/Lead_tasks?id=${lead_id}`, fetcher);
 
@@ -44,7 +45,7 @@ export default function LeadTasks({ user_id,lead_id,team_id }: props) {
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-xl font-bold text-gray-900">Tasks</h1>
-        <button
+       {role === 'admin' || access?.tasks?.includes('write') ?  <button
           className="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-xs hover:bg-blue-200 transition"
           onClick={() => {
             setEditingTask(null);
@@ -52,7 +53,7 @@ export default function LeadTasks({ user_id,lead_id,team_id }: props) {
           }}
         >
           + Add Task
-        </button>
+        </button>:null}
       </div>
 
       {/* Tabs + Search */}
@@ -162,7 +163,7 @@ export default function LeadTasks({ user_id,lead_id,team_id }: props) {
         </table>
       </div>
 
-      <LeadTaskPanel user_id={user_id} isOpen={drawerOpen} onClose={() => setDrawerOpen(false)} task={editingTask} teamId={teamId} mutate={mutate} lead_id={lead_id} />
+      <LeadTaskPanel user_id={user_id} isOpen={drawerOpen} onClose={() => setDrawerOpen(false)} task={editingTask} teamId={teamId} mutate={mutate} lead_id={lead_id} role={role} access={access}/>
     </div>
   );
 }

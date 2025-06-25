@@ -13,6 +13,7 @@ interface MeetingPanelProps {
   teamId: string;
   userId: string;
   mutate: () => void;
+  
 }
 
 const MeetingPanel: React.FC<MeetingPanelProps> = ({
@@ -23,6 +24,7 @@ const MeetingPanel: React.FC<MeetingPanelProps> = ({
   teamId,
   userId,
   mutate,
+ 
 }) => {
   const isPreview = mode === 'preview';
   const isEdit = mode === 'edit' && !!meeting;
@@ -63,11 +65,13 @@ const MeetingPanel: React.FC<MeetingPanelProps> = ({
                 teamId,
                 createdBy: meeting?.createdBy || '',
                 leadId: meeting?.leadId || null,
+
               }}
               isEdit={isEdit}
               isPreview={isPreview}
               onClose={onClose}
               reload={mutate}
+             
             />
           )}
         </div>
