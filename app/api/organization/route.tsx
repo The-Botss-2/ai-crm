@@ -12,7 +12,6 @@ export async function GET(req: NextRequest) {
     }
 
     await connectToDatabase();
-
     // Fetch organizations created by the logged-in user
     const organizations = await Organization.find({ userId: session.user.id }).sort({ createdAt: -1 });
 
@@ -32,14 +31,10 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
 
-    if (!body.name || !body.description || !body.address || !body.contactEmail || !body.contactPhone) {
+    if (!body.name || !body.contactPhone || !body.Number_of_Employees) {
       return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
     }
     await connectToDatabase();
-    const alreadyExist = await Organization.findOne({ contactEmail: body.contactEmail });
-    if (alreadyExist) {
-      return NextResponse.json({ error: 'Organization already exist with this email' }, { status: 400 });
-    }
     const newOrganization = new Organization({
       ...body,
       userId: session.user.id,
@@ -66,7 +61,7 @@ export async function PATCH(req: NextRequest) {
     const id = searchParams.get('id');
     
     const body = await req.json();
-    const {  name, description, address, contactPhone } = body;
+    const {  name, description, address, contactPhone, Number_of_Employees , country, website} = body;
 
     if (!id) {
       return NextResponse.json({ error: 'Organization ID is required' }, { status: 400 });
@@ -85,6 +80,9 @@ export async function PATCH(req: NextRequest) {
     if (description !== undefined) organization.description = description;
     if (address !== undefined) organization.address = address;
     if (contactPhone !== undefined) organization.contactPhone = contactPhone;
+    if (Number_of_Employees !== undefined) organization.Number_of_Employees = Number_of_Employees;
+    if (country !== undefined) organization.country = country;
+    if (website !== undefined) organization.website = website;
 
     await organization.save();
 

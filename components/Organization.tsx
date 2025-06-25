@@ -13,15 +13,17 @@ const Organization = ({ user_id }: Props) => {
         name: '',
         description: '',
         address: '',
-        contactEmail: '',
         contactPhone: '',
+        country: '',
+        website: '',
+        Number_of_Employees: '',
     })
 
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [success, setSuccess] = useState<string | null>(null)
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target
         setOrganizationData((prevData) => ({
             ...prevData,
@@ -59,8 +61,10 @@ const Organization = ({ user_id }: Props) => {
                     name: '',
                     description: '',
                     address: '',
-                    contactEmail: '',
                     contactPhone: '',
+                    country: '',
+                    website: '',
+                    Number_of_Employees: '',
                 })
                 router.push(`/teams`)
             } else {
@@ -90,7 +94,7 @@ const Organization = ({ user_id }: Props) => {
 
                 {/* Success Message */}
                 {success && <p className="text-green-500 mb-4 text-center">{success}</p>}
-                
+
                 {/* Error Message */}
                 {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
 
@@ -117,7 +121,6 @@ const Organization = ({ user_id }: Props) => {
                             name="description"
                             value={organizationData.description}
                             onChange={handleChange}
-                            required
                             rows={4}
                             className="w-full mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
@@ -132,28 +135,16 @@ const Organization = ({ user_id }: Props) => {
                             name="address"
                             value={organizationData.address}
                             onChange={handleChange}
-                            required
                             className="w-full mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     </div>
 
                     {/* Contact Email */}
-                    <div>
-                        <label htmlFor="contactEmail" className="block text-sm font-semibold text-gray-700">Contact Email</label>
-                        <input
-                            type="email"
-                            id="contactEmail"
-                            name="contactEmail"
-                            value={organizationData.contactEmail}
-                            onChange={handleChange}
-                            required
-                            className="w-full mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                    </div>
+
 
                     {/* Contact Phone */}
                     <div>
-                        <label htmlFor="contactPhone" className="block text-sm font-semibold text-gray-700">Contact Phone</label>
+                        <label htmlFor="contactPhone" className="block text-sm font-semibold text-gray-700">Phone Number</label>
                         <input
                             type="tel"
                             id="contactPhone"
@@ -163,6 +154,48 @@ const Organization = ({ user_id }: Props) => {
                             required
                             className="w-full mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
+                    </div>
+                    <div>
+                        <label htmlFor="website" className="block text-sm font-semibold text-gray-700">Website Url</label>
+                        <input
+                            type="text"
+                            id="website"
+                            name="website"
+                            value={organizationData.website}
+                            onChange={handleChange}
+                            className="w-full mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                    </div>
+
+                    <div>
+                        <label htmlFor="country" className="block text-sm font-semibold text-gray-700">Country</label>
+                        <input
+                            type="text"
+                            id="country"
+                            name="country"
+                            value={organizationData.country}
+                            onChange={handleChange}
+                            className="w-full mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="Number_of_Employees" className="block text-sm font-semibold text-gray-700">Number of Employees</label>
+                        <select
+                            id="Number_of_Employees"
+                            name="Number_of_Employees"
+                            value={organizationData.Number_of_Employees}
+                            onChange={handleChange}
+                            required
+                            className="w-full mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                            <option value="" disabled>Select Number of Employees</option>
+                            <option value="1-10">1-10</option>
+                            <option value="11-50">11-50</option>
+                            <option value="51-200">51-200</option>
+                            <option value="201-500">201-500</option>
+                            <option value="501-1000">501-1000</option>
+                            <option value="1000+">1000+</option>
+                        </select>
                     </div>
 
                     {/* Submit Button */}

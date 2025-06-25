@@ -80,7 +80,6 @@ export default function SidebarNav({ teamId, pathname, userId, session, isOpen }
         {
             title: 'Integrations',
             items: [
-   ...(role === 'admin' ? [{ name: 'Integrations', href: `/team/${teamId}/integrations`, icon: <PiLinkSimpleDuotone size={22} /> }] : []),
                 { name: 'Forms', href: `/team/${teamId}/forms`, icon: <FaWpforms size={22} /> },
             ],
         },

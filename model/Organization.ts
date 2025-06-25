@@ -2,11 +2,11 @@ import mongoose, { Schema, Types, model } from 'mongoose';
 
 const OrganizationSchema = new Schema({
   name: { type: String, required: true },
-  description: { type: String, required: true },
-  address: { type: String, required: true },
-  contactEmail: { type: String, required: true, unique: true },
+  description: { type: String },
+  address: { type: String },
   contactPhone: { type: String, required: true },
-
+  Number_of_Employees: { type: String, required: true },
+  country: { type: String },
   // Link to the User (or Profile) model
   userId: { type: Types.ObjectId, ref: 'Profile', required: true },
 

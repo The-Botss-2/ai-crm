@@ -15,7 +15,9 @@ const OrganizationSettingsPage = ({ user_id, teamId }: any) => {
     description: '',
     country: '',
     address: '',
-    contactPhone: ''
+    contactPhone: '',
+    Number_of_Employees: '',
+    website: '',
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -32,7 +34,9 @@ const OrganizationSettingsPage = ({ user_id, teamId }: any) => {
             description: res.data[0]?.description,
             country: res.data[0]?.country,
             address: res.data[0]?.address,
-            contactPhone: res.data[0]?.contactPhone
+            contactPhone: res.data[0]?.contactPhone,
+            Number_of_Employees: res.data[0]?.Number_of_Employees,
+            website: res.data[0]?.website
           });
         } else {
           toast.error('Failed to load organization data');
@@ -60,7 +64,7 @@ const OrganizationSettingsPage = ({ user_id, teamId }: any) => {
     e.preventDefault();
     const toastId = toast.loading("Saving changes...");
     setLoading(true);
-    
+
     try {
       const res = await axios.patch(`/api/organization?id=${organization?._id}`, formData);
       toast.success('Organization updated successfully', { id: toastId });
@@ -117,24 +121,24 @@ const OrganizationSettingsPage = ({ user_id, teamId }: any) => {
                   />
                 </div>
 
+
                 <div className="space-y-2">
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Email
+                  <label htmlFor="address" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Address 
                   </label>
                   <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={organization?.email || ''}
-                    disabled
-                    className="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400 bg-gray-100 cursor-not-allowed"
-                    placeholder="contact@organization.com"
+                    id="address"
+                    name="address"
+                    type="text"
+                    value={formData.address}
+                    onChange={handleChange}
+                    className="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    placeholder="123 Main St, City, State ZIP"
                   />
                 </div>
-
                 <div className="space-y-2 md:col-span-2">
                   <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Description <span className="text-red-500">*</span>
+                    Description 
                   </label>
                   <textarea
                     id="description"
@@ -143,12 +147,10 @@ const OrganizationSettingsPage = ({ user_id, teamId }: any) => {
                     value={formData.description}
                     onChange={handleChange}
                     className="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                    required
                     placeholder="Brief description of your organization"
                   />
                 </div>
 
-              
                 <div className="space-y-2">
                   <label htmlFor="contactPhone" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     Contact Phone <span className="text-red-500">*</span>
@@ -165,21 +167,45 @@ const OrganizationSettingsPage = ({ user_id, teamId }: any) => {
                   />
                 </div>
 
-                <div className="space-y-2 ">
-                  <label htmlFor="address" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Address <span className="text-red-500">*</span>
+                <div className="space-y-2">
+                  <label htmlFor="Number_of_Employees" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Number of Employees <span className="text-red-500">*</span>
                   </label>
-                  <input
-                    id="address"
-                    name="address"
-                    type="text"
-                    value={formData.address}
+                  <select
+                    id="Number_of_Employees"
+                    name="Number_of_Employees"
+                    value={formData.Number_of_Employees}
                     onChange={handleChange}
                     className="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                     required
-                    placeholder="123 Main St, City, State ZIP"
+                  >
+                    <option value="" disabled>Select number of employees</option>
+                    <option value="1-10">1-10</option>
+                    <option value="11-50">11-50</option>
+                    <option value="51-200">51-200</option>
+                    <option value="201-500">201-500</option>
+                    <option value="501-1000">501-1000</option>
+                    <option value="1000+">1000+</option>
+                  </select>
+                </div>
+
+
+                <div className="space-y-2">
+                  <label htmlFor="website" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Website Url
+                  </label>
+                  <input
+                    id="website"
+                    name="website"
+                    type="url"
+                    value={formData.website}
+                    onChange={handleChange}
+                    className="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    placeholder="https://www.organization.com"
                   />
                 </div>
+
+
               </div>
             </div>
 
