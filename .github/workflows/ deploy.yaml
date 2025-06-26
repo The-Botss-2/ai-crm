@@ -24,8 +24,8 @@ jobs:
           script: |
             # Navigate to the application directory
             cd /root/ai-crm
-            rm -rf package.json
-            rm -rf package-lock.json
+            # rm -rf package.json
+            # rm -rf package-lock.json
             # Fetch the latest code from the staging branch
             git pull origin master
 
