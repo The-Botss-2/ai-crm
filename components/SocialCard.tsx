@@ -102,7 +102,7 @@ useEffect(() => {
                 </button>
               }
 
-              {name !== 'Zoom' && name !== 'Email' && <Link href={`/team/${teamId}/integrations/${name.replace(/([A-Z])/g, '-$1').toLowerCase().slice(1)}`} className="bg-blue-100 w-fit text-blue-800 px-4 py-2 rounded hover:font-semibold text-xs">
+              {name !== 'Zoom' && name !== 'Email' && <Link href={`/integrations/${name.replace(/([A-Z])/g, '-$1').toLowerCase().slice(1)}`} className="bg-blue-100 w-fit text-blue-800 px-4 py-2 rounded hover:font-semibold text-xs">
                 Setup
               </Link>}
 

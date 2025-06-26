@@ -182,7 +182,7 @@ export default function AgentsTable({ crmUserId }: AgentsTableProps) {
                                                 Delete
                                             </button>
                                             <Link
-                                                href={`/team/${crmUserId}/integrations/eleven-labs/${agent.agent_id}`}
+                                                href={`/integrations/eleven-labs/${agent.agent_id}`}
                                                 className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 hover:bg-green-200"
                                             >
                                                 Edit

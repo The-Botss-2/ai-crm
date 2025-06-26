@@ -66,7 +66,7 @@ const Organization = ({ user_id }: Props) => {
                     website: '',
                     Number_of_Employees: '',
                 })
-                router.push(`/teams`)
+                router.push(`/integrations`)
             } else {
                 setError(data.error || 'Something went wrong.')
                 toast.error(data.error || 'Something went wrong.')
