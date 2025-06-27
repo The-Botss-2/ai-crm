@@ -18,7 +18,7 @@ const memberSchema = new mongoose.Schema({
     campaigns: { type: [String], enum: ['none', 'read', 'write', 'update', 'delete'], default: [] },
     teams: { type: [String], enum: ['none', 'read', 'write', 'update', 'delete'], default: [] },
     analytics: { type: [String], enum: ['none', 'read', 'write', 'update', 'delete'], default: [] },
-    setting: { type: [String], enum: ['none', 'read', 'write', 'update', 'delete'], default: [] },
+    org_setting: { type: [String], enum: ['none', 'read', 'write', 'update', 'delete'], default: [] },
   },
 });
 

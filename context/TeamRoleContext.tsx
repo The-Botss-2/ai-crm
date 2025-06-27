@@ -39,11 +39,12 @@ export function TeamRoleProvider({
     const [logo, setLogo] = useState<string | null>(null);
     const [teamName, setTeamName] = useState<string | null>(null);
     const [access, setAccess] = useState<any>(null);
-
+    console.log(data,'datadata');
+    
 
     useEffect(() => {
         if (data?.team && userId) {
-            const member = data.team.members.find((m: any) => m.profile._id === userId);
+            const member = data.team.members.find((m: any) => m?.profile?._id === userId);
             setRole(member?.role ?? null);
             setAgent(data.team.agent)
             setLogo(data.team.logo)

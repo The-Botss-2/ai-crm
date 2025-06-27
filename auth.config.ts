@@ -28,11 +28,10 @@ export const authConfig: NextAuthConfig = {
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
-
           const data = await response.json();
 
           return {
-            id: data.user._id,
+            id: data?.user?.id || data?.user?._id,
             name: data.user.name,
             email: data.user.email,
             image: data.user.image || null,

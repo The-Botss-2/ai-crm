@@ -17,8 +17,10 @@ export default async function TeamsPage({params}:{params:Promise<{id:string}>}) 
   // Fetch the organizations of the user
   await connectToDatabase();
   const organizations = await Organization.find({ userId: session?.user?.id });
+  console.log(organizations,'organizationsorganizations');
+  
   // If there are organizations, redirect to the team route
-  if (!organizations.length) {
+  if (organizations?.length === 0) {
     return redirect('/organization'); 
   } else {
     
@@ -26,7 +28,7 @@ export default async function TeamsPage({params}:{params:Promise<{id:string}>}) 
     <div className="h-screen">
       <Navbar id={session.user.id} />
       <Suspense fallback={<Loading />}>
-        <TeamList id={id} userId={session.user.id} organizations={organizations}/>
+        <TeamList id={id} userId={session.user.id}/>
       </Suspense>
     </div>
   );

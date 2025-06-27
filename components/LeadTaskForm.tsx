@@ -168,7 +168,7 @@ const LeadTaskForm: React.FC<TaskFormProps> = ({
           <Field name="assignedTo" as="select" className="w-full border border-gray-300 text-xs p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
             <option value="">Assign to</option>
             {teamData?.team?.members?.map((m: any) => (
-              <option key={m.profile._id} value={m.profile._id}>
+              <option key={m.profile?._id} value={m.profile?._id}>
                 {m.profile.name} ({m.role})
               </option>
             ))}

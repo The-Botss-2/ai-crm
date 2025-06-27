@@ -8,6 +8,7 @@ import { mutate } from 'swr';
 import { MdDeleteOutline } from 'react-icons/md';
 import { FaArrowRight } from 'react-icons/fa6';
 import Link from 'next/link';
+import AddMemberDialog from './AddMemberDialog';
 
 export default function TeamCard({ teams, userId ,organization_id}: { teams: any[]; userId: string ; organization_id: string}) {
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -57,7 +58,7 @@ export default function TeamCard({ teams, userId ,organization_id}: { teams: any
           ) : (
             teams.map((team) => (
               <tr key={team._id} className="hover:bg-gray-50 transition-colors">
-                <td className="px-5 py-4 font-medium truncate">{team.name}</td>
+                <td className="px-5 py-4 font-medium truncate">{team?.name}</td>
                 <td className="px-5 py-4">
                   {team.members.length} member{team.members.length !== 1 && 's'}
                 </td>
@@ -81,7 +82,11 @@ export default function TeamCard({ teams, userId ,organization_id}: { teams: any
                   >
                     <FaArrowRight size={14} />
                   </Link>
+                 {team?.createdBy === userId && (
+                    <AddMemberDialog teamId={team._id} requesterId={userId} page="team" />
+                )}
                 </td>
+
               </tr>
             ))
           )}

@@ -18,7 +18,7 @@ export default function TeamPageClient({ currentUserId }: { currentUserId: strin
   return (
     <div className="p-6 bg-white min-h-screen">
       <div className="flex justify-between items-center mb-4 border-b border-gray-300 pb-5">
-        <h1 className="text-xl font-semibold text-gray-900">Team - {team.name}</h1>
+        <h1 className="text-xl font-semibold text-gray-900">Team - {team?.name}</h1>
         {team.createdBy === currentUserId && (
           <AddMemberDialog teamId={team._id} requesterId={currentUserId} mutate={mutate} />
         )}

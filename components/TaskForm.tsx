@@ -173,7 +173,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
             >
               <option value="">Assign to</option>
               {teamData?.team?.members?.map((m: any) => (
-                <option key={m.profile._id} value={m.profile._id}>
+                <option key={m.profile?._id} value={m.profile?._id}>
                   {m.profile.name} ({m.role})
                 </option>
               ))}

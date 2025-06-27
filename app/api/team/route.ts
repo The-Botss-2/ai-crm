@@ -82,7 +82,7 @@ export async function POST(req: Request) {
                 email: `${team._id}@bot.com`,
             });
 
-            team.members.push({ id: botProfile._id, role: 'bot' });
+            team.members.push({ id: botProfile?._id, role: 'bot' });
             await team.save();
         }
         return NextResponse.json({ team }, { status: 201 });

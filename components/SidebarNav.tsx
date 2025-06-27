@@ -52,9 +52,9 @@ export default function SidebarNav({ teamId, pathname, userId, session, isOpen }
         {
             title: 'Management',
             items: [
-               ...(role === 'admin' || access?.leads?.includes('read') ? [{ name: 'Leads', href: `/team/${teamId}/leads`, icon: <PiUsersThreeDuotone size={22} /> }] : []),
-                ...(role === 'admin' || access?.meetings?.includes('read') ? [{ name: 'Meetings', href: `/team/${teamId}/meetings`, icon: <AiTwotoneCalendar size={22} /> }] : []),,
-               ...(role === 'admin' || access?.teams?.includes('read') ? [{ name: 'Team', href: `/team/${teamId}/team-details`, icon: <PiUsersDuotone size={22} /> }] : []),
+                ...(role === 'admin' || access?.leads?.includes('read') ? [{ name: 'Leads', href: `/team/${teamId}/leads`, icon: <PiUsersThreeDuotone size={22} /> }] : []),
+                ...(role === 'admin' || access?.meetings?.includes('read') ? [{ name: 'Meetings', href: `/team/${teamId}/meetings`, icon: <AiTwotoneCalendar size={22} /> }] : []), ,
+                ...(role === 'admin' || access?.teams?.includes('read') ? [{ name: 'Team', href: `/team/${teamId}/team-details`, icon: <PiUsersDuotone size={22} /> }] : []),
                 ...(role === 'admin' || access?.tasks?.includes('read') ? [{ name: 'Tasks', href: `/team/${teamId}/tasks`, icon: <AiTwotoneBuild size={22} /> }] : []),
                 ...(role === 'admin' || access?.categories?.includes('read') ? [{ name: 'Categories', href: `/team/${teamId}/category`, icon: <TbCategory size={22} /> }] : []),
                 ...(role === 'admin' || access?.products?.includes('read') ? [{ name: 'Products', href: `/team/${teamId}/product`, icon: <RiProductHuntLine size={22} /> }] : []),
@@ -64,17 +64,17 @@ export default function SidebarNav({ teamId, pathname, userId, session, isOpen }
         {
             title: 'Campaigns',
             items: [
-             {
+                ...(role === 'admin' || access?.campaigns?.includes('read') ? [{
                     name: 'Outbound Campaigns',
                     href: `/team/${teamId}/outbound-calls`,
                     icon: <MdOutlineOutbound size={22} />,
-                }
+                }] : [])
             ],
         },
         {
             title: 'Integrations',
             items: [
-            { name: 'Forms', href: `/team/${teamId}/forms`, icon: <FaWpforms size={22} /> }
+                ...(role === 'admin' || access?.forms?.includes('read') ? [{ name: 'Forms', href: `/team/${teamId}/forms`, icon: <FaWpforms size={22} /> }] : []),
             ],
         },
         {
@@ -100,12 +100,12 @@ export default function SidebarNav({ teamId, pathname, userId, session, isOpen }
         {
             title: 'Settings',
             items: [
-             {
+                {
                     name: 'Settings',
                     href: `/team/${teamId}/settings`,
                     icon: <AiTwotoneSetting size={22} />,
                 },
-               { name: 'Organization Setting', href: `/team/${teamId}/organization-setting`, icon: <PiLinkSimpleDuotone size={22} /> }
+                ...(role === 'admin' || access?.org_setting?.includes('read') ? [{ name: 'Organization Setting', href: `/organization-setting`, icon: <PiLinkSimpleDuotone size={22} /> }] : [])
 
             ],
         },

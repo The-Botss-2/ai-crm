@@ -28,7 +28,7 @@ export default function Integration({ userId, page }: Props) {
         email: <MdOutlineEmail color="white" size={20} />,
     };
     const INTEGRATIONS: any = [
-        ...(role === 'admin' || page === 'integrations' ? [
+        // ...(role === 'admin' || page === 'integrations' ? [
             {
                 name: 'zoom',
                 displayName: 'Zoom',
@@ -46,8 +46,8 @@ export default function Integration({ userId, page }: Props) {
                 displayName: 'Twilio',
                 oauthUrl: 'https://callingagent.thebotss.com/api/twilio/connect',
                 fetchUrl: 'https://callingagent.thebotss.com/api/twilio/status',
-            }
-        ] : []),
+            },
+        // ] : []),
         {
             name: 'email',
             displayName: 'Email',

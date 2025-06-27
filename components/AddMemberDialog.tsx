@@ -5,7 +5,7 @@ import { Fragment, useState } from 'react';
 import toast from 'react-hot-toast';
 import { axiosInstance } from '@/lib/fetcher';
 
-export default function AddMemberDialog({ teamId, requesterId, mutate }: any) {
+export default function AddMemberDialog({ teamId, requesterId, mutate, page }: any) {
   const [email, setEmail] = useState('');
   const [role, setRole] = useState('agent');
   const [access, setAccess] = useState<any>({
@@ -18,6 +18,8 @@ export default function AddMemberDialog({ teamId, requesterId, mutate }: any) {
     forms: [],
     teams: [],
     analytics: [],
+    campaigns: [],
+    org_setting: [],
   });
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -62,14 +64,14 @@ export default function AddMemberDialog({ teamId, requesterId, mutate }: any) {
         categories: [],
         products: [],
         forms: [],
-        campaigns: [],
         teams: [],
         analytics: [],
-        setting: [],
+        campaigns: [],
+        org_setting: [],
       })
       setRole('agent');
       setIsOpen(false);
-      mutate();
+      page !== 'team' ?  mutate() : null;
     } catch (err: any) {
       toast.error(err?.response?.data?.error || 'Failed to add', { id: toastId });
       setEmail('');
@@ -125,7 +127,7 @@ export default function AddMemberDialog({ teamId, requesterId, mutate }: any) {
               <div className="mb-4">
                 <h3 className="font-semibold text-gray-900">Access</h3>
                 <div className="space-y-4">
-                  {['dashboard', 'leads', 'meetings', 'tasks', 'categories', 'products', 'forms', 'teams', 'analytics'].map((field) => (
+                  {['dashboard', 'leads', 'meetings', 'tasks', 'categories', 'products', 'forms', 'teams', 'analytics', 'campaigns', 'org_setting'].map((field) => (
                     <div key={field}>
                       <label className="block text-sm text-gray-700 capitalize">{field}</label>
                       <div className="flex space-x-4">

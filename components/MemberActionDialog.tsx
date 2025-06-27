@@ -35,7 +35,7 @@ export default function MemberActionDialog({ member, teamId, requesterId, mutate
     try {
       await axiosInstance.patch(`/api/team/user?id=${teamId}`, {
         requesterId,
-        memberId: member.profile._id,
+        memberId: member.profile?._id,
         role,
         access: permissions,
       });
@@ -55,7 +55,7 @@ export default function MemberActionDialog({ member, teamId, requesterId, mutate
     setLoading(true);
     try {
       await axiosInstance.delete(`/api/team/user?id=${teamId}`, {
-        data: { requesterId, memberId: member.profile._id },
+        data: { requesterId, memberId: member.profile?._id },
       });
 
       toast.success('Member removed', { id: toastId });
@@ -101,7 +101,7 @@ export default function MemberActionDialog({ member, teamId, requesterId, mutate
 
               {/* Permissions checkboxes */}
               <div className="space-y-4">
-                {['dashboard', 'leads', 'meetings', 'tasks', 'categories', 'products', 'forms', 'teams', 'analytics'].map((field) => (
+                {['dashboard', 'leads', 'meetings', 'tasks', 'categories', 'products', 'forms', 'teams', 'analytics', 'campaigns', 'org_setting'].map((field) => (
                   <div key={field}>
                     <h3 className="font-semibold text-gray-900 capitalize">{field}</h3>
                     <div className="flex space-x-4">

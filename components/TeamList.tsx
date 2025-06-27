@@ -8,11 +8,9 @@ import TeamSkeleton from './TeamSkeleton';
 interface props {
     userId: string;
     id: string;
-    organizations:any
 }
-export default function TeamList({ id,userId,organizations }: props) {
+export default function TeamList({ id,userId }: props) {
     const { data, error, isLoading, mutate } = useSWR(`/api/team/user?id=${userId}`, fetcher);
-    localStorage.setItem('organization_id', organizations[0]._id);
     if (isLoading) return <TeamSkeleton />;
     if (error) return <p className="text-red-500">Failed to load teams.</p>;
 

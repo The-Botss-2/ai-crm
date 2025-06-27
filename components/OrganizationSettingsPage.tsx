@@ -7,7 +7,7 @@ import { toast } from "react-hot-toast";
 import Loading from "./Loading";
 import Integration from "./Integration";
 
-const OrganizationSettingsPage = ({ user_id, teamId }: any) => {
+const OrganizationSettingsPage = ({ user_id }: any) => {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'settings' | 'integrations'>('settings');
 
@@ -83,7 +83,7 @@ const OrganizationSettingsPage = ({ user_id, teamId }: any) => {
   if (error) return <div className="flex items-center justify-center h-screen text-red-500">{error}</div>;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <div className=" mx-auto">
         <div className="text-center mb-10">
           <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white sm:text-4xl">

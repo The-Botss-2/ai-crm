@@ -19,6 +19,8 @@ export default async function DashboardLayout({ children, params }: LayoutProps)
     if (!session) return notFound();
  const pathname = (await headers()).get('x-pathname') || '';
     const { id } = await params;
+    console.log(session,id, 'sessionsessionsessionsession');
+    
     return (session.user?.id && (
         <TeamRoleProvider teamId={id} userId={session.user.id}>
             <CardConnectionProvider>
