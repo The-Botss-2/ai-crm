@@ -7,7 +7,7 @@ interface Props {
     user_id: string
 }
 
-const Organization = ({ user_id }: Props) => {
+const OrganizationPage = ({ user_id }: Props) => {
     const router = useRouter()
     const [organizationData, setOrganizationData] = useState({
         name: '',
@@ -214,4 +214,4 @@ const Organization = ({ user_id }: Props) => {
     )
 }
 
-export default Organization
+export default OrganizationPage

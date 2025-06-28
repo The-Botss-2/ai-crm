@@ -3,6 +3,7 @@ import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import { connectToDatabase } from '@/lib/db';
 import Organization from "@/model/Organization";
+import OrganizationPage from '@/components/Organization';
 
 export default async function page() {
   const session = await auth();
@@ -14,7 +15,6 @@ export default async function page() {
  // Fetch the organizations of the user
   await connectToDatabase();
   const organizations = await Organization.find({ userId: session?.user?.id });
-    console.log(organizations,'organizationsorganizations');
     
   // If there are organizations, redirect to the team route
   if (organizations?.length > 0) {
@@ -24,7 +24,7 @@ export default async function page() {
   return (
     <div className="h-screen">
       <Suspense fallback={<div className="text-gray-500">Loading...</div>}>
-       <Organization user_id={session.user.id} />
+       <OrganizationPage user_id={session.user.id} />
       </Suspense>
     </div>
   );
