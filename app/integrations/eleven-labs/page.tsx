@@ -13,7 +13,7 @@ export default async function Page() {
 
     if (session.user?.id) {
         try {
-            const res = await axios.get(`https://callingagent.thebotss.com/api/elevenlabs/status/${session.user.id}`);
+            const res = await axios.get(`${process.env.CALLING_AGENT_URL}/api/elevenlabs/status/${session.user.id}`);
             responseData = res.data;
         } catch (error: any) {
             errorData = error.response?.data || error.message;

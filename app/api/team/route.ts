@@ -67,7 +67,7 @@ export async function POST(req: Request) {
             ]
         });
 
-        const agentResponse = await axios.post('https://callingagent.thebotss.com/api/create-agent', {
+        const agentResponse = await axios.post(`${process.env.CALLING_AGENT_URL}/api/create-agent`, {
             user_id: session.user.id,
             team_id: team._id.toString()
         });

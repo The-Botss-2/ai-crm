@@ -64,7 +64,7 @@ const ElevenLabsWidget = ({ agent_id }: { agent_id: string }) => {
           const convaiElement = document.createElement('elevenlabs-convai');
           convaiElement.setAttribute('agent-id', agent_id);
           convaiElement.setAttribute('variant', 'tiny');
-          convaiElement.setAttribute('avatar-image-url', 'https://callingagent.thebotss.com/static/1698673175383.jpeg');
+          convaiElement.setAttribute('avatar-image-url', `${process.env.CALLING_AGENT_URL}/static/1698673175383.jpeg`);
           updateWidgetColors(convaiElement);
           updateWidgetVariant(convaiElement);
 

@@ -29,7 +29,7 @@ const validationSchema = Yup.object({
 
 const fetchPhoneNumbers = async (crmUserId: string): Promise<PhoneNumber[]> => {
   const response = await axios.get(
-    `https://callingagent.thebotss.com/api/elevenlabs/free-numbers?crm_user_id=${crmUserId}`,
+    `${process.env.CALLING_AGENT_URL}/api/elevenlabs/free-numbers?crm_user_id=${crmUserId}`,
     { headers: { 'accept': 'application/json' } }
   );
   return response.data;
@@ -113,7 +113,7 @@ export default function AddElevenAgentDialog({
                 formData.append('phone_number', values.phone_number);
 
                 await axios.post(
-                  'https://callingagent.thebotss.com/api/elevenlabs/agent-setup',
+                  `${process.env.CALLING_AGENT_URL}/api/elevenlabs/agent-setup`,
                   formData,
                   {
                     headers: {

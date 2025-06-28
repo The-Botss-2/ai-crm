@@ -35,7 +35,7 @@ const fetcher = (url: string) => axios.get(url, { headers: { 'accept': 'applicat
 
 export default function AgentsTable({ crmUserId }: AgentsTableProps) {
     const { data, error, mutate, isLoading } = useSWR<AgentsResponse>(
-        `https://callingagent.thebotss.com/api/elevenlabs/agents?crm_user_id=${crmUserId}`,
+        `${process.env.CALLING_AGENT_URL}/api/elevenlabs/agents?crm_user_id=${crmUserId}`,
         fetcher
     );
 
@@ -44,7 +44,7 @@ export default function AgentsTable({ crmUserId }: AgentsTableProps) {
         const loadingToast = toast.loading('Deleting agent...');
 
         try {
-            await axios.delete(`https://callingagent.thebotss.com/api/elevenlabs/agent/${agentId}?crm_user_id=${crmUserId}`, {
+            await axios.delete(`${process.env.CALLING_AGENT_URL}/api/elevenlabs/agent/${agentId}?crm_user_id=${crmUserId}`, {
                 headers: { 'accept': 'application/json' },
             });
 

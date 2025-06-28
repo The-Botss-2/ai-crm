@@ -32,27 +32,27 @@ export default function Integration({ userId, page }: Props) {
             {
                 name: 'zoom',
                 displayName: 'Zoom',
-                oauthUrl: 'https://zoom.thebotss.com/zoom/oauth/start',
-                fetchUrl: 'https://zoom.thebotss.com/zoom/zoom_user',
+                oauthUrl: `${process.env.ZOOM_URL}/zoom/oauth/start`,
+                fetchUrl: `${process.env.ZOOM_URL}/zoom/zoom_user`,
             },
             {
                 name: 'elevenlabs',
                 displayName: 'ElevenLabs',
-                oauthUrl: 'https://callingagent.thebotss.com/api/elevenlabs/connect',
-                fetchUrl: 'https://callingagent.thebotss.com/api/elevenlabs/status',
+                oauthUrl: `${process.env.CALLING_AGENT_URL}/api/elevenlabs/connect`,
+                fetchUrl: `${process.env.CALLING_AGENT_URL}/api/elevenlabs/status`,
             },
             {
                 name: 'twilio',
                 displayName: 'Twilio',
-                oauthUrl: 'https://callingagent.thebotss.com/api/twilio/connect',
-                fetchUrl: 'https://callingagent.thebotss.com/api/twilio/status',
+                oauthUrl: `${process.env.CALLING_AGENT_URL}/api/twilio/connect`,
+                fetchUrl: `${process.env.CALLING_AGENT_URL}/api/twilio/status`,
             },
         // ] : []),
         {
             name: 'email',
             displayName: 'Email',
-            oauthUrl: 'https://callingagent.thebotss.com/api/email/connect', // Fixed URL (assuming)
-            fetchUrl: 'https://callingagent.thebotss.com/api/email/status', // Fixed URL (assuming)
+            oauthUrl: `${process.env.CALLING_AGENT_URL}/api/email/connect`, // Fixed URL (assuming)
+            fetchUrl: `${process.env.CALLING_AGENT_URL}/api/email/status`, // Fixed URL (assuming)
         }
     ] as const;
 

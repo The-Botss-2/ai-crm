@@ -123,7 +123,7 @@ const KnowledgeBase = ({ user_id }: { user_id: string }) => {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
             {files.map((file) => {
               const isImage = file.content_type.startsWith('image/');
-              const fileUrl = `https://callingagent.thebotss.com${file.access_url}`;
+              const fileUrl = `${process.env.CALLING_AGENT_URL}${file.access_url}`;
 
               return (
                 <div

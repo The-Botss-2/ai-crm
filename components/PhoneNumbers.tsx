@@ -13,7 +13,7 @@ interface PhoneNumber {
 
 async function fetchPhoneNumbers(userId: string): Promise<PhoneNumber[]> {
     try {
-        const response = await axios.get(`https://callingagent.thebotss.com/api/twilio/get-phone-numbers?crm_user_id=${userId}`,
+        const response = await axios.get(`${process.env.CALLING_AGENT_URL}/api/twilio/get-phone-numbers?crm_user_id=${userId}`,
             {
                 headers: {
                     'accept': 'application/json'

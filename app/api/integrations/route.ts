@@ -12,10 +12,10 @@ export async function GET(req: NextRequest) {
 
   const userId = session.user.id;
 
-  const zoomURL = `https://zoom.thebotss.com/zoom/zoom_user/${userId}`;
-  const elevenlabsURL = `https://callingagent.thebotss.com/api/elevenlabs/status/${userId}`;
-  const twilioURL = `https://callingagent.thebotss.com/api/twilio/status/${userId}`;
-  const emailURL = `https://crm-emails.thebotss.com/user/status/${userId}`
+  const zoomURL = `${process.env.ZOOM_URL}/zoom/zoom_user/${userId}`;
+  const elevenlabsURL = `${process.env.CALLING_AGENT_URL}/api/elevenlabs/status/${userId}`;
+  const twilioURL = `${process.env.CALLING_AGENT_URL}/api/twilio/status/${userId}`;
+  const emailURL = `${process.env.CRM_EMAILS_URL}/user/status/${userId}`
 
   const [zoom, elevenlabs, twilio, email] = await Promise.allSettled([
     axios.get(zoomURL),

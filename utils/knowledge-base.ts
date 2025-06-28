@@ -61,7 +61,7 @@ export const uploadAndUpdateKnowledgeBase = async (
       formData.append('files', file);
 
       const uploadRes = await axios.post(
-        'https://callingagent.thebotss.com/api/knowledge-base/upload',
+        `${process.env.CALLING_AGENT_URL}/api/knowledge-base/upload`,
         formData,
         { headers: { 'Content-Type': 'multipart/form-data' } }
       );

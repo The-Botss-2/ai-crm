@@ -34,7 +34,7 @@ const CampaignDetailsForm: React.FC<CampaignDetailsFormProps> = ({ agentId, user
   const { data: leads = [] } = useSWR(`/api/leads?team=${team_id}`, fetcher);
 
   const [phoneNumbers, setPhoneNumbers] = useState<string[]>([]);
-  const Api_BASE_URL = 'https://callingagent.thebotss.com/api'
+  const Api_BASE_URL = `${process.env.CALLING_AGENT_URL}/api`
 
   useEffect(() => {
     const loadNumbers = async () => {

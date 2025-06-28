@@ -22,7 +22,7 @@ interface ConversationType {
 const LeadDetails = ({ leadId, teamId, userID }: LeadProps) => {
     const searchParams = useSearchParams();
     const { data: rawLeads, error, mutate } = useSWR<Lead>(`/api/lead?id=${leadId}`, fetcher);
-    const { data: Conversation, error:ConversationError, mutate: mutateConversation } = useSWR<ConversationType>(`https://callingagent.thebotss.com/api/conversations/by-lead?lead_id=${leadId}`, fetcher);
+    const { data: Conversation, error:ConversationError, mutate: mutateConversation } = useSWR<ConversationType>(`${process.env.CALLING_AGENT_URL}/api/conversations/by-lead?lead_id=${leadId}`, fetcher);
 
     return (
         rawLeads ? (<div className="p-4">

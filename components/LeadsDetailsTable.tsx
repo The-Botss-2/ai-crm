@@ -39,7 +39,7 @@ const LeadsDetailsTable: React.FC<LeadsTableProps> = ({ leads, error, teamId, us
 
   // Fetch campaigns
   const { data: campaigns = [], isLoading: campaignsLoading, error: campaignsError } = useSWR<any[]>(
-    `https://callingagent.thebotss.com/api/outbound-campaigns?crm_user_id=${userID}`,
+    `${process.env.CALLING_AGENT_URL}/api/outbound-campaigns?crm_user_id=${userID}`,
     fetcher
   );
   const { data: teamData } = useSWR(`/api/team?id=${teamId}`, fetcher);
@@ -70,7 +70,7 @@ const LeadsDetailsTable: React.FC<LeadsTableProps> = ({ leads, error, teamId, us
     setIsSubmitting(true);
 
     try {
-      const res = await axios.post('https://callingagent.thebotss.com/api/outbound-single-call', payload);
+      const res = await axios.post(`${process.env.CALLING_AGENT_URL}/api/outbound-single-call`, payload);
 
       if (res.data && res.data.success) {
         mutateConversation();
