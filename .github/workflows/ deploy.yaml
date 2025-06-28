@@ -24,17 +24,14 @@ jobs:
           script: |
             # Navigate to the application directory
             cd /root/ai-crm
-            # rm -rf package-lock.json
+            rm -rf package-lock.json
             # Fetch the latest code
             git pull origin master
-
             # Install dependencies
             npm install --force
             # Build the application
             npm run build
-
             # Restart the PM2 process
-            pm2 restart crmfront || HOST=0.0.0.0 pm2 start npm --name "crmfront" -- run dev
-
+            pm2 restart crmfront || HOST=0.0.0.0 pm2 start npm --name "crmfront" -- start
             # Save PM2 process for restarts
             pm2 save
