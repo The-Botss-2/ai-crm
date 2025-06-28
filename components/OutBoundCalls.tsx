@@ -47,7 +47,7 @@ export default function OutBoundCalls({ user_id ,page, lead_id, team_id}: props)
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'draft' | 'scheduled' | 'running' | 'stopped'>('all');
   const [step, setStep] = useState<'agent' | 'details'>('agent');
-  const Api_BASE_URL = `${process.env.CALLING_AGENT_URL}/api`
+  const Api_BASE_URL = `${process.env.NEXT_PUBLIC_CALLING_AGENT_URL}/api`
   const handleAddClick = () => {
     setEditingCampaign(null);
     setDrawerOpen(true);

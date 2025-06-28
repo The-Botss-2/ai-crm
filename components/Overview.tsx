@@ -16,14 +16,14 @@ const Overview = ({ lead_id, userid, team_id, email }: any) => {
         fetcher
     );
     const { data: Conversation, isLoading: ConversationLoading, error: ConversationError, mutate: mutateConversation } = useSWR<any>(
-        `${process.env.CALLING_AGENT_URL}/api/conversations/by-lead?lead_id=${lead_id}`,
+        `${process.env.NEXT_PUBLIC_CALLING_AGENT_URL}/api/conversations/by-lead?lead_id=${lead_id}`,
         fetcher
     );
     const { data: FormResponse, error: FormResponseError, isLoading: FormResponseLoading } = useSWR<any>(
         `/api/form-responses-email?email=${email}`,
         fetcher
     );
-    const emailsKey = `${process.env.CRM_EMAILS_URL}/emails/conversation/${userid}/${email}`;
+    const emailsKey = `${process.env.NEXT_PUBLIC_CRM_EMAILS_URL}/emails/conversation/${userid}/${email}`;
     const { data: emails, error: emailError, isLoading: emailLoading } = useSWR<any>(emailsKey, fetcher);
 
     const [selectionRange, setSelectionRange] = useState<any>({

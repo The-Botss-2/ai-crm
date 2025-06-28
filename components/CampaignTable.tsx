@@ -24,7 +24,7 @@ interface TableProps {
 const CampaignTable: React.FC<TableProps> = ({ campaigns, onEdit, onDelete, onStop,campaignLoading ,teamId}) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-  const Api_BASE_URL = `${process.env.CALLING_AGENT_URL}/api`
+  const Api_BASE_URL = `${process.env.NEXT_PUBLIC_CALLING_AGENT_URL}/api`
   const router = useRouter()
   const totalPages = Math.ceil(campaigns.length / itemsPerPage);
   const paginatedCampaigns = campaigns.slice(

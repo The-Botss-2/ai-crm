@@ -16,7 +16,7 @@ export default function ZoomIntegration({ userId }: { userId: string }) {
 
     const handleConnect = async () => {
         try {
-            const res = await axios.get(`${process.env.ZOOM_URL}/zoom/oauth/start?crm_user_id=${userId}`);
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_ZOOM_URL}/zoom/oauth/start?crm_user_id=${userId}`);
             window.open(res.data.auth_url, '_blank');
         } catch (err) {
             toast.error('Failed to connect with Zoom.');

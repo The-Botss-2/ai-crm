@@ -28,7 +28,7 @@ interface AgentFormProps {
 
 const fetchPhoneNumbers = async (crmUserId: string): Promise<PhoneNumber[]> => {
     const response = await axios.get(
-        `${process.env.CALLING_AGENT_URL}/api/elevenlabs/free-numbers?crm_user_id=${crmUserId}`,
+        `${process.env.NEXT_PUBLIC_CALLING_AGENT_URL}/api/elevenlabs/free-numbers?crm_user_id=${crmUserId}`,
         { headers: { accept: 'application/json' } }
     );
     return response.data;
@@ -85,7 +85,7 @@ export default function AgentForm({ agentId, crmUserId, initialData, error }: Ag
                 form.append('phone_number', values.phone_number);
 
                 await axios.patch(
-                    `${process.env.CALLING_AGENT_URL}/api/elevenlabs/agent/${agentId}`,
+                    `${process.env.NEXT_PUBLIC_CALLING_AGENT_URL}/api/elevenlabs/agent/${agentId}`,
                     form,
                     {
                         headers: {

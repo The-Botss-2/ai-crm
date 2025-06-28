@@ -59,7 +59,7 @@ export function SocialCard({
   const disconnectEmail = async () => {
     const toastId = toast.loading('Unlinking Email...');
     try {
-      await axios.post(`${process.env.CRM_EMAILS_URL}/user/unlink`, {
+      await axios.post(`${process.env.NEXT_PUBLIC_CRM_EMAILS_URL}/user/unlink`, {
         user_id: userId
       })
       toast.success('Email Unlinked successfully!', { id: toastId });
@@ -152,8 +152,8 @@ useEffect(() => {
           isOpen={showPanel}
           userId={userId}
           onClose={() => setShowPanel(false)}
-          fetchUrl={`${process.env.ZOOM_URL}/zoom/get_context/${userId}`}
-          uploadUrl={`${process.env.ZOOM_URL}/zoom/upload_context`}
+          fetchUrl={`${process.env.NEXT_PUBLIC_ZOOM_URL}/zoom/get_context/${userId}`}
+          uploadUrl={`${process.env.NEXT_PUBLIC_ZOOM_URL}/zoom/upload_context`}
           label={'Zoom'}
           name={'Zoom'}
         />

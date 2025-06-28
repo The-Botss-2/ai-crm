@@ -32,27 +32,27 @@ export default function Integration({ userId, page }: Props) {
             {
                 name: 'zoom',
                 displayName: 'Zoom',
-                oauthUrl: `${process.env.ZOOM_URL}/zoom/oauth/start`,
-                fetchUrl: `${process.env.ZOOM_URL}/zoom/zoom_user`,
+                oauthUrl: `${process.env.NEXT_PUBLIC_ZOOM_URL}/zoom/oauth/start`,
+                fetchUrl: `${process.env.NEXT_PUBLIC_ZOOM_URL}/zoom/zoom_user`,
             },
             {
                 name: 'elevenlabs',
                 displayName: 'ElevenLabs',
-                oauthUrl: `${process.env.CALLING_AGENT_URL}/api/elevenlabs/connect`,
-                fetchUrl: `${process.env.CALLING_AGENT_URL}/api/elevenlabs/status`,
+                oauthUrl: `${process.env.NEXT_PUBLIC_CALLING_AGENT_URL}/api/elevenlabs/connect`,
+                fetchUrl: `${process.env.NEXT_PUBLIC_CALLING_AGENT_URL}/api/elevenlabs/status`,
             },
             {
                 name: 'twilio',
                 displayName: 'Twilio',
-                oauthUrl: `${process.env.CALLING_AGENT_URL}/api/twilio/connect`,
-                fetchUrl: `${process.env.CALLING_AGENT_URL}/api/twilio/status`,
+                oauthUrl: `${process.env.NEXT_PUBLIC_CALLING_AGENT_URL}/api/twilio/connect`,
+                fetchUrl: `${process.env.NEXT_PUBLIC_CALLING_AGENT_URL}/api/twilio/status`,
             },
         // ] : []),
         {
             name: 'email',
             displayName: 'Email',
-            oauthUrl: `${process.env.CALLING_AGENT_URL}/api/email/connect`, // Fixed URL (assuming)
-            fetchUrl: `${process.env.CALLING_AGENT_URL}/api/email/status`, // Fixed URL (assuming)
+            oauthUrl: `${process.env.NEXT_PUBLIC_CALLING_AGENT_URL}/api/email/connect`, // Fixed URL (assuming)
+            fetchUrl: `${process.env.NEXT_PUBLIC_CALLING_AGENT_URL}/api/email/status`, // Fixed URL (assuming)
         }
     ] as const;
 

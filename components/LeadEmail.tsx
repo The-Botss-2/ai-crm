@@ -48,7 +48,7 @@ const fetcher = (url: string) => axios.get(url).then(res =>
 
 const LeadEmail: React.FC<EmailClientProps> = ({ userid ,page,source_email}) => {
 
-  const emailsKey = page === 'lead' ? `${process.env.CRM_EMAILS_URL}/emails/conversation/${userid}/${source_email}` : `${process.env.CRM_EMAILS_URL}/emails/${userid}`;
+  const emailsKey = page === 'lead' ? `${process.env.NEXT_PUBLIC_CRM_EMAILS_URL}/emails/conversation/${userid}/${source_email}` : `${process.env.NEXT_PUBLIC_CRM_EMAILS_URL}/emails/${userid}`;
   const { data: emails, error, isLoading } = useSWR<Email[]>(emailsKey, fetcher);
 
   const [selectedEmailId, setSelectedEmailId] = useState<string | null>(null);
@@ -78,7 +78,7 @@ const LeadEmail: React.FC<EmailClientProps> = ({ userid ,page,source_email}) => 
     const loadingToast = toast.loading('Generating AI response...');
 
     try {
-      const response = await axios.post(`${process.env.CRM_EMAILS_URL}/generate-reply`, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_CRM_EMAILS_URL}/generate-reply`, {
         user_id: userid,
         message_id: message_id
       });
@@ -115,7 +115,7 @@ const LeadEmail: React.FC<EmailClientProps> = ({ userid ,page,source_email}) => 
     const loadingToast = toast.loading('Sending reply...');
 
     try {
-      const response = await axios.post(`${process.env.CRM_EMAILS_URL}/send-reply`, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_CRM_EMAILS_URL}/send-reply`, {
         user_id: userid,
         to: to,
         subject: `Re: ${subject}`,

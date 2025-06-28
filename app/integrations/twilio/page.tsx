@@ -13,7 +13,7 @@ export default async function Page() {
 
     if (session.user?.id) {
         try {
-            const res = await axios.get(`${process.env.CALLING_AGENT_URL}/api/twilio/status/${session.user.id}`);
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_CALLING_AGENT_URL}/api/twilio/status/${session.user.id}`);
             responseData = res.data;
         } catch (error: any) {
             errorData = error.response?.data || error.message;

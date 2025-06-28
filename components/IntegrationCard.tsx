@@ -64,10 +64,10 @@ export default function IntegrationCard({
           crmUserId={userId}
           apiUrl={
             name === 'twilio'
-              ? `${process.env.CALLING_AGENT_URL}/api/twilio/connect`
+              ? `${process.env.NEXT_PUBLIC_CALLING_AGENT_URL}/api/twilio/connect`
               : name === 'elevenlabs'
-                ? `${process.env.CALLING_AGENT_URL}/api/elevenlabs/connect`
-                : `${process.env.CRM_EMAILS_URL}/user/link`
+                ? `${process.env.NEXT_PUBLIC_CALLING_AGENT_URL}/api/elevenlabs/connect`
+                : `${process.env.NEXT_PUBLIC_CRM_EMAILS_URL}/user/link`
           }
           fields={
             name === 'twilio'
@@ -97,7 +97,7 @@ export default function IntegrationCard({
         onConnect={handleConnect}
         mutate={mutate}
         fetchMeetingUrl={
-          name === 'zoom' ? `${process.env.ZOOM_URL}/zoom/start_meeting/${userId}` : undefined
+          name === 'zoom' ? `${process.env.NEXT_PUBLIC_ZOOM_URL}/zoom/start_meeting/${userId}` : undefined
         }
       />
     </>

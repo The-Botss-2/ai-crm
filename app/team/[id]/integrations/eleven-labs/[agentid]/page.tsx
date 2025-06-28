@@ -14,7 +14,7 @@ interface AgentData {
 async function fetchAgentData(agentid: string, crmUserId: string): Promise<AgentData> {
   try {
     const response = await axios.get(
-      `${process.env.CALLING_AGENT_URL}/api/elevenlabs/agent/${agentid}?crm_user_id=${crmUserId}`,
+      `${process.env.NEXT_PUBLIC_CALLING_AGENT_URL}/api/elevenlabs/agent/${agentid}?crm_user_id=${crmUserId}`,
       { headers: { 'accept': 'application/json' } }
     );
     return response.data;

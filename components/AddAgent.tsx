@@ -37,7 +37,7 @@ export default function AddAgentDialog({ crmUserId, mutate }: AddAgentDialogProp
         const fetchPhoneNumbers = async () => {
             try {
                 const response = await axios.get(
-                    `${process.env.CALLING_AGENT_URL}/api/elevenlabs/free-numbers?crm_user_id=${crmUserId}`,
+                    `${process.env.NEXT_PUBLIC_CALLING_AGENT_URL}/api/elevenlabs/free-numbers?crm_user_id=${crmUserId}`,
                     {
                         headers: { accept: 'application/json' },
                     }
@@ -77,7 +77,7 @@ export default function AddAgentDialog({ crmUserId, mutate }: AddAgentDialogProp
             const toastId = toast.loading('Creating agent...');
             try {
                 await axios.post(
-                    `${process.env.CALLING_AGENT_URL}/api/elevenlabs/agent-setup`,
+                    `${process.env.NEXT_PUBLIC_CALLING_AGENT_URL}/api/elevenlabs/agent-setup`,
                     new URLSearchParams({
                         crm_user_id: crmUserId,
                         agent_name: values.agent_name,

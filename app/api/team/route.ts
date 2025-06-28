@@ -67,7 +67,7 @@ export async function POST(req: Request) {
             ]
         });
 
-        const agentResponse = await axios.post(`${process.env.CALLING_AGENT_URL}/api/create-agent`, {
+        const agentResponse = await axios.post(`${process.env.NEXT_PUBLIC_CALLING_AGENT_URL}/api/create-agent`, {
             user_id: session.user.id,
             team_id: team._id.toString()
         });

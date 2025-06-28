@@ -47,7 +47,7 @@ export default function ZoomPanel({ isOpen, zoomUserId, onClose }: ZoomPanelProp
 
   const handleSave = async () => {
     try {
-      await axios.post(`${process.env.ZOOM_URL}/zoom/upload_context`,
+      await axios.post(`${process.env.NEXT_PUBLIC_ZOOM_URL}/zoom/upload_context`,
         {
           'zoom_user_id ': zoomUserId,
           'kb_files': file,
@@ -97,7 +97,7 @@ export default function ZoomPanel({ isOpen, zoomUserId, onClose }: ZoomPanelProp
                     <button
                       onClick={async () => {
                         try {
-                          await axios.delete(`${process.env.ZOOM_URL}/zoom/delete_context?zoom_user_id=${zoomUserId}&delete_file_name=${file.file_name}`);
+                          await axios.delete(`${process.env.NEXT_PUBLIC_ZOOM_URL}/zoom/delete_context?zoom_user_id=${zoomUserId}&delete_file_name=${file.file_name}`);
                           toast.success('File deleted successfully!');
                           mutate();
                         } catch (err) {

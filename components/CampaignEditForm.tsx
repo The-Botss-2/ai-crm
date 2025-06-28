@@ -23,7 +23,7 @@ interface CampaignEditFormProps {
     userId: string;
 }
 
-const API_BASE_URL = `${process.env.CALLING_AGENT_URL}/api`;
+const API_BASE_URL = `${process.env.NEXT_PUBLIC_CALLING_AGENT_URL}/api`;
 
 const CampaignEditForm: React.FC<CampaignEditFormProps> = ({
     initialValues,

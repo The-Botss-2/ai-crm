@@ -46,7 +46,7 @@ interface Props {
 
 const SingleCampaign = ({ teamId, out_id, userID }: Props) => {
   const { data: campaigns = [], isLoading: campaignsLoading } = useSWR<Campaign[]>(
-    `${process.env.CALLING_AGENT_URL}/api/outbound-campaigns?crm_user_id=${userID}`,
+    `${process.env.NEXT_PUBLIC_CALLING_AGENT_URL}/api/outbound-campaigns?crm_user_id=${userID}`,
     fetcher
   );
 
@@ -56,7 +56,7 @@ const SingleCampaign = ({ teamId, out_id, userID }: Props) => {
 
   const fetchConversations = async (lead_id: string) => {
     try {
-      const { data } = await axios.get(`${process.env.CALLING_AGENT_URL}/api/conversations/by-lead?lead_id=${lead_id}`);
+      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_CALLING_AGENT_URL}/api/conversations/by-lead?lead_id=${lead_id}`);
       setConversations(data.conversations || []);
     } catch (error) {
       console.error('Error fetching conversations:', error);
@@ -98,7 +98,7 @@ const SingleCampaign = ({ teamId, out_id, userID }: Props) => {
 
     const toastId = toast.loading('Calling agent...');
     try {
-      const res = await axios.post(`${process.env.CALLING_AGENT_URL}/api/outbound-single-call`, payload);
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_CALLING_AGENT_URL}/api/outbound-single-call`, payload);
 
       if (res.data && res.data.success) {
         fetchConversations(lead._id);
