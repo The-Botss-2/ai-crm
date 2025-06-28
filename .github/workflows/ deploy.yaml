@@ -25,7 +25,7 @@ jobs:
             # Navigate to the application directory
             cd /root/ai-crm
             rm -rf package-lock.json
-            # Fetch the latest code
+            # Fetch the latest code.
             git pull origin master
             # Install dependencies
             npm install --force
