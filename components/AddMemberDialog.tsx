@@ -1,15 +1,20 @@
 'use client';
 
 import { Dialog, Transition } from '@headlessui/react';
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { axiosInstance } from '@/lib/fetcher';
-import { useTeamRole } from '@/context/TeamRoleContext';
+import { axiosInstance, fetcher } from '@/lib/fetcher';
+import useSWR from 'swr';
 
 export default function AddMemberDialog({ teamId, requesterId, mutate, page }: any) {
   const [email, setEmail] = useState('');
-  const { teamAccess } = useTeamRole();
-  console.log(teamAccess, 'teamAccess');
+  const { data, isLoading } = useSWR(`/api/team?id=${teamId}`, fetcher);
+  const [teamAccess, setTeamAccess] = useState<any>(null);
+  useEffect(() => {
+    if (data?.team) {
+      setTeamAccess(data?.team?.teamAccess)
+    }
+  }, [data]);
 
   const [role, setRole] = useState('agent');
   const [access, setAccess] = useState<any>({
@@ -131,7 +136,7 @@ export default function AddMemberDialog({ teamId, requesterId, mutate, page }: a
               <div className="mb-4">
                 <h3 className="font-semibold text-gray-900">Access</h3>
                 <div className="space-y-4">
-                  {['dashboard', 'leads', 'meetings', 'tasks', 'categories', 'products', 'forms', 'teams', 'analytics', 'campaigns', 'knowledge_base']
+                  {teamAccess && ['dashboard', 'leads', 'meetings', 'tasks', 'categories', 'products', 'forms', 'teams', 'analytics', 'campaigns', 'knowledge_base']
                     .filter(field => teamAccess[field]?.includes('Visible'))
                     .map(field => (<div key={field}>
                       <label className="block text-sm text-gray-700 capitalize">{field}</label>
