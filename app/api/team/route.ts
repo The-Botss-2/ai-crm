@@ -172,3 +172,44 @@ export async function PATCH(req: NextRequest) {
         }, { status: 500 });
     }
 }
+
+
+export async function PUT(req: NextRequest) {
+  await connectToDatabase();
+
+  try {
+    const { requesterId, teamId, name, access } = await req.json();
+
+    if (!requesterId || !teamId || !name) {
+      return NextResponse.json({ success: false, error: 'Missing fields.' }, { status: 400 });
+    }
+
+    const team = await Team.findById(teamId);
+    if (!team) return NextResponse.json({ success: false, error: 'Team not found.' }, { status: 404 });
+
+    if (team.createdBy.toString() !== requesterId) {
+      return NextResponse.json({ success: false, error: 'Only admin can update Teams.' }, { status: 403 });
+    }
+
+    team.name = name;
+    team.teamAccess = {
+      dashboard: access.dashboard || team.teamAccess.dashboard || 'none',
+      leads: access.leads || team.teamAccess.leads || 'none',
+      meetings: access.meetings || team.teamAccess.meetings || 'none',
+      tasks: access.tasks || team.teamAccess.tasks || 'none',
+      categories: access.categories || team.teamAccess.categories || 'none',
+      products: access.products || team.teamAccess.products || 'none',
+      forms: access.forms || team.teamAccess.forms || 'none',
+      campaigns: access.campaigns || team.teamAccess.campaigns || 'none',
+      teams: access.teams || team.teamAccess.teams || 'none',
+      analytics: access.analytics || team.teamAccess.analytics || 'none',
+      knowledge_base: access.knowledge_base || team.teamAccess.knowledge_base || 'none',
+    };
+    await team.save();
+
+    return NextResponse.json({ success: true, message: 'Team updated.' });
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json({ success: false, error: 'Update failed.' }, { status: 500 });
+  }
+}

@@ -8,7 +8,7 @@ import useSWR from 'swr';
 
 export default function AddMemberDialog({ teamId, requesterId, mutate, page }: any) {
   const [email, setEmail] = useState('');
-  const { data, isLoading } = useSWR(`/api/team?id=${teamId}`, fetcher);
+  const { data } = useSWR(`/api/team?id=${teamId}`, fetcher);
   const [teamAccess, setTeamAccess] = useState<any>(null);
   useEffect(() => {
     if (data?.team) {

@@ -16,7 +16,7 @@ export default function TeamList({ id,userId }: props) {
 
     return (
        <div className="flex flex-wrap gap-6 justify-start p-4">
-  <TeamCard teams={data?.teams} userId={userId} organization_id={id}/>
+  <TeamCard teams={data?.teams} userId={userId} organization_id={id} mutate={mutate}/>
 </div>
 
     );

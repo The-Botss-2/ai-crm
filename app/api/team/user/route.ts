@@ -103,7 +103,7 @@ export async function PATCH(req: NextRequest) {
       campaigns: access.campaigns || member.access.campaigns || 'none',
       teams: access.teams || member.access.teams || 'none',
       analytics: access.analytics || member.access.analytics || 'none',
-      org_setting: access.org_setting || member.access.org_setting || 'none',
+      knowledge_base: access.knowledge_base || member.access.knowledge_base || 'none',
     };
     await team.save();
 

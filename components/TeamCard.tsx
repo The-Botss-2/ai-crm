@@ -4,13 +4,13 @@ import { useState, Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { mutate } from 'swr';
 import { MdDeleteOutline } from 'react-icons/md';
 import { FaArrowRight } from 'react-icons/fa6';
 import Link from 'next/link';
 import AddMemberDialog from './AddMemberDialog';
+import TeamActionDialog from './TeamActionDailog';
 
-export default function TeamCard({ teams, userId ,organization_id}: { teams: any[]; userId: string ; organization_id: string}) {
+export default function TeamCard({ teams, userId ,organization_id, mutate}: { teams: any[]; userId: string ; organization_id: string, mutate: any}) {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState<any>(null);
   const [deleting, setDeleting] = useState(false);
@@ -25,7 +25,7 @@ export default function TeamCard({ teams, userId ,organization_id}: { teams: any
         data: { requesterId: userId },
       });
       toast.success('Team deleted', { id: toastId });
-      mutate(`/api/team/user?id=${userId}`);
+      mutate();
     } catch (err: any) {
       const msg = err?.response?.data?.error || 'Failed to delete';
       toast.error(msg, { id: toastId });
@@ -83,7 +83,10 @@ export default function TeamCard({ teams, userId ,organization_id}: { teams: any
                     <FaArrowRight size={14} />
                   </Link>
                  {team?.createdBy === userId && (
-                    <AddMemberDialog teamId={team._id} requesterId={userId} page="team" />
+                    <AddMemberDialog teamId={team._id} requesterId={userId} page="team"/>
+                )}
+                      {team?.createdBy === userId && (
+                    <TeamActionDialog team={team} teamId={team._id} requesterId={userId} mutate={mutate} page="team" />
                 )}
                 </td>
 
