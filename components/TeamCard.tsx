@@ -82,12 +82,13 @@ export default function TeamCard({ teams, userId ,organization_id, mutate}: { te
                   >
                     <FaArrowRight size={14} />
                   </Link>
+                       {team?.createdBy === userId && (
+                    <TeamActionDialog team={team} teamId={team._id} requesterId={userId} mutate={mutate} page="team" />
+                )}
                  {team?.createdBy === userId && (
                     <AddMemberDialog teamId={team._id} requesterId={userId} page="team"/>
                 )}
-                      {team?.createdBy === userId && (
-                    <TeamActionDialog team={team} teamId={team._id} requesterId={userId} mutate={mutate} page="team" />
-                )}
+                 
                 </td>
 
               </tr>
