@@ -35,18 +35,18 @@ export default function Integration({ userId, page }: Props) {
                 oauthUrl: `${process.env.NEXT_PUBLIC_ZOOM_URL}/zoom/oauth/start`,
                 fetchUrl: `${process.env.NEXT_PUBLIC_ZOOM_URL}/zoom/zoom_user`,
             },
-            {
-                name: 'elevenlabs',
-                displayName: 'ElevenLabs',
-                oauthUrl: `${process.env.NEXT_PUBLIC_CALLING_AGENT_URL}/api/elevenlabs/connect`,
-                fetchUrl: `${process.env.NEXT_PUBLIC_CALLING_AGENT_URL}/api/elevenlabs/status`,
-            },
-            {
-                name: 'twilio',
-                displayName: 'Twilio',
-                oauthUrl: `${process.env.NEXT_PUBLIC_CALLING_AGENT_URL}/api/twilio/connect`,
-                fetchUrl: `${process.env.NEXT_PUBLIC_CALLING_AGENT_URL}/api/twilio/status`,
-            },
+            // {
+            //     name: 'elevenlabs',
+            //     displayName: 'ElevenLabs',
+            //     oauthUrl: `${process.env.NEXT_PUBLIC_CALLING_AGENT_URL}/api/elevenlabs/connect`,
+            //     fetchUrl: `${process.env.NEXT_PUBLIC_CALLING_AGENT_URL}/api/elevenlabs/status`,
+            // },
+            // {
+            //     name: 'twilio',
+            //     displayName: 'Twilio',
+            //     oauthUrl: `${process.env.NEXT_PUBLIC_CALLING_AGENT_URL}/api/twilio/connect`,
+            //     fetchUrl: `${process.env.NEXT_PUBLIC_CALLING_AGENT_URL}/api/twilio/status`,
+            // },
         // ] : []),
         {
             name: 'email',
