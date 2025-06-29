@@ -4,9 +4,13 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useState } from 'react';
 import toast from 'react-hot-toast';
 import { axiosInstance } from '@/lib/fetcher';
+import { useTeamRole } from '@/context/TeamRoleContext';
 
 export default function AddMemberDialog({ teamId, requesterId, mutate, page }: any) {
   const [email, setEmail] = useState('');
+  const { teamAccess } = useTeamRole();
+  console.log(teamAccess, 'teamAccess');
+
   const [role, setRole] = useState('agent');
   const [access, setAccess] = useState<any>({
     dashboard: [],
@@ -19,7 +23,7 @@ export default function AddMemberDialog({ teamId, requesterId, mutate, page }: a
     teams: [],
     analytics: [],
     campaigns: [],
-    org_setting: [],
+    knowledge_base: [],
   });
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -53,7 +57,7 @@ export default function AddMemberDialog({ teamId, requesterId, mutate, page }: a
         role,
         access,
       });
-      
+
       toast.success(response?.data?.message || 'Member added', { id: toastId });
       setEmail('');
       setAccess({
@@ -67,11 +71,11 @@ export default function AddMemberDialog({ teamId, requesterId, mutate, page }: a
         teams: [],
         analytics: [],
         campaigns: [],
-        org_setting: [],
+        knowledge_base: [],
       })
       setRole('agent');
       setIsOpen(false);
-      page !== 'team' ?  mutate() : null;
+      page !== 'team' ? mutate() : null;
     } catch (err: any) {
       toast.error(err?.response?.data?.error || 'Failed to add', { id: toastId });
       setEmail('');
@@ -103,7 +107,7 @@ export default function AddMemberDialog({ teamId, requesterId, mutate, page }: a
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-                 <Dialog.Panel className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-6 z-[9999] rounded-xl shadow-md w-[500px] max-h-[70vh] overflow-y-scroll">
+            <Dialog.Panel className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-6 z-[9999] rounded-xl shadow-md w-[500px] max-h-[70vh] overflow-y-scroll">
               <Dialog.Title className="text-lg font-semibold mb-4 text-gray-900">Add Member</Dialog.Title>
               <input
                 type="email"
@@ -127,8 +131,9 @@ export default function AddMemberDialog({ teamId, requesterId, mutate, page }: a
               <div className="mb-4">
                 <h3 className="font-semibold text-gray-900">Access</h3>
                 <div className="space-y-4">
-                  {['dashboard', 'leads', 'meetings', 'tasks', 'categories', 'products', 'forms', 'teams', 'analytics', 'campaigns', 'org_setting'].map((field) => (
-                    <div key={field}>
+                  {['dashboard', 'leads', 'meetings', 'tasks', 'categories', 'products', 'forms', 'teams', 'analytics', 'campaigns', 'knowledge_base']
+                    .filter(field => teamAccess[field]?.includes('Visible'))
+                    .map(field => (<div key={field}>
                       <label className="block text-sm text-gray-700 capitalize">{field}</label>
                       <div className="flex space-x-4">
                         {['read', 'write', 'update', 'delete'].map((perm) => (
@@ -146,7 +151,7 @@ export default function AddMemberDialog({ teamId, requesterId, mutate, page }: a
                         ))}
                       </div>
                     </div>
-                  ))}
+                    ))}
                 </div>
               </div>
 

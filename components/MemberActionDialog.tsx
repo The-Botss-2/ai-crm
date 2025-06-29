@@ -4,9 +4,11 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useState } from 'react';
 import toast from 'react-hot-toast';
 import { axiosInstance } from '@/lib/fetcher';
+import { useTeamRole } from '@/context/TeamRoleContext';
 
 export default function MemberActionDialog({ member, teamId, requesterId, mutate }: any) {
   const [isOpen, setIsOpen] = useState(false);
+  const {teamAccess} = useTeamRole();
   const [role, setRole] = useState(member.role);
   const [permissions, setPermissions] = useState(member.access);
   const [loading, setLoading] = useState(false);
@@ -84,7 +86,7 @@ export default function MemberActionDialog({ member, teamId, requesterId, mutate
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-         <Dialog.Panel className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-6 z-[9999] rounded-xl shadow-md w-[500px] max-h-[70vh] overflow-y-scroll">
+            <Dialog.Panel className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-6 z-[9999] rounded-xl shadow-md w-[500px] max-h-[70vh] overflow-y-scroll">
 
               <Dialog.Title className="text-lg font-semibold mb-4">Update Member Role & Permissions</Dialog.Title>
 
@@ -101,8 +103,9 @@ export default function MemberActionDialog({ member, teamId, requesterId, mutate
 
               {/* Permissions checkboxes */}
               <div className="space-y-4">
-                {['dashboard', 'leads', 'meetings', 'tasks', 'categories', 'products', 'forms', 'teams', 'analytics', 'campaigns', 'org_setting'].map((field) => (
-                  <div key={field}>
+                {['dashboard', 'leads', 'meetings', 'tasks', 'categories', 'products', 'forms', 'teams', 'analytics', 'campaigns', 'knowledge_base']
+                  .filter(field => teamAccess[field]?.includes('Visible'))
+                  .map(field => (<div key={field}>
                     <h3 className="font-semibold text-gray-900 capitalize">{field}</h3>
                     <div className="flex space-x-4">
                       {['read', 'write', 'update', 'delete'].map((perm) => (
@@ -120,7 +123,7 @@ export default function MemberActionDialog({ member, teamId, requesterId, mutate
                       ))}
                     </div>
                   </div>
-                ))}
+                  ))}
               </div>
 
               <div className="flex justify-between mt-4">

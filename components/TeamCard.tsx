@@ -82,9 +82,9 @@ export default function TeamCard({ teams, userId ,organization_id}: { teams: any
                   >
                     <FaArrowRight size={14} />
                   </Link>
-                 {team?.createdBy === userId && (
+                 {/* {team?.createdBy === userId && (
                     <AddMemberDialog teamId={team._id} requesterId={userId} page="team" />
-                )}
+                )} */}
                 </td>
 
               </tr>

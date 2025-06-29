@@ -32,6 +32,7 @@ export async function GET(req: NextRequest) {
                 _id: team._id,
                 name: team.name,
                 agent: team.agent,
+                teamAccess: team?.teamAccess || null,
                 logo: team.logo,
                 createdBy: team.createdBy,
                 members: populatedMembers,
@@ -55,13 +56,14 @@ export async function POST(req: Request) {
   
 
     const body = await req.json();
-    const { name } = body;
+    const { name,teamAccess } = body;
     
 
     try {
         const team = await Team.create({
             name,
             createdBy: session.user.id,
+            teamAccess,
             members: [
                 { id: session.user.id, role: 'admin' }
             ]

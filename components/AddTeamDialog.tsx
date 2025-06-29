@@ -11,7 +11,35 @@ export default function AddTeamDialog({ userId }: { userId: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const [teamName, setTeamName] = useState("");
   const [loading, setLoading] = useState(false);
-     const params = useParams<{ id: string }>()
+  const [access, setAccess] = useState<any>({
+    dashboard: [],
+    leads: [],
+    meetings: [],
+    tasks: [],
+    categories: [],
+    products: [],
+    forms: [],
+    teams: [],
+    analytics: [],
+    campaigns: [],
+    knowledge_base: [],
+  });
+  const handleAccessChange = (field: string, value: string) => {
+    setAccess((prevAccess: any) => {
+      const currentPermissions = prevAccess[field];
+      if (currentPermissions.includes(value)) {
+        return {
+          ...prevAccess,
+          [field]: currentPermissions.filter((perm: string) => perm !== value),
+        };
+      } else {
+        return {
+          ...prevAccess,
+          [field]: [...currentPermissions, value],
+        };
+      }
+    });
+  };
   const handleCreate = async () => {
     if (!teamName.trim()) {
       toast.error("Team name is required");
@@ -24,12 +52,26 @@ export default function AddTeamDialog({ userId }: { userId: string }) {
     try {
       await axiosInstance.post("/api/team", {
         name: teamName,
+        teamAccess: access,
       });
 
       toast.success("Team created successfully", { id: toastId });
 
       mutate(`/api/team/user?id=${userId}`); // update teams list
       setTeamName("");
+       setAccess({
+        dashboard: [],
+        leads: [],
+        meetings: [],
+        tasks: [],
+        categories: [],
+        products: [],
+        forms: [],
+        teams: [],
+        analytics: [],
+        campaigns: [],  
+        knowledge_base: [],
+      })
       // mutate(`/api/team/user?id=${organization_id}&userId=${userId}`);
       setIsOpen(false);
     } catch (err: any) {
@@ -69,17 +111,8 @@ export default function AddTeamDialog({ userId }: { userId: string }) {
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <Dialog.Panel
-              className="
-                fixed top-1/3 left-1/2 -translate-x-1/2 transform
-                bg-white
-                p-6
-                z-50
-                rounded-xl
-                shadow-md
-                w-96
-              "
-            >
+            <Dialog.Panel className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-6 z-[9999] rounded-xl shadow-md w-[500px] max-h-[70vh] overflow-y-scroll">
+
               <Dialog.Title className="text-lg font-semibold mb-4 text-gray-900">
                 New Team
               </Dialog.Title>
@@ -105,7 +138,32 @@ export default function AddTeamDialog({ userId }: { userId: string }) {
                 "
                 disabled={loading}
               />
-
+              {/* Access Control checkboxes */}
+              <div className="mb-4">
+                <h3 className="font-semibold text-gray-900">Access</h3>
+                <div className="space-y-4 flex flex-row flex-wrap gap-4">
+                  {['dashboard', 'leads', 'meetings', 'tasks', 'categories', 'products', 'forms', 'teams', 'analytics', 'campaigns', 'knowledge_base'].map((field) => (
+                    <div key={field}>
+                      <label className="block text-sm text-gray-700 capitalize">{field}</label>
+                      <div className="flex space-x-4">
+                        {['Visible'].map((perm) => (
+                          <label key={perm} className="flex items-center space-x-2">
+                            <input
+                              type="checkbox"
+                              value={perm}
+                              checked={access[field].includes(perm)}
+                              onChange={() => handleAccessChange(field, perm)}
+                              className="h-4 w-4 border-gray-300 rounded text-blue-600 focus:ring-blue-500"
+                              disabled={loading}
+                            />
+                            <span>{perm.charAt(0).toUpperCase() + perm.slice(1)}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
               <div className="flex justify-end space-x-3">
                 <button
                   className="

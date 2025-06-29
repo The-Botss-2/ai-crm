@@ -11,6 +11,7 @@ type TeamRoleContextType = {
     logo: string | null;
     loading: boolean;
     access: any;
+    teamAccess: any;
 };
 
 const TeamRoleContext = createContext<TeamRoleContextType>({
@@ -19,7 +20,8 @@ const TeamRoleContext = createContext<TeamRoleContextType>({
     loading: true,
     logo: null,
     teamName: null,
-    access: null
+    access: null,
+    teamAccess: null
 });
 
 export const useTeamRole = () => useContext(TeamRoleContext);
@@ -39,22 +41,26 @@ export function TeamRoleProvider({
     const [logo, setLogo] = useState<string | null>(null);
     const [teamName, setTeamName] = useState<string | null>(null);
     const [access, setAccess] = useState<any>(null);
+    const [teamAccess, setTeamAccess] = useState<any>(null);
     console.log(data,'datadata');
     
 
     useEffect(() => {
         if (data?.team && userId) {
             const member = data.team.members.find((m: any) => m?.profile?._id === userId);
+            console.log(data?.team,'member');
+            
             setRole(member?.role ?? null);
             setAgent(data.team.agent)
             setLogo(data.team.logo)
             setAccess(member?.access)
             setTeamName(data.team.name)
+            setTeamAccess(data?.team?.teamAccess)
         }
     }, [data, userId]);
 
     return (
-        <TeamRoleContext.Provider value={{ role, agent, teamName, logo, loading: isLoading ,access}}>
+        <TeamRoleContext.Provider value={{ role, agent, teamName, logo, loading: isLoading ,access, teamAccess}}>
             {children}
         </TeamRoleContext.Provider>
     );
