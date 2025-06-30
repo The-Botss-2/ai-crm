@@ -115,7 +115,7 @@ export default function TeamActionDialog({ team, teamId, requesterId, mutate }: 
                 <div className="flex gap-2 items-center">
                   <button
                     onClick={() => setIsOpen(false)}
-                    className="px-4 py-2 bg-gray-200 rounded text-xs dark:text-black"
+                    className="px-4 py-2 bg-gray-200 rounded text-xs"
                     disabled={loading}
                   >
                     Cancel

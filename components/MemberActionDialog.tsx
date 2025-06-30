@@ -94,7 +94,7 @@ export default function MemberActionDialog({ member, teamId, requesterId, mutate
               <select
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
-                className="border p-2 w-full mb-2 rounded text-sm dark:border-gray-700 border-gray-200 dark:bg-slate-900"
+                className="border p-2 w-full mb-2 rounded text-sm border-gray-200 "
                 disabled={loading}
               >
                 <option value="manager">Manager</option>
@@ -137,7 +137,7 @@ export default function MemberActionDialog({ member, teamId, requesterId, mutate
                 <div className="flex gap-2 items-center">
                   <button
                     onClick={() => setIsOpen(false)}
-                    className="px-4 py-2 bg-gray-200 rounded text-xs dark:text-black"
+                    className="px-4 py-2 bg-gray-200 rounded text-xs "
                     disabled={loading}
                   >
                     Cancel

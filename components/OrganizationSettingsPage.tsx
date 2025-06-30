@@ -86,31 +86,31 @@ const OrganizationSettingsPage = ({ user_id }: any) => {
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <div className=" mx-auto">
         <div className="text-center mb-10">
-          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white sm:text-4xl">
+          <h1 className="text-3xl font-extrabold text-gray-900  sm:text-4xl">
             Organization Settings
           </h1>
-          <p className="mt-3 text-xl text-gray-500 dark:text-gray-300">
+          <p className="mt-3 text-xl text-gray-500 ">
             Manage your organization's profile and settings
           </p>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 shadow-xl rounded-2xl overflow-hidden">
+        <div className="bg-white  shadow-xl rounded-2xl overflow-hidden">
           {/* Tab Navigation */}
-          <div className="border-b border-gray-200 dark:border-gray-700">
+          <div className="border-b border-gray-200 ">
             <nav className="flex -mb-px">
               <button
                 onClick={() => setActiveTab('settings')}
                 className={`py-4 px-6 text-center border-b-2 font-medium text-sm ${activeTab === 'settings' 
-                  ? 'border-blue-500 text-blue-600 dark:text-blue-400 dark:border-blue-400' 
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}`}
+                  ? 'border-blue-500 text-blue-600  ' 
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 '}`}
               >
                 Settings
               </button>
               <button
                 onClick={() => setActiveTab('integrations')}
                 className={`py-4 px-6 text-center border-b-2 font-medium text-sm ${activeTab === 'integrations' 
-                  ? 'border-blue-500 text-blue-600 dark:text-blue-400 dark:border-blue-400' 
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}`}
+                  ? 'border-blue-500 text-blue-600 ' 
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 '}`}
               >
                 Integrations
               </button>
@@ -120,20 +120,20 @@ const OrganizationSettingsPage = ({ user_id }: any) => {
           {/* Tab Content */}
           {activeTab === 'settings' ? (
             <div>
-              <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-                <h2 className="text-2xl font-semibold text-gray-800 dark:text-white">
+              <div className="p-6 border-b border-gray-200 ">
+                <h2 className="text-2xl font-semibold text-gray-800 ">
                   General Information
                 </h2>
-                <p className="mt-1 text-gray-500 dark:text-gray-400">
+                <p className="mt-1 text-gray-500 ">
                   Basic details about your organization
                 </p>
               </div>
 
-              <form onSubmit={handleSubmit} className="divide-y divide-gray-200 dark:divide-gray-700">
+              <form onSubmit={handleSubmit} className="divide-y divide-gray-200 ">
                 <div className="p-6 space-y-8">
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                     <div className="space-y-2">
-                      <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                      <label htmlFor="name" className="block text-sm font-medium text-gray-700">
                         Organization Name <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -142,14 +142,14 @@ const OrganizationSettingsPage = ({ user_id }: any) => {
                         type="text"
                         value={formData.name}
                         onChange={handleChange}
-                        className="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                        className="block w-full px-4 py-3 rounded-lg border border-gray-300  focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                         required
                         placeholder="Acme Inc."
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <label htmlFor="address" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                      <label htmlFor="address" className="block text-sm font-medium text-gray-700 ">
                         Address 
                       </label>
                       <input
@@ -158,12 +158,12 @@ const OrganizationSettingsPage = ({ user_id }: any) => {
                         type="text"
                         value={formData.address}
                         onChange={handleChange}
-                        className="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                        className="block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                         placeholder="123 Main St, City, State ZIP"
                       />
                     </div>
                     <div className="space-y-2 md:col-span-2">
-                      <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                      <label htmlFor="description" className="block text-sm font-medium text-gray-700 ">
                         Description 
                       </label>
                       <textarea
@@ -172,13 +172,13 @@ const OrganizationSettingsPage = ({ user_id }: any) => {
                         rows={3}
                         value={formData.description}
                         onChange={handleChange}
-                        className="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                        className="block w-full px-4 py-3 rounded-lg border border-gray-300  focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                         placeholder="Brief description of your organization"
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <label htmlFor="contactPhone" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                      <label htmlFor="contactPhone" className="block text-sm font-medium text-gray-700 ">
                         Contact Phone <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -187,14 +187,14 @@ const OrganizationSettingsPage = ({ user_id }: any) => {
                         type="tel"
                         value={formData.contactPhone}
                         onChange={handleChange}
-                        className="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                        className="block w-full px-4 py-3 rounded-lg border border-gray-300    focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                         required
                         placeholder="+1 (555) 123-4567"
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <label htmlFor="Number_of_Employees" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                      <label htmlFor="Number_of_Employees" className="block text-sm font-medium text-gray-700 ">
                         Number of Employees <span className="text-red-500">*</span>
                       </label>
                       <select
@@ -202,7 +202,7 @@ const OrganizationSettingsPage = ({ user_id }: any) => {
                         name="Number_of_Employees"
                         value={formData.Number_of_Employees}
                         onChange={handleChange}
-                        className="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                        className="block w-full px-4 py-3 rounded-lg border border-gray-300    focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                         required
                       >
                         <option value="" disabled>Select number of employees</option>
@@ -216,7 +216,7 @@ const OrganizationSettingsPage = ({ user_id }: any) => {
                     </div>
 
                     <div className="space-y-2">
-                      <label htmlFor="website" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                      <label htmlFor="website" className="block text-sm font-medium text-gray-700 ">
                         Website Url
                       </label>
                       <input
@@ -225,14 +225,14 @@ const OrganizationSettingsPage = ({ user_id }: any) => {
                         type="url"
                         value={formData.website}
                         onChange={handleChange}
-                        className="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                        className="block w-full px-4 py-3 rounded-lg border border-gray-300    focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                         placeholder="https://www.organization.com"
                       />
                     </div>
                   </div>
                 </div>
 
-                <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700 text-right">
+                <div className="px-6 py-4 bg-gray-50  text-right">
                   <button
                     type="submit"
                     disabled={loading}

@@ -62,7 +62,7 @@ export default function AddElevenAgentDialog({
       <Transition show={isOpen} as={Fragment}>
         <Dialog onClose={onClose} className="relative z-50">
           <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
-          <div className="fixed inset-y-0 right-0 w-full max-w-md bg-white dark:bg-slate-900 shadow-xl p-6 overflow-y-auto">
+          <div className="fixed inset-y-0 right-0 w-full max-w-md bg-white  shadow-xl p-6 overflow-y-auto">
             <div className="bg-red-50 border border-red-200 rounded-md p-4">
               <div className="flex">
                 <div className="flex-shrink-0">
@@ -86,8 +86,8 @@ export default function AddElevenAgentDialog({
     <Transition show={isOpen} as={Fragment}>
       <Dialog onClose={onClose} className="relative z-50">
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
-        <div className="fixed inset-y-0 right-0 w-full max-w-md bg-white dark:bg-slate-900 shadow-xl p-6 overflow-y-auto">
-          <Dialog.Title className="text-md font-semibold border-b border-gray-300 dark:border-gray-700 pb-3 mb-4 flex justify-between items-center">
+        <div className="fixed inset-y-0 right-0 w-full max-w-md bg-white shadow-xl p-6 overflow-y-auto">
+          <Dialog.Title className="text-md font-semibold border-b border-gray-300  pb-3 mb-4 flex justify-between items-center">
             Add ElevenLabs Agent
             <button onClick={onClose}>
               <IoClose size={18} />
@@ -162,25 +162,25 @@ export default function AddElevenAgentDialog({
                 )}
 
                 <div>
-                  <label htmlFor="agent_name" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                  <label htmlFor="agent_name" className="block text-sm font-medium text-gray-700 ">
                     Agent Name
                   </label>
                   <Field
                     name="agent_name"
                     type="text"
-                    className="mt-1 block w-full rounded-md px-4 py-3 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm dark:bg-slate-800 dark:border-gray-600 dark:text-gray-200"
+                    className="mt-1 block w-full rounded-md px-4 py-3 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm "
                   />
                   <ErrorMessage name="agent_name" component="div" className="text-red-600 text-xs mt-1" />
                 </div>
 
                 <div>
-                  <label htmlFor="phone_number" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                  <label htmlFor="phone_number" className="block text-sm font-medium text-gray-700 ">
                     Phone Number
                   </label>
                   <Field
                     as="select"
                     name="phone_number"
-                    className="mt-1 block w-full rounded-md px-4 py-3 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm dark:bg-slate-800 dark:border-gray-600 dark:text-gray-200"
+                    className="mt-1 block w-full rounded-md px-4 py-3 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm "
                   >
                     <option value="" disabled>
                       No number configured
@@ -195,27 +195,27 @@ export default function AddElevenAgentDialog({
                 </div>
 
                 <div>
-                  <label htmlFor="system_prompt" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                  <label htmlFor="system_prompt" className="block text-sm font-medium text-gray-700 ">
                     System Prompt
                   </label>
                   <Field
                     as="textarea"
                     name="system_prompt"
                     rows={4}
-                    className="mt-1 block w-full rounded-md px-4 py-3 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm dark:bg-slate-800 dark:border-gray-600 dark:text-gray-200"
+                    className="mt-1 block w-full rounded-md px-4 py-3 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm "
                   />
                   <ErrorMessage name="system_prompt" component="div" className="text-red-600 text-xs mt-1" />
                 </div>
 
                 <div>
-                  <label htmlFor="first_message" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                  <label htmlFor="first_message" className="block text-sm font-medium text-gray-700 ">
                     First Message
                   </label>
                   <Field
                     as="textarea"
                     name="first_message"
                     rows={4}
-                    className="mt-1 block w-full rounded-md px-4 py-3 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm dark:bg-slate-800 dark:border-gray-600 dark:text-gray-200"
+                    className="mt-1 block w-full rounded-md px-4 py-3 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm "
                   />
                   <ErrorMessage name="first_message" component="div" className="text-red-600 text-xs mt-1" />
                 </div>

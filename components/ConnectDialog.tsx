@@ -83,7 +83,7 @@ export default function ConnectDialog({
       <Dialog onClose={onClose} className="relative z-50">
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
         <div className="fixed inset-y-0 right-0 max-w-sm w-full bg-white p-6 overflow-y-auto shadow-lg">
-          <Dialog.Title className="text-md font-semibold border-b dark:border-gray-700 border-gray-200 pb-4 mb-4 flex justify-between items-center capitalize">
+          <Dialog.Title className="text-md font-semibold border-b  border-gray-200 pb-4 mb-4 flex justify-between items-center capitalize">
             Connect {name}
             <button onClick={onClose}>
               <IoClose size={16} />

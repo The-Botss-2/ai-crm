@@ -34,7 +34,7 @@ export function ZoomCard({ isConnected, zoomUserId, onConnect }: ZoomCardProps) 
 
   return (
     <>
-      <div className="bg-white/50 dark:bg-slate-900 border dark:border-gray-700 border-gray-200 rounded-xl py-8 flex gap-3 flex-col items-center justify-center shadow-md hover:shadow-lg transition">
+      <div className="bg-white/50 border-gray-200 rounded-xl py-8 flex gap-3 flex-col items-center justify-center shadow-md hover:shadow-lg transition">
         <div>
           <div className="size-10 bg-[#0871f4] rounded-full p-2 flex mb-2 items-center justify-center">
             <BiLogoZoom color="white" size={20} />
@@ -99,7 +99,7 @@ export function ZoomCard({ isConnected, zoomUserId, onConnect }: ZoomCardProps) 
 
 export function ZoomCardSkeleton() {
   return (
-    <div className="bg-white/40 border dark:border-gray-700 border-gray-200 rounded-xl py-6 px-4 flex gap-3 flex-col items-center justify-center shadow-md animate-pulse">
+    <div className="bg-white/40 border  border-gray-200 rounded-xl py-6 px-4 flex gap-3 flex-col items-center justify-center shadow-md animate-pulse">
       <div className="flex flex-col items-center gap-2">
         <div className="size-10 bg-gray-300 rounded-full flex items-center justify-center">
           <BiLogoZoom color="white" size={20} />
