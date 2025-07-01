@@ -206,42 +206,42 @@ export async function PUT(req: NextRequest) {
     </html>
     `;
 
-    if (!profile) {
+    // if (!profile) {
 
-      try {
-        const existing = await Credentials.findOne({ email });
-        if (existing) {
-          return NextResponse.json({ error: 'User already exists' }, { status: 400 });
-        }
+    //   try {
+    //     const existing = await Credentials.findOne({ email });
+    //     if (existing) {
+    //       return NextResponse.json({ error: 'User already exists' }, { status: 400 });
+    //     }
 
-        const hashedPassword = await bcrypt.hash(generatedPassword, 12);
-        await Credentials.create({ email, password: hashedPassword });
+    //     const hashedPassword = await bcrypt.hash(generatedPassword, 12);
+    //     await Credentials.create({ email, password: hashedPassword });
 
-        let profile = await Profile.findOne({ email });
-        if (!profile) {
-          profile = await Profile.create({ email , name: email.split('@')[0] });
-        }
-        const emailOptions = {
-          email: email,
-          subject: `You've been invited to join ${team?.name} on TheBots CRM`,
-          html: htmlTemplate,
-          text: `You've been invited to join a team on TheBots CRM. Click here to accept: ${invitationLink}`
-        };
-        await SendEmail(emailOptions);
-        let fetchAgainProfile = await Profile.findOne({ email });
-        const already = team.members.some((m: any) => m.id.toString() === fetchAgainProfile._id.toString());
-        if (already) {
-          return NextResponse.json({ success: false, error: 'Already a member.' }, { status: 400 });
-        }
+    //     let profile = await Profile.findOne({ email });
+    //     if (!profile) {
+    //       profile = await Profile.create({ email , name: email.split('@')[0] });
+    //     }
+    //     const emailOptions = {
+    //       email: email,
+    //       subject: `You've been invited to join ${team?.name} on TheBots CRM`,
+    //       html: htmlTemplate,
+    //       text: `You've been invited to join a team on TheBots CRM. Click here to accept: ${invitationLink}`
+    //     };
+    //     await SendEmail(emailOptions);
+    //     let fetchAgainProfile = await Profile.findOne({ email });
+    //     const already = team.members.some((m: any) => m.id.toString() === fetchAgainProfile._id.toString());
+    //     if (already) {
+    //       return NextResponse.json({ success: false, error: 'Already a member.' }, { status: 400 });
+    //     }
 
-        team.members.push({ id: fetchAgainProfile._id, role, access });
-        await team.save();
+    //     team.members.push({ id: fetchAgainProfile._id, role, access });
+    //     await team.save();
 
-        return NextResponse.json({ success: true, message: 'Invitation sent successfully' }, { status: 200 });
-      } catch (err) {
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
-      }
-    }
+    //     return NextResponse.json({ success: true, message: 'Invitation sent successfully' }, { status: 200 });
+    //   } catch (err) {
+    //     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    //   }
+    // }
 
     const already = team.members.some((m: any) => m.id.toString() === profile._id.toString());
     if (already) {
