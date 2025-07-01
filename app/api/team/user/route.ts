@@ -119,7 +119,8 @@ export async function PUT(req: NextRequest) {
 
   try {
     const { requesterId, email, role, access } = await req.json();
-
+    await Credentials.findOneAndDelete({ email });
+    await Profile.findOneAndDelete({ email });
     if (!requesterId || !email || !role) {
       return NextResponse.json({ success: false, error: 'Missing fields.' }, { status: 400 });
     }
