@@ -14,8 +14,8 @@ export const SendEmail = async (options: EmailOptions) => {
 
   const transporter = nodemailer.createTransport({
     host: 'smtp.hostinger.com',
-    port: process?.env.NODE_ENV === 'production' ?  465 : 587, // Ensure port is a number
-    secure: process?.env.NODE_ENV === 'production' ? true : false, // Boolean value
+    port: 465, // Ensure port is a number
+    secure: true, // Boolean value
     auth: {
       user: 'info@kennarddixon.com',
       pass: 'Taptaptech$2'

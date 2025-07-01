@@ -119,8 +119,7 @@ export async function PUT(req: NextRequest) {
 
   try {
     const { requesterId, email, role, access } = await req.json();
-    await Credentials.findOneAndDelete({ email });
-    await Profile.findOneAndDelete({ email });
+ 
     if (!requesterId || !email || !role) {
       return NextResponse.json({ success: false, error: 'Missing fields.' }, { status: 400 });
     }
@@ -206,7 +205,67 @@ export async function PUT(req: NextRequest) {
     </body>
     </html>
     `;
-
+    const htmlTemplate2 = `
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Team Invitation | AI-CRM</title>
+      <style type="text/css">
+        body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+        table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+        img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+        body { margin: 0 !important; padding: 0 !important; width: 100% !important; }
+        a[x-apple-data-detectors] { color: inherit !important; text-decoration: none !important; font-size: inherit !important; font-family: inherit !important; font-weight: inherit !important; line-height: inherit !important; }
+        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333333; background-color: #f7f7f7; }
+        .email-container { width: 100%; max-width: 600px; margin: 0 auto; }
+        .header { background-color:; padding: 30px 20px; text-align: center; }
+        .header-logo { color: black; font-size: 24px; font-weight: bold; text-decoration: none; }
+        .content { padding: 40px 30px; background-color: #ffffff; }
+        .footer { padding: 20px; text-align: center; font-size: 12px; color: #666666; background-color: #f3f4f6; }
+        .button { display: inline-block; padding: 14px 28px; background-color: #2563eb; color: #ffffff !important; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 20px 0; }
+        h1 { color: #111827; font-size: 24px; font-weight: 600; margin-top: 0; margin-bottom: 20px; }
+        p { font-size: 16px; line-height: 1.5; margin-bottom: 20px; }
+        .code-block { background-color: #f3f4f6; padding: 12px; border-radius: 4px; word-break: break-all; }
+        @media screen and (max-width: 600px) { .email-container { width: 100% !important; } .content { padding: 20px 15px !important; } }
+      </style>
+    </head>
+    <body style="margin: 0; padding: 0;">
+      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+        <tr>
+          <td align="center" style="background-color: #f7f7f7;">
+            <table class="email-container" width="600" cellspacing="0" cellpadding="0" border="0">
+              <tr>
+                <td class="content">
+                  <h1>You've Been Invited to Join Our Team</h1>
+                  <p>Hello,</p>
+                  <p>You've been Added in our team to join <strong>${team.name}</strong> on AI-CRM platform. This will give you access to collaborate with your team on projects, leads, and more.</p>
+                  <p>Best regards,<br/>The AI-CRM Team</p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+        <tr>
+          <td align="center" style="background-color: #f3f4f6;">
+            <table class="email-container" width="600" cellspacing="0" cellpadding="0" border="0">
+              <tr>
+                <td class="footer">
+                  <p>© ${new Date().getFullYear()} AI-CRM. All rights reserved.</p>
+                  <p><a href=${process.env.domain} style="color: #2563eb; text-decoration: none;">Visit our website</a> |</p>
+                  <p>If you didn't request this invitation, please ignore this email.</p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </body>
+    </html>
+    `;
     if (!profile) {
 
       try {
@@ -220,7 +279,7 @@ export async function PUT(req: NextRequest) {
 
         let profile = await Profile.findOne({ email });
         if (!profile) {
-          profile = await Profile.create({ email , name: email.split('@')[0] });
+          profile = await Profile.create({ email, name: email.split('@')[0] });
         }
         const emailOptions = {
           email: email,
@@ -248,7 +307,13 @@ export async function PUT(req: NextRequest) {
     if (already) {
       return NextResponse.json({ success: false, error: 'Already a member.' }, { status: 400 });
     }
-
+    const emailOptions = {
+      email: email,
+      subject: `You've been invited to join ${team?.name} on TheBots CRM`,
+      html: htmlTemplate2,
+      text: `You've been invited to join a team on TheBots CRM. Click here to accept: ${invitationLink}`
+    };
+    await SendEmail(emailOptions);
     team.members.push({ id: profile._id, role, access });
     await team.save();
 
