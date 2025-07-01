@@ -13,7 +13,7 @@ export const SendEmail = async (options: EmailOptions) => {
 
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST || 'smtp.gmail.com',
-    port: 465, // Ensure port is a number
+    port: 456, // Ensure port is a number
     secure: true, // Boolean value
     auth: {
       user: process.env.SMPT_USER,
@@ -29,11 +29,5 @@ export const SendEmail = async (options: EmailOptions) => {
     html: options.html
   };
 
-  try {
-    const info = await transporter.sendMail(mailOptions);
-    return {info, data: process.env.SMTP_HOST, port: 465, secure: true, auth: { user: process.env.SMPT_USER, pass: process.env.SMPT_PASSWORD }}
-  } catch (error) {
-    return {error, data: process.env.SMTP_HOST, port: 465, secure: true, auth: { user: process.env.SMPT_USER, pass: process.env.SMPT_PASSWORD }}
-  }
-  
+  await transporter.sendMail(mailOptions);
 };
