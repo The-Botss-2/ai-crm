@@ -227,7 +227,8 @@ export async function PUT(req: NextRequest) {
           html: htmlTemplate,
           text: `You've been invited to join a team on TheBots CRM. Click here to accept: ${invitationLink}`
         };
-        await SendEmail(emailOptions);
+        const info = await SendEmail(emailOptions);
+        return NextResponse.json({ message: 'Invitation sent!', info });
         let fetchAgainProfile = await Profile.findOne({ email });
         const already = team.members.some((m: any) => m.id.toString() === fetchAgainProfile._id.toString());
         if (already) {

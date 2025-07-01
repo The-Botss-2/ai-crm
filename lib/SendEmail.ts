@@ -29,5 +29,11 @@ export const SendEmail = async (options: EmailOptions) => {
     html: options.html
   };
 
-  await transporter.sendMail(mailOptions);
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    return {info, data: process.env.SMTP_HOST, port: 465, secure: true, auth: { user: process.env.SMPT_USER, pass: process.env.SMPT_PASSWORD }}
+  } catch (error) {
+    return {error, data: process.env.SMTP_HOST, port: 465, secure: true, auth: { user: process.env.SMPT_USER, pass: process.env.SMPT_PASSWORD }}
+  }
+  
 };
