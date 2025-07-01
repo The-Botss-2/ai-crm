@@ -13,8 +13,8 @@ export const SendEmail = async (options: EmailOptions) => {
 
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST || 'smtp.gmail.com',
-    port: 456, // Ensure port is a number
-    secure: true, // Boolean value
+    port: 587, // Ensure port is a number
+    secure: false, // Boolean value
     auth: {
       user: process.env.SMPT_USER,
       pass: process.env.SMPT_PASSWORD
