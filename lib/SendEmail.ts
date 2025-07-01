@@ -13,24 +13,30 @@ export const SendEmail = async (options: EmailOptions) => {
 
 
   const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST || 'smtp.gmail.com',
-    port: 465, // Ensure port is a number
-    secure: true, // Boolean value
+    host: 'smtp.hostinger.com',
+    port: process?.env.NODE_ENV === 'production' ?  465 : 587, // Ensure port is a number
+    secure: process?.env.NODE_ENV === 'production' ? true : false, // Boolean value
     auth: {
-      user: process.env.SMPT_USER,
-      pass: process.env.SMPT_PASSWORD
+      user: 'info@kennarddixon.com',
+      pass: 'Taptaptech$2'
     },
       // Add connection timeout (optional)
       connectionTimeout: 10_000,
   });
 
   const mailOptions = {
-    from: process.env.SMTP_MAIL,
+    from: 'info@kennarddixon.com',
     to: options.email,
     subject: options.subject,
     text: options.text,
     html: options.html
   };
 
-  await transporter.sendMail(mailOptions);
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log('Email sent successfully');
+  } catch (error) {
+    console.error('Error sending email:', error);
+  }
+//  /
 };
