@@ -13,19 +13,19 @@ export const SendEmail = async (options: EmailOptions) => {
 
 
   const transporter = nodemailer.createTransport({
-    host: 'smtp.hostinger.com',
+    host: 'smtp.gmail.com',
     port: 465, // Ensure port is a number
     secure: true, // Boolean value
     auth: {
-      user: 'info@kennarddixon.com',
-      pass: 'Taptaptech$2'
+      user: 'duawegarments@gmail.com',
+      pass: 'slhj xiue ypiq ozbc'
     },
       // Add connection timeout (optional)
       connectionTimeout: 10_000,
   });
 
   const mailOptions = {
-    from: 'info@kennarddixon.com',
+    from: 'duawegarments@gmail.com',
     to: options.email,
     subject: options.subject,
     text: options.text,
