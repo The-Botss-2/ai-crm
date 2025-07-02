@@ -103,7 +103,7 @@ export default function MemberActionDialog({ member, teamId, requesterId, mutate
 
               {/* Permissions checkboxes */}
               <div className="space-y-4">
-                {['dashboard', 'leads', 'meetings', 'tasks', 'categories', 'products', 'forms', 'teams', 'analytics', 'campaigns', 'knowledge_base']
+                {['dashboard', 'leads', 'meetings', 'tasks', 'categories', 'products', 'forms', 'teams', 'analytics', 'campaigns', 'knowledge_base', 'widget_snippet']
                   .filter(field => teamAccess[field]?.includes('Visible'))
                   .map(field => (<div key={field}>
                     <h3 className="font-semibold text-gray-900 capitalize">{field}</h3>

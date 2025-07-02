@@ -104,6 +104,7 @@ export async function PATCH(req: NextRequest) {
       teams: access.teams || member.access.teams || 'none',
       analytics: access.analytics || member.access.analytics || 'none',
       knowledge_base: access.knowledge_base || member.access.knowledge_base || 'none',
+      widget_snippet: access.widget_snippet || member.access.widget_snippet || 'none',
     };
     await team.save();
 

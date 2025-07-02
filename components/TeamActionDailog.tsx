@@ -89,7 +89,7 @@ export default function TeamActionDialog({ team, teamId, requesterId, mutate }: 
 
               {/* Permissions checkboxes */}
               <div className="space-y-4 flex flex-row flex-wrap gap-4">
-                {['dashboard', 'leads', 'meetings', 'tasks', 'categories', 'products', 'forms', 'teams', 'analytics', 'campaigns', 'knowledge_base'].map(field => (<div key={field}>
+                {['dashboard', 'leads', 'meetings', 'tasks', 'categories', 'products', 'forms', 'teams', 'analytics', 'campaigns', 'knowledge_base', 'widget_snippet'].map(field => (<div key={field}>
                     <h3 className="font-semibold text-gray-900 capitalize">{field}</h3>
                     <div className="flex space-x-4">
                       {['Visible'].map((perm) => (

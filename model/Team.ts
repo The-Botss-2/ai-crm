@@ -19,6 +19,7 @@ const memberSchema = new mongoose.Schema({
     teams: { type: [String], enum: ['none', 'read', 'write', 'update', 'delete'], default: [] },
     analytics: { type: [String], enum: ['none', 'read', 'write', 'update', 'delete'], default: [] },
     knowledge_base: { type: [String], enum: ['none', 'read', 'write', 'update', 'delete'], default: [] },
+    widget_snippet: { type: [String], enum: ['none', 'read', 'write', 'update', 'delete'], default: [] },
   },
 });
 
@@ -42,6 +43,7 @@ const teamSchema = new Schema({
     teams: { type: [String], enum: ['none', 'Visible'], default: [] },
     analytics: { type: [String], enum: ['none', 'Visible'], default: [] },
     knowledge_base: { type: [String], enum: ['none', 'Visible'], default: [] },
+    widget_snippet: { type: [String], enum: ['none', 'Visible'], default: [] },
   },
   logo: { type: String, default: "https://cdn-icons-png.flaticon.com/512/10872/10872139.png" },
   agent: { type: String },

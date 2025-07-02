@@ -20,7 +20,7 @@ import { RiProductHuntLine } from "react-icons/ri";
 import { TbCategory } from "react-icons/tb";
 import { FaProductHunt, FaWpforms } from 'react-icons/fa';
 import { GiClassicalKnowledge } from 'react-icons/gi';
-import { MdOutlineOutbound } from 'react-icons/md';
+import { MdOutlineOutbound, MdOutlineTextSnippet } from 'react-icons/md';
 
 import ElevenLabsWidget from './ElevenLabsConvAI';
 import { Fa42Group } from 'react-icons/fa6';
@@ -79,13 +79,15 @@ export default function SidebarNav({ teamId, pathname, userId, session, isOpen }
         },
         {
             title: 'AI',
-            items: (role === 'admin' && teamAccess?.knowledge_base?.includes('Visible')) || access?.knowledge_base?.includes('read') ? [
-                {
-                    name: 'Knowledge Base',
-                    href: `/team/${teamId}/knowlege-base`,
-                    icon: <GiClassicalKnowledge size={22} />,
-                },
-            ] : [],
+            items:  [
+                ...((role === 'admin' && teamAccess?.knowledge_base?.includes('Visible')) || access?.knowledge_base?.includes('read') ? [{ name: 'Knowledge Base', href: `/team/${teamId}/knowlege-base`, icon: <GiClassicalKnowledge size={22} /> }] : []),
+                  
+                ...((role === 'admin' && teamAccess?.widget_snippet?.includes('Visible')) || access?.widget_snippet?.includes('read') ? [{
+                    name: "Widget Snippet",
+                    href: `/team/${teamId}/widget-snippet`,
+                    icon: <MdOutlineTextSnippet size={22} />
+                }] : []),
+            ] 
         },
         {
             title: 'Communication',

@@ -23,6 +23,7 @@ export default function AddTeamDialog({ userId }: { userId: string }) {
     analytics: [],
     campaigns: [],
     knowledge_base: [],
+    widget_snippet: [],
   });
   const handleAccessChange = (field: string, value: string) => {
     setAccess((prevAccess: any) => {
@@ -71,6 +72,7 @@ export default function AddTeamDialog({ userId }: { userId: string }) {
         analytics: [],
         campaigns: [],  
         knowledge_base: [],
+        widget_snippet: [],
       })
       // mutate(`/api/team/user?id=${organization_id}&userId=${userId}`);
       setIsOpen(false);
@@ -142,7 +144,7 @@ export default function AddTeamDialog({ userId }: { userId: string }) {
               <div className="mb-4">
                 <h3 className="font-semibold text-gray-900">Access</h3>
                 <div className="space-y-4 flex flex-row flex-wrap gap-4">
-                  {['dashboard', 'leads', 'meetings', 'tasks', 'categories', 'products', 'forms', 'teams', 'analytics', 'campaigns', 'knowledge_base'].map((field) => (
+                  {['dashboard', 'leads', 'meetings', 'tasks', 'categories', 'products', 'forms', 'teams', 'analytics', 'campaigns', 'knowledge_base', 'widget_snippet'].map((field) => (
                     <div key={field}>
                       <label className="block text-sm text-gray-700 capitalize">{field}</label>
                       <div className="flex space-x-4">

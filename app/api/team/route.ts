@@ -204,6 +204,7 @@ export async function PUT(req: NextRequest) {
       teams: access.teams || team.teamAccess.teams || 'none',
       analytics: access.analytics || team.teamAccess.analytics || 'none',
       knowledge_base: access.knowledge_base || team.teamAccess.knowledge_base || 'none',
+      widget_snippet: access.widget_snippet || team.teamAccess.widget_snippet || 'none',
     };
     await team.save();
 
