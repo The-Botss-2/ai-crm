@@ -32,6 +32,6 @@ jobs:
             # Build the application
             npm run build
             # Restart the PM2 process
-            pm2 restart crmfront-staging || HOST=0.0.0.0 pm2 start npm --name "crmfront-staging" -- start
+            pm2 restart crmfront-staging || HOST=0.0.0.0 PORT=3001 pm2 start npm --name "crmfront-staging" -- start
             # Save PM2 process for restarts
             pm2 save
