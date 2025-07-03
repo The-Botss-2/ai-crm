@@ -1,0 +1,37 @@
+name: Deploy Dev to DigitalOcean!
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the code from the repository
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up SSH access to EC2 instance
+      - name: Deploy to DO
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.SERVER_IP }} # Public IP or DNS name
+          username: ${{ secrets.USERNAME }}     # Username (e.g., ubuntu)
+          key: ${{ secrets.SSH_KEY }}           # SSH Private Key stored in GitHub Secrets
+          script: |
+            # Navigate to the application directory
+            cd /root/Staging_AI_CRM/ai-crm
+            rm -rf package-lock.json
+            # Fetch the latest code.
+            git pull origin dev
+            # Install dependencies
+            npm install --force
+            # Build the application
+            npm run build
+            # Restart the PM2 process
+            pm2 restart crmfront-staging || HOST=0.0.0.0 pm2 start npm --name "crmfront-staging" -- start
+            # Save PM2 process for restarts
+            pm2 save
